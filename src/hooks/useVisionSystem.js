@@ -189,15 +189,53 @@ export function useVisionSystem(stationLevels, activeQuests) {
       const stream = await navigator.mediaDevices.getDisplayMedia({
         video: { cursor: "always" }, audio: false
       });
+
+      // --- NEW: DETECT STOP SHARING ---
+      const videoTrack = stream.getVideoTracks()[0];
+      videoTrack.onended = () => {
+        console.log("Screen share ended by user.");
+        stopCapture();
+      };
+
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         videoRef.current.play();
+        
         setIsStreaming(true);
         isLooping.current = true;
         setWorkerStatus("Scanning...");
+        
         requestAnimationFrame(captureSingleFrame);
       }
-    } catch (err) { console.error(err); }
+    } catch (err) { 
+        console.error("Error starting screen capture:", err); 
+        // Handle case where user cancels the browser picker immediately
+        stopCapture();
+    }
+  };
+
+  const stopCapture = () => {
+    // 1. Stop the loop
+    isLooping.current = false;
+    
+    // 2. Clear video source
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+
+    // 3. Reset UI State
+    setIsStreaming(false);
+    setWorkerStatus("Idle");
+    setHasData(false);
+    setCurrentAnalysis(null);
+    setDebugRawText("");
+    setIsInventoryOpen(false);
+    
+    // Optional: Clear canvases visually if you want a complete wipe
+    if (analyticsCanvasRef.current) {
+      const ctx = analyticsCanvasRef.current.getContext('2d');
+      ctx.clearRect(0, 0, analyticsCanvasRef.current.width, analyticsCanvasRef.current.height);
+    }
   };
 
   return {
