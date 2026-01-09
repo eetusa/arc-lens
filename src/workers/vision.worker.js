@@ -7,6 +7,8 @@ import { AdvisorEngine } from '../logic/advisor-engine.js';
 import { findBestMatch } from '../logic/string-utils.js';
 
 // --- GLOBAL STATE ---
+ort.env.logLevel = 'error';
+
 let cvReady = false;
 let advisor = null;
 let ocrSession = null;
