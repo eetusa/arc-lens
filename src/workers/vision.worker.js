@@ -79,16 +79,16 @@ async function initSystems() {
         ort.env.wasm.wasmPaths = {
             'ort-wasm-simd-threaded.wasm': `${root}/ort-wasm-simd-threaded.wasm`,
             'ort-wasm-simd-threaded.jsep.wasm': `${root}/ort-wasm-simd-threaded.jsep.wasm`,
-            // Fallbacks (just in case)
-            'ort-wasm.wasm': `${root}/ort-wasm-simd-threaded.wasm`, 
+            'ort-wasm.wasm': `${root}/ort-wasm-simd-threaded.wasm`,
             'ort-wasm-simd.wasm': `${root}/ort-wasm-simd-threaded.wasm`
         };
 
-        // 2. ENABLE Threading (Required for this binary)
-        // Since you only have the threaded binary, you should enable proxy and threads.
-        ort.env.wasm.numThreads = navigator.hardwareConcurrency || 4;
-        ort.env.wasm.proxy = true; 
-        ort.env.wasm.simd = true;
+        // 2. DISABLE THREADING (The "Magic Fix")
+        // Even though it's a threaded binary, this forces it to run on the main thread
+        // bypassing the need for headers.
+        ort.env.wasm.numThreads = 1; 
+        ort.env.wasm.proxy = false; 
+        ort.env.wasm.simd = true; 
 
         const modelUrl = `${root}/en_PP-OCRv4_rec_infer.onnx`;
         
