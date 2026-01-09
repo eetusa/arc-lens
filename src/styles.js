@@ -86,7 +86,7 @@ export const styles = {
     padding: '2px 0', textAlign: 'center', fontWeight: 'bold'
   },
   statusBar: {
-    position: 'absolute', top: '20px', display: 'flex', gap: '20px',
+    position: 'absolute', top: '40px', display: 'flex', gap: '20px',
     alignItems: 'center', padding: '8px 20px', backgroundColor: theme.cardBg,
     borderRadius: '20px', border: `1px solid ${theme.border}`,
     fontSize: '12px', fontWeight: '600', letterSpacing: '0.5px'

@@ -9,7 +9,7 @@ import { useVisionSystem } from './hooks/useVisionSystem';
 
 function App() {
   // --- UI STATE ---
-  const [showDebug, setShowDebug] = useState(true);
+  const [showDebug, setShowDebug] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [allQuestNames, setAllQuestNames] = useState([]);
 
