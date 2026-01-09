@@ -71,24 +71,30 @@ async function initSystems() {
         } catch (err) { console.error("Menu Template Error", err); }
 
         // 2. Initialize ONNX (Standard Config)
-        const wasmPath = self.location.origin + '/ort-wasm.wasm';
-        const simdPath = self.location.origin + '/ort-wasm-simd.wasm';
-        const threadedPath = self.location.origin + '/ort-wasm-simd-threaded.jsep.wasm';
+        const root = self.location.origin;
 
+        // 1. Point to the file you ACTUALLY have
+        // We map the standard keys to your threaded file just to be safe, 
+        // but primarily we set the threaded path.
         ort.env.wasm.wasmPaths = {
-            'ort-wasm.wasm': wasmPath,
-            'ort-wasm-simd.wasm': simdPath,
-            'ort-wasm-simd-threaded.jsep.wasm': threadedPath,
-            'ort-wasm-simd-threaded.wasm': threadedPath
+            'ort-wasm-simd-threaded.wasm': `${root}/ort-wasm-simd-threaded.wasm`,
+            'ort-wasm-simd-threaded.jsep.wasm': `${root}/ort-wasm-simd-threaded.jsep.wasm`,
+            // Fallbacks (just in case)
+            'ort-wasm.wasm': `${root}/ort-wasm-simd-threaded.wasm`, 
+            'ort-wasm-simd.wasm': `${root}/ort-wasm-simd-threaded.wasm`
         };
 
-        ort.env.wasm.numThreads = 1; 
-        ort.env.wasm.proxy = false; 
+        // 2. ENABLE Threading (Required for this binary)
+        // Since you only have the threaded binary, you should enable proxy and threads.
+        ort.env.wasm.numThreads = navigator.hardwareConcurrency || 4;
+        ort.env.wasm.proxy = true; 
         ort.env.wasm.simd = true;
 
-        const modelUrl = self.location.origin + '/en_PP-OCRv4_rec_infer.onnx';
-        ocrSession = await ort.InferenceSession.create(modelUrl, { executionProviders: ['wasm'] });
-
+        const modelUrl = `${root}/en_PP-OCRv4_rec_infer.onnx`;
+        
+        ocrSession = await ort.InferenceSession.create(modelUrl, { 
+            executionProviders: ['wasm'] 
+        });
         // 3. LOAD & FIX DICTIONARY
         const vocabResp = await fetch('/en_dict.txt');
         const vocabText = await vocabResp.text();
