@@ -1,0 +1,92 @@
+{
+  "Picking Up The Pieces": ["DAM BATTLEGROUNDS UNLOCKED"],
+  "Clearer Skies": ["Picking Up The Pieces"],
+  "Trash Into Treasure": ["Picking Up The Pieces"],
+  "Off The Radar": ["Clearer Skies", "Trash Into Treasure"],
+  "A Bad Feeling": ["Off The Radar"],
+  
+  "Safe Passage": ["A Bad Feeling"],
+  "What Goes Around": ["Safe Passage"],
+  "Sparks Fly": ["What Goes Around"],
+  
+  "The Right Tool": ["A Bad Feeling"],
+  "A Better Use": ["The Right Tool"],
+  "Greasing Her Palms": ["A Better Use"],
+  
+  "Hatch Repairs": ["A Bad Feeling"],
+  "Down To Earth": ["Hatch Repairs"],
+  "The Trifecta": ["Down To Earth"],
+  
+  "In My Image": ["A Bad Feeling"],
+  "Cold Storage": ["In My Image"],
+  "Snap And Salvage": ["Cold Storage"],
+  "STELLA MONTIS UNLOCKED": ["Snap And Salvage"],
+  
+  "Doctor's Orders": ["A Bad Feeling"],
+  "Medical Merchandise": ["Doctor's Orders"],
+  "A Reveal In Ruins": ["Medical Merchandise"],
+  "A Lay Of The Land": ["A Reveal In Ruins"],
+  "Eyes In The Sky": ["A Lay Of The Land"],
+  
+  "A Balanced Harvest": ["Eyes In The Sky"],
+  "Untended Garden": ["A Balanced Harvest"],
+  "The Root Of The Matter": ["Untended Garden"],
+  
+  "After Rain Comes": ["Eyes In The Sky"],
+  "Water Troubles": ["After Rain Comes"],
+  "Source Of The Contaminant": ["Water Troubles"],
+  "Switching The Supply": ["Source Of The Contaminant"],
+  "A Warm Place To Rest": ["Switching The Supply"],
+  "Prescriptions Of The Past": ["A Warm Place To Rest"],
+  "Power Out": ["Prescriptions Of The Past"],
+  "Flickering Threat": ["Power Out"],
+  "Bees!": ["Flickering Threat"],
+  "Espresso": ["Bees!"],
+  "Life Of A Pharmacist": ["Espresso"],
+  
+  "Dormant Barons": ["The Trifecta"],
+  "What We Left Behind": ["Dormant Barons"],
+  "Mixed Signals": ["What We Left Behind"],
+  "Broken Monument": ["Dormant Barons"],
+  
+  "Straight Record": ["Broken Monument"],
+  "Keeping The Memory": ["Straight Record"],
+  "Echoes Of Victory Ridge": ["Keeping The Memory"],
+  
+  "Marked For Death": ["Broken Monument"],
+  "Market Correction": ["Marked For Death"],
+  "Eyes On The Prize": ["Market Correction"],
+  "Industrial Espionage": ["Eyes On The Prize"],
+  
+  "Unexpected Initiative": ["Echoes Of Victory Ridge", "Industrial Espionage"],
+  "A Symbol Of Unification": ["Unexpected Initiative"],
+  "Celeste's Journals": ["A Symbol Of Unification"],
+  "Out Of The Shadows": ["A Symbol Of Unification"],
+  "The Major's Footlocker": ["Out Of The Shadows"],
+  
+  "Back On Top": ["Celeste's Journals"],
+  "Our Presence Up There": ["Back On Top"],
+  "Lost In Transmission": ["Our Presence Up There"],
+  "Communication Hideout": ["Lost In Transmission"],
+  "Into The Fray": ["Communication Hideout"],
+  "Paving The Way": ["Into The Fray"],
+  "Deciphering The Data": ["Paving The Way"],
+  "Groundbreaking": ["Deciphering The Data"],
+
+  "BLUE GATE UNLOCKED": ["Life Of A Pharmacist"],
+  "Tribute To Toledo": ["BLUE GATE UNLOCKED"],
+  
+  "A Toxic Trail": ["Life Of A Pharmacist"],
+  "The Stench Of Corruption": ["A Toxic Trail"],
+  
+  "Digging Up Dirt": ["Life Of A Pharmacist"],
+  "Building A Library": ["Digging Up Dirt"],
+  "Turnabout": ["Building A Library"],
+  "A New Type Of Plant": ["Building A Library"],
+  
+  "A First Foothold": ["BLUE GATE UNLOCKED"],
+  "Reduced To Rubble": ["A First Foothold"],
+  "With A Trace": ["Reduced To Rubble"],
+  "The Clean Dream": ["With A Trace"],
+  "Armored Transports": ["With A Trace"]
+}
