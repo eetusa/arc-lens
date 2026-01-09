@@ -4,20 +4,21 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
-    exclude: ['onnxruntime-web'] // Keep this!
+    exclude: ['onnxruntime-web'] // Prevents path errors
   },
-  // 1. ADD THIS SECTION
   server: {
+    // Re-adding these ensures Dev behaves exactly like Prod
     headers: {
       'Cross-Origin-Opener-Policy': 'same-origin',
       'Cross-Origin-Embedder-Policy': 'require-corp'
     }
   },
-  // 2. Add it for Preview mode too (optional but good practice)
-  preview: {
-    headers: {
-      'Cross-Origin-Opener-Policy': 'same-origin',
-      'Cross-Origin-Embedder-Policy': 'require-corp'
-    }
+  build: {
+    // 1. CRITICAL: Disabling minification fixes "indirect call to null"
+    // (WASM often crashes if variable names are shortened)
+    minify: false, 
+    
+    // 2. Ensures your bundle supports the newer WASM syntax
+    target: "esnext" 
   }
 })
