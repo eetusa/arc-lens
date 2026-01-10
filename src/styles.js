@@ -95,16 +95,31 @@ export const styles = {
   ledContainer: {
     display: 'flex', alignItems: 'center', gap: '8px'
   },
-  led: (isOn) => ({
-    width: '10px', height: '10px', borderRadius: '50%',
-    backgroundColor: isOn ? theme.success : theme.off,
-    boxShadow: isOn ? `0 0 10px ${theme.success}` : 'inset 0 0 3px #000',
-    border: `1px solid ${isOn ? theme.success : '#444'}`,
-    transition: 'all 0.2s ease'
-  }),
+  led: (isOn, isOverride = false) => {
+    const color = isOverride ? '#ff9800' : (isOn ? theme.success : theme.off);
+    const glowColor = isOverride ? '#ff9800' : theme.success;
+    return {
+      width: '10px', height: '10px', borderRadius: '50%',
+      backgroundColor: color,
+      boxShadow: (isOn || isOverride) ? `0 0 10px ${glowColor}` : 'inset 0 0 3px #000',
+      border: `1px solid ${(isOn || isOverride) ? color : '#444'}`,
+      transition: 'all 0.2s ease'
+    };
+  },
   ledText: (isOn) => ({
     color: isOn ? theme.textMain : theme.textDim,
     fontSize: '11px', fontWeight: 'bold'
+  }),
+  overrideButton: (isActive) => ({
+    fontSize: '9px',
+    padding: '4px 8px',
+    backgroundColor: isActive ? '#ff9800' : 'transparent',
+    border: `1px solid ${isActive ? '#ff9800' : theme.border}`,
+    color: isActive ? '#000' : theme.textDim,
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontWeight: 'bold',
+    transition: 'all 0.2s ease'
   }),
   // -----------------------
   button: {

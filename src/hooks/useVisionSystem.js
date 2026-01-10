@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import VisionWorker from '../workers/vision.worker.js?worker';
 
-export function useVisionSystem(stationLevels, activeQuests, prioritySettings = {}) {
+export function useVisionSystem(stationLevels, activeQuests, prioritySettings = {}, inventoryOverride = false) {
   // --- REFS (Single Source of Truth for Loop) ---
   const videoRef = useRef(null);
   const miniFeedCanvasRef = useRef(null);
@@ -12,6 +12,7 @@ export function useVisionSystem(stationLevels, activeQuests, prioritySettings = 
   const isLooping = useRef(false);
   const offscreenRef = useRef(null);
   const scanDelayRef = useRef(1000);
+  const inventoryOverrideRef = useRef(inventoryOverride);
 
   // --- STATE ---
   const [isStreaming, setIsStreaming] = useState(false);
@@ -25,12 +26,22 @@ export function useVisionSystem(stationLevels, activeQuests, prioritySettings = 
   const [debugRawText, setDebugRawText] = useState("");
   const [isInventoryOpen, setIsInventoryOpen] = useState(false);
 
+  // Keep override ref in sync with prop
+  useEffect(() => {
+    inventoryOverrideRef.current = inventoryOverride;
+    // When override is active, always use fast scanning
+    if (inventoryOverride) {
+      scanDelayRef.current = 0;
+    }
+  }, [inventoryOverride]);
+
   // --- INTERNAL: HANDLE RESULTS ---
   const handleWorkerResult = (payload) => {
     // A. Inventory Logic
     if (typeof payload.isMenuOpen === 'boolean') {
       setIsInventoryOpen(payload.isMenuOpen);
-      scanDelayRef.current = payload.isMenuOpen ? 0 : 1000;
+      // Only use slow scanning if both actual detection is false AND override is off
+      scanDelayRef.current = (payload.isMenuOpen || inventoryOverrideRef.current) ? 0 : 1000;
     }
 
     // B. Analytics Image (Canvas Drawing Only)
@@ -181,11 +192,13 @@ export function useVisionSystem(stationLevels, activeQuests, prioritySettings = 
           // Priority settings
           devPrioritiesEnabled: prioritySettings.devPrioritiesEnabled ?? true,
           userPrioritiesEnabled: prioritySettings.userPrioritiesEnabled ?? true,
-          userPriorities: prioritySettings.userPriorities || []
+          userPriorities: prioritySettings.userPriorities || [],
+          // Inventory override for debug mode
+          inventoryOverride: inventoryOverride
         }
       });
     }
-  }, [stationLevels, activeQuests, prioritySettings]);
+  }, [stationLevels, activeQuests, prioritySettings, inventoryOverride]);
 
   // --- START CAPTURE ACTION ---
   const startCapture = async () => {
@@ -257,8 +270,8 @@ export function useVisionSystem(stationLevels, activeQuests, prioritySettings = 
     hasData,
     isAnalyzing,
     debugRawText,
-    isInventoryOpen,
-    
+    isInventoryOpen: isInventoryOpen || inventoryOverride, // Effective state (actual OR override)
+
     // Actions
     startCapture
   };

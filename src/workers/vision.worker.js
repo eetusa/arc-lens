@@ -16,6 +16,7 @@ let vocab = [];
 let menuChecker = null;
 let isOcrBusy = false;
 let lastHeaderMat = null;
+let inventoryOverride = false; // Debug override for menu detection
 const mats = { src: null };
 
 // NEW: Holds the last confirmed valid item (Image + Text)
@@ -122,6 +123,8 @@ self.onmessage = (e) => {
             userPrioritiesEnabled: payload.userPrioritiesEnabled,
             userPriorities: payload.userPriorities
         });
+        // Update inventory override state
+        inventoryOverride = payload.inventoryOverride || false;
         return;
     }
     if (!cvReady) return;
@@ -152,7 +155,8 @@ async function processFrame({ width, height, buffer }) {
             menuDebugData = result.debug;
         }
 
-        if (!isMenuOpen) {
+        // Skip processing if menu is not open AND override is not active
+        if (!isMenuOpen && !inventoryOverride) {
             // Clear stable state when menu closes so we don't show old items later
             stableState = { analysis: null, buffer: null, width: 0, height: 0 };
 
@@ -161,6 +165,9 @@ async function processFrame({ width, height, buffer }) {
             postMessage({ type: 'RESULT', payload: { isMenuOpen: false, analytics: null, debug: null, menuDebug: menuDebugData } }, transfers);
             return;
         }
+
+        // If override is active, treat as menu open for processing
+        const effectiveMenuOpen = isMenuOpen || inventoryOverride;
 
         const tooltipResult = TooltipFinder.findTooltip(self.cv, mats.src);
 
@@ -260,7 +267,7 @@ async function processFrame({ width, height, buffer }) {
 
         postMessage({
             type: 'RESULT',
-            payload: { isMenuOpen: isMenuOpen, analytics: analyticsData, debug: debugData, menuDebug: menuDebugData }
+            payload: { isMenuOpen: effectiveMenuOpen, analytics: analyticsData, debug: debugData, menuDebug: menuDebugData }
         }, transferList);
 
     } catch (err) {
