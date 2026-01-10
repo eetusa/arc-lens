@@ -20,7 +20,7 @@ function InfoModal({ onClose }) {
           <div style={styles.modalSection}>
             <span style={styles.modalSectionTitle}>What is this?</span>
             <p style={{ margin: 0 }}>
-              ARC Inventory Seer is a real-time inventory advisor for Core Keeper.
+              ARC Inventory Seer is a real-time inventory advisor for ARC Raiders.
               It analyzes items you hover over in your inventory and recommends
               whether to keep, sell, or recycle them based on your current game progress.
             </p>
@@ -31,7 +31,7 @@ function InfoModal({ onClose }) {
             <span style={styles.modalSectionTitle}>How to use</span>
             <ol style={styles.modalList}>
               <li style={styles.modalListItem}>
-                Click <strong>"SELECT WINDOW"</strong> and choose your Core Keeper game window
+                Click <strong>"SELECT WINDOW"</strong> and choose your ARC Raiders game window
               </li>
               <li style={styles.modalListItem}>
                 Open your inventory in-game
@@ -56,11 +56,11 @@ function InfoModal({ onClose }) {
               </div>
               <div style={{ marginBottom: '10px' }}>
                 <span style={styles.verdictBadge('#ffd700')}>SELL</span>
-                <span>Item is worth more when sold directly to a merchant</span>
+                <span>Item is worth more when sold directly</span>
               </div>
               <div style={{ marginBottom: '10px' }}>
                 <span style={styles.verdictBadge('#00bfff')}>RECYCLE</span>
-                <span>Item gives better value when recycled at a station</span>
+                <span>Item gives better value when recycled</span>
               </div>
               <div style={{ marginBottom: '10px' }}>
                 <span style={styles.verdictBadge('#888888')}>PREFERENCE</span>
