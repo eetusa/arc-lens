@@ -270,5 +270,115 @@ export const styles = {
     fontWeight: 'bold',
     fontSize: '12px',
     lineHeight: '1'
-  }
+  },
+  // --- INFO BUTTON & MODAL ---
+  infoButton: (debugVisible) => ({
+    position: 'absolute',
+    bottom: debugVisible ? '240px' : '20px',
+    left: '20px',
+    width: '32px',
+    height: '32px',
+    borderRadius: '50%',
+    backgroundColor: theme.cardBg,
+    border: `1px solid ${theme.border}`,
+    color: theme.accent,
+    fontSize: '18px',
+    fontWeight: 'bold',
+    fontStyle: 'italic',
+    fontFamily: 'Georgia, serif',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 5,
+    transition: 'all 0.3s ease',
+    boxShadow: '0 2px 10px rgba(0,0,0,0.3)'
+  }),
+  modalBackdrop: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100vw',
+    height: '100vh',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 100
+  },
+  modalContainer: {
+    width: '500px',
+    maxHeight: '80vh',
+    backgroundColor: theme.cardBg,
+    border: `1px solid ${theme.border}`,
+    borderRadius: '12px',
+    boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden'
+  },
+  modalHeader: {
+    padding: '16px 20px',
+    borderBottom: `1px solid ${theme.border}`,
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.03)'
+  },
+  modalTitle: {
+    fontSize: '16px',
+    fontWeight: 'bold',
+    color: theme.textMain,
+    margin: 0
+  },
+  modalClose: {
+    width: '28px',
+    height: '28px',
+    borderRadius: '50%',
+    backgroundColor: 'transparent',
+    border: `1px solid ${theme.border}`,
+    color: theme.textDim,
+    fontSize: '18px',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'all 0.2s ease'
+  },
+  modalContent: {
+    padding: '20px',
+    overflowY: 'auto',
+    flex: 1,
+    fontSize: '13px',
+    lineHeight: '1.6',
+    color: theme.textMain
+  },
+  modalSection: {
+    marginBottom: '20px'
+  },
+  modalSectionTitle: {
+    fontSize: '14px',
+    fontWeight: 'bold',
+    color: theme.accent,
+    marginBottom: '8px',
+    display: 'block'
+  },
+  modalList: {
+    margin: '8px 0',
+    paddingLeft: '20px'
+  },
+  modalListItem: {
+    marginBottom: '6px',
+    color: theme.textDim
+  },
+  verdictBadge: (color) => ({
+    display: 'inline-block',
+    padding: '2px 8px',
+    borderRadius: '3px',
+    fontSize: '11px',
+    fontWeight: 'bold',
+    backgroundColor: color,
+    color: '#000',
+    marginRight: '8px'
+  })
 };
