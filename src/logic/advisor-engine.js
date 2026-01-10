@@ -164,7 +164,7 @@ export class AdvisorEngine {
             const outputNode = this.db.items[outputId];
             if (outputNode) {
                 const rarity = outputNode.rarity || 'common';
-                const isPrioritized = this.priorityTracker.isDirectlyPrioritized(outputId);
+                const isPrioritized = this.priorityTracker.isRecycleOutputPrioritized(outputId);
                 analysis.addRecycleOutput(outputId, outputNode.name, amount, rarity, isPrioritized);
             }
         }
