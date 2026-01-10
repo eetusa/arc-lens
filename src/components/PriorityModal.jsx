@@ -33,7 +33,7 @@ const PriorityModal = ({
   });
 
   const isEditMode = mode === 'edit';
-  const title = isEditMode ? 'My Priorities' : 'Developer Priorities';
+  const title = isEditMode ? 'My Priorities' : 'Suggested Priorities';
 
   // Close on Escape key
   useEffect(() => {
