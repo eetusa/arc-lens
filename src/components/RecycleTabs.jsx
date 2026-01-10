@@ -97,9 +97,9 @@ const RecycleTabs = ({ outputs = [] }) => {
                 position: 'absolute',
                 top: '2px',
                 right: '4px',
-                color: PRIORITY_BORDER_COLOR,
-                fontSize: '10px',
-                textShadow: '0 0 4px rgba(156, 39, 176, 0.8)'
+                color: '#FFD700',
+                fontSize: '11px',
+                textShadow: '0 0 4px rgba(255, 215, 0, 0.9), 0 0 8px rgba(255, 165, 0, 0.6)'
               }}>
                 ★
               </div>
