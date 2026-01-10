@@ -13,6 +13,7 @@ function App() {
   const [showDebug, setShowDebug] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
+  const [inventoryOverride, setInventoryOverride] = useState(false);
   const [allQuestNames, setAllQuestNames] = useState([]);
   const [allItems, setAllItems] = useState([]);
   const [devPriorities, setDevPriorities] = useState([]);
@@ -53,7 +54,7 @@ function App() {
     debugRawText,
     isInventoryOpen,
     startCapture
-  } = useVisionSystem(stationLevels, activeQuests, prioritySettings);
+  } = useVisionSystem(stationLevels, activeQuests, prioritySettings, inventoryOverride);
 
   // --- INITIAL DATA FETCH ---
   useEffect(() => {
@@ -115,11 +116,24 @@ function App() {
       {/* STATUS BAR */}
       <div style={styles.statusBar}>
         <div style={styles.ledContainer}>
-            <div style={styles.led(isInventoryOpen)}></div>
+            <div style={styles.led(isInventoryOpen, inventoryOverride)}></div>
             <span style={styles.ledText(isInventoryOpen)}>
-                {isInventoryOpen ? "INVENTORY OPEN" : "INVENTORY CLOSED"}
+                {inventoryOverride ? "OVERRIDE ACTIVE" : (isInventoryOpen ? "INVENTORY OPEN" : "INVENTORY CLOSED")}
             </span>
         </div>
+        {/* Override button - debug mode only */}
+        {showDebug && (
+          <>
+            <div style={{width:'1px', height:'14px', backgroundColor:'#333', margin:'0 10px'}}></div>
+            <button
+              style={styles.overrideButton(inventoryOverride)}
+              onClick={() => setInventoryOverride(!inventoryOverride)}
+              title="Force inventory detection to always be active"
+            >
+              {inventoryOverride ? 'DISABLE OVERRIDE' : 'FORCE OPEN'}
+            </button>
+          </>
+        )}
         <div style={{width:'1px', height:'14px', backgroundColor:'#333', margin:'0 10px'}}></div>
         <span style={{color: theme.textDim}}>WORKER: {workerStatus.toUpperCase()}</span>
         <div style={{width:'1px', height:'14px', backgroundColor:'#333', margin:'0 10px'}}></div>
