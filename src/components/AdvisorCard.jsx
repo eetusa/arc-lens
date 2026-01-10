@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { styles } from '../styles';
 
 const COLORS = {
   success: { bg: '#1b5e20', border: '#4caf50', text: '#e8f5e9' },
@@ -59,12 +60,43 @@ function CraftingList({ options }) {
   );
 }
 
+// --- PRIORITY BADGE ---
+function PriorityBadge({ prioritization }) {
+  if (!prioritization || !prioritization.isPrioritized) return null;
+
+  const getMatchLabel = (matchType) => {
+    switch (matchType) {
+      case 'direct': return 'direct match';
+      case 'craft-to': return 'crafts into';
+      case 'recycle-to': return 'recycles into';
+      default: return matchType;
+    }
+  };
+
+  return (
+    <div style={styles.priorityBadge}>
+      <div style={styles.priorityBadgeHeader}>
+        <span style={styles.priorityBadgeIcon}>★</span>
+        <span style={styles.priorityBadgeTitle}>Prioritized</span>
+      </div>
+      <div style={styles.priorityBadgeList}>
+        {prioritization.matches.map((match, i) => (
+          <div key={i} style={styles.priorityBadgeItem}>
+            • {match.targetItemName}{' '}
+            <span style={styles.priorityMatchType}>({getMatchLabel(match.matchType)})</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // --- MAIN CARD ---
 export default function AdvisorCard({ analysis }) {
   if (!analysis) return null;
 
   // Destructure economics here to access sellPrice
-  const { verdict, meta, demand, utility, economics } = analysis;
+  const { verdict, meta, demand, utility, economics, prioritization } = analysis;
   const theme = COLORS[verdict.colorToken] || COLORS.neutral;
 
   // Rarity Setup
@@ -118,7 +150,7 @@ export default function AdvisorCard({ analysis }) {
                   ))}
                   {demand.stations.map((s, i) => (
                     <li key={`s-${i}`} style={{ marginBottom: '4px' }}>
-                        <span style={{color: '#42a5f5'}}>[B]</span> 
+                        <span style={{color: '#42a5f5'}}>[B]</span>
                         {' '}{s.name} {s.tier ? <span style={{color: '#888'}}> (Lvl {s.tier})</span> : ''}
                         {' '}(x{s.amount})
                     </li>
@@ -126,6 +158,9 @@ export default function AdvisorCard({ analysis }) {
                 </ul>
               </div>
             )}
+
+            {/* Priority Badge */}
+            <PriorityBadge prioritization={prioritization} />
         </div>
       </div>
 

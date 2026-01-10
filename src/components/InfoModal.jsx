@@ -83,6 +83,9 @@ function InfoModal({ onClose }) {
                 Add active quests to prevent accidentally selling needed materials
               </li>
               <li style={styles.modalListItem}>
+                Use Priorities in the sidebar to flag specific items you want to track
+              </li>
+              <li style={styles.modalListItem}>
                 Items with crafting utility will show what they can be used to craft
               </li>
             </ul>

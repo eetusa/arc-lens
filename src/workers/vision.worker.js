@@ -114,7 +114,16 @@ loadOpenCV();
 // --- 2. MESSAGE HANDLING ---
 self.onmessage = (e) => {
     const { type, payload } = e.data;
-    if (type === 'UPDATE_USER_STATE' && advisor) { advisor.userProgress = payload; return; }
+    if (type === 'UPDATE_USER_STATE' && advisor) {
+        advisor.userProgress = payload;
+        // Update priority settings in the advisor engine
+        advisor.updatePrioritySettings({
+            devPrioritiesEnabled: payload.devPrioritiesEnabled,
+            userPrioritiesEnabled: payload.userPrioritiesEnabled,
+            userPriorities: payload.userPriorities
+        });
+        return;
+    }
     if (!cvReady) return;
     if (type === 'PROCESS_FRAME') processFrame(payload);
 };

@@ -20,25 +20,25 @@ export const styles = {
     alignItems: 'center', justifyContent: 'center', overflow: 'hidden'
   },
   resultCard: {
-    display: 'flex', 
-    width: '700px', 
+    display: 'flex',
+    width: '700px',
     height: '500px', // Slightly taller to breathe
     backgroundColor: theme.cardBg,
-    border: `1px solid ${theme.border}`, 
+    border: `1px solid ${theme.border}`,
     borderRadius: '16px',
-    boxShadow: '0 10px 40px rgba(0,0,0,0.5)', 
+    boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
     overflow: 'hidden',
-    transition: 'all 0.3s ease', 
-    position: 'relative', 
+    transition: 'all 0.3s ease',
+    position: 'relative',
     zIndex: 10
   },
   infoCol: {
-    flex: 1, 
-    padding: '24px', 
-    display: 'flex', 
+    flex: 1,
+    padding: '24px',
+    display: 'flex',
     flexDirection: 'column',
     // CRITICAL FIX: explicit overflow hidden helps, but flex child behavior is key
-    overflow: 'hidden', 
+    overflow: 'hidden',
     position: 'relative'
   },
   imageCol: {
@@ -52,7 +52,7 @@ export const styles = {
     zIndex: 20, pointerEvents: 'none'
   },
   spinner: {
-    width: '14px', height: '14px', border: `2px solid ${theme.cardBg}`, 
+    width: '14px', height: '14px', border: `2px solid ${theme.cardBg}`,
     borderTop: `2px solid ${theme.accent}`, borderRadius: '50%',
     animation: 'spin 0.8s linear infinite'
   },
@@ -127,7 +127,7 @@ export const styles = {
     display: 'flex', flexDirection: 'column'
   },
   toggleLabel: {
-    display: 'flex', alignItems: 'center', gap: '8px', 
+    display: 'flex', alignItems: 'center', gap: '8px',
     cursor: 'pointer', userSelect: 'none'
   },
   switchTrack: (isOn) => ({
@@ -137,7 +137,7 @@ export const styles = {
     boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.5)'
   }),
   switchKnob: (isOn) => ({
-    position: 'absolute', top: '2px', 
+    position: 'absolute', top: '2px',
     left: isOn ? '20px' : '2px', // Slide logic
     width: '14px', height: '14px',
     backgroundColor: '#fff', borderRadius: '50%',
@@ -148,7 +148,7 @@ export const styles = {
     fontSize: '11px', fontWeight: 'bold', color: theme.textDim, textTransform: 'uppercase'
   },
   sidebarToggle: {
-    position: 'absolute', top: '50%', right: '0', 
+    position: 'absolute', top: '50%', right: '0',
     transform: 'translateY(-50%)',
     width: '24px', height: '40px', // Smaller toggle
     backgroundColor: theme.cardBg,
@@ -163,7 +163,7 @@ export const styles = {
   sidebar: (isOpen) => ({
     position: 'absolute', top: 0, right: isOpen ? 0 : '-300px', // Slightly narrower
     width: '300px', height: '100%',
-    backgroundColor: 'rgba(15, 15, 15, 0.96)', 
+    backgroundColor: 'rgba(15, 15, 15, 0.96)',
     backdropFilter: 'blur(5px)',
     borderLeft: `1px solid ${theme.border}`,
     zIndex: 50,
@@ -181,15 +181,15 @@ export const styles = {
   },
   // --- COMPACT ROW LAYOUT ---
   stationRow: {
-    display: 'flex', 
-    justifyContent: 'space-between', 
+    display: 'flex',
+    justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: '8px',
     paddingBottom: '8px',
     borderBottom: '1px solid #222' // Subtle separator
   },
   stationLabel: {
-    fontSize: '11px', color: theme.textDim, fontWeight: '600', 
+    fontSize: '11px', color: theme.textDim, fontWeight: '600',
     textTransform: 'uppercase', letterSpacing: '0.5px'
   },
   levelSelector: {
@@ -214,7 +214,7 @@ export const styles = {
     position: 'relative' // Important for absolute dropdown positioning
   },
   sectionTitle: {
-    fontSize: '11px', color: theme.textMain, fontWeight: 'bold', 
+    fontSize: '11px', color: theme.textMain, fontWeight: 'bold',
     letterSpacing: '1px', marginBottom: '10px', display: 'block'
   },
   inputWrapper: {
@@ -271,6 +271,138 @@ export const styles = {
     fontSize: '12px',
     lineHeight: '1'
   },
+  // --- PRIORITY STYLES ---
+  priorityContainer: {
+    marginTop: '20px',
+    borderTop: `1px solid ${theme.border}`,
+    paddingTop: '15px'
+  },
+  priorityToggles: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
+    marginBottom: '12px'
+  },
+  priorityToggleLabel: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    cursor: 'pointer'
+  },
+  priorityToggleText: {
+    fontSize: '11px',
+    color: theme.textDim
+  },
+  priorityCheckbox: {
+    width: '14px',
+    height: '14px',
+    accentColor: theme.accent,
+    cursor: 'pointer'
+  },
+  priorityAddSection: {
+    marginBottom: '12px'
+  },
+  priorityOptions: {
+    display: 'flex',
+    gap: '12px',
+    marginTop: '8px'
+  },
+  priorityOptionLabel: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+    cursor: 'pointer'
+  },
+  priorityOptionText: {
+    fontSize: '10px',
+    color: theme.textDim
+  },
+  priorityList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
+    marginTop: '12px'
+  },
+  priorityItem: {
+    backgroundColor: 'rgba(156, 39, 176, 0.1)',
+    border: '1px solid #9c27b0',
+    borderRadius: '6px',
+    padding: '8px 10px'
+  },
+  priorityItemHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '4px'
+  },
+  priorityItemName: {
+    fontSize: '11px',
+    fontWeight: 'bold',
+    color: theme.textMain
+  },
+  priorityStar: {
+    color: '#9c27b0',
+    marginRight: '4px'
+  },
+  priorityItemRemove: {
+    cursor: 'pointer',
+    color: '#9c27b0',
+    fontWeight: 'bold',
+    fontSize: '14px',
+    lineHeight: '1'
+  },
+  priorityItemFlags: {
+    display: 'flex',
+    gap: '6px'
+  },
+  priorityFlag: (active) => ({
+    fontSize: '9px',
+    padding: '1px 4px',
+    borderRadius: '2px',
+    backgroundColor: active ? 'rgba(156, 39, 176, 0.3)' : 'transparent',
+    color: active ? '#ce93d8' : theme.textDim,
+    border: `1px solid ${active ? '#9c27b0' : theme.border}`
+  }),
+  // --- PRIORITY BADGE IN ADVISOR CARD ---
+  priorityBadge: {
+    marginTop: '12px',
+    padding: '10px',
+    backgroundColor: 'rgba(156, 39, 176, 0.15)',
+    border: '1px solid #9c27b0',
+    borderRadius: '6px',
+    boxShadow: '0 0 10px rgba(156, 39, 176, 0.2)'
+  },
+  priorityBadgeHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    marginBottom: '6px'
+  },
+  priorityBadgeIcon: {
+    color: '#ce93d8',
+    fontSize: '14px'
+  },
+  priorityBadgeTitle: {
+    fontSize: '11px',
+    fontWeight: 'bold',
+    color: '#ce93d8',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px'
+  },
+  priorityBadgeList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '4px'
+  },
+  priorityBadgeItem: {
+    fontSize: '10px',
+    color: theme.textDim,
+    paddingLeft: '8px'
+  },
+  priorityMatchType: {
+    color: '#9c27b0',
+    fontStyle: 'italic'
+  },
   // --- INFO BUTTON & MODAL ---
   infoButton: (debugVisible) => ({
     position: 'absolute',
@@ -299,18 +431,20 @@ export const styles = {
     transition: 'all 0.3s ease',
     boxShadow: '0 2px 10px rgba(0,0,0,0.3)'
   }),
+  // --- SHARED MODAL STYLES ---
   modalBackdrop: {
     position: 'fixed',
     top: 0,
     left: 0,
     width: '100vw',
     height: '100vh',
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    backgroundColor: 'rgba(0, 0, 0, 0.85)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 100
+    zIndex: 200
   },
+  // --- INFO MODAL STYLES ---
   modalContainer: {
     width: '500px',
     maxHeight: '80vh',
@@ -390,5 +524,181 @@ export const styles = {
     backgroundColor: color,
     color: '#000',
     marginRight: '8px'
-  })
+  }),
+  // --- PRIORITY MODAL STYLES ---
+  priorityModalContainer: {
+    width: '450px',
+    maxHeight: '70vh',
+    backgroundColor: theme.cardBg,
+    border: '1px solid #9c27b0',
+    borderRadius: '12px',
+    boxShadow: '0 0 30px rgba(156, 39, 176, 0.3)',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden'
+  },
+  priorityModalHeader: {
+    padding: '16px 20px',
+    borderBottom: '1px solid #9c27b0',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'rgba(156, 39, 176, 0.1)'
+  },
+  priorityModalTitle: {
+    fontSize: '16px',
+    fontWeight: 'bold',
+    color: '#ce93d8',
+    margin: 0,
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px'
+  },
+  priorityModalClose: {
+    width: '28px',
+    height: '28px',
+    minWidth: '28px',
+    minHeight: '28px',
+    padding: 0,
+    boxSizing: 'border-box',
+    borderRadius: '50%',
+    backgroundColor: 'transparent',
+    border: '1px solid #9c27b0',
+    color: '#ce93d8',
+    fontSize: '18px',
+    lineHeight: 1,
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  priorityModalContent: {
+    padding: '16px',
+    overflowY: 'auto',
+    flex: 1
+  },
+  priorityModalAddSection: {
+    marginBottom: '16px',
+    paddingBottom: '16px',
+    borderBottom: `1px solid ${theme.border}`
+  },
+  priorityModalAddOptions: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    marginTop: '10px',
+    flexWrap: 'wrap'
+  },
+  priorityModalAddLabel: {
+    fontSize: '11px',
+    color: theme.textDim
+  },
+  priorityModalEmpty: {
+    textAlign: 'center',
+    color: theme.textDim,
+    fontSize: '13px',
+    padding: '30px 20px'
+  },
+  priorityModalList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '10px'
+  },
+  priorityModalItem: {
+    backgroundColor: 'rgba(156, 39, 176, 0.08)',
+    border: '1px solid rgba(156, 39, 176, 0.3)',
+    borderRadius: '8px',
+    padding: '12px'
+  },
+  priorityModalItemHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '8px'
+  },
+  priorityModalItemName: {
+    fontSize: '13px',
+    fontWeight: 'bold',
+    color: theme.textMain
+  },
+  priorityModalItemRemove: {
+    cursor: 'pointer',
+    color: '#9c27b0',
+    fontWeight: 'bold',
+    fontSize: '16px',
+    lineHeight: 1,
+    padding: '2px 6px',
+    borderRadius: '4px',
+    transition: 'background-color 0.2s'
+  },
+  priorityModalItemFlags: {
+    display: 'flex',
+    gap: '16px'
+  },
+  priorityModalFlagLabel: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    cursor: 'pointer'
+  },
+  priorityModalFlagText: (active) => ({
+    fontSize: '11px',
+    color: active ? '#ce93d8' : theme.textDim
+  }),
+  // View/Edit buttons for sidebar
+  priorityRowWithButton: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '8px'
+  },
+  priorityViewButton: {
+    fontSize: '10px',
+    padding: '3px 8px',
+    backgroundColor: 'transparent',
+    border: '1px solid #9c27b0',
+    color: '#ce93d8',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    transition: 'all 0.2s'
+  },
+  // Quick glance list in sidebar
+  priorityQuickList: {
+    marginTop: '8px',
+    marginLeft: '4px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '4px'
+  },
+  priorityQuickItem: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    fontSize: '11px',
+    padding: '4px 8px',
+    backgroundColor: 'rgba(156, 39, 176, 0.08)',
+    borderRadius: '4px',
+    borderLeft: '2px solid #9c27b0'
+  },
+  priorityQuickName: {
+    color: '#ce93d8',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    flex: 1,
+    marginRight: '8px'
+  },
+  priorityQuickFlags: {
+    display: 'flex',
+    gap: '3px',
+    flexShrink: 0
+  },
+  priorityQuickFlag: {
+    fontSize: '9px',
+    fontWeight: 'bold',
+    color: '#9c27b0',
+    backgroundColor: 'rgba(156, 39, 176, 0.2)',
+    padding: '1px 4px',
+    borderRadius: '2px'
+  }
 };

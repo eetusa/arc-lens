@@ -1,5 +1,6 @@
 import { ItemDatabase } from './item-database';
 import { QuestTracker } from './quest-tracker';
+import { PriorityTracker } from './priority-tracker';
 import { Action, QuestStatus } from './constants';
 import { AdvisorAnalysis } from './advisor-analysis';
 
@@ -18,13 +19,22 @@ export class AdvisorEngine {
     constructor() {
         this.db = new ItemDatabase();
         this.questTracker = new QuestTracker();
+        this.priorityTracker = new PriorityTracker(this.db);
         this.ready = false;
         this.defaultProgress = { activeQuestTitles: [], stationLevels: {} };
     }
 
     async init() {
-        await Promise.all([this.db.load(), this.questTracker.load()]);
+        await Promise.all([
+            this.db.load(),
+            this.questTracker.load(),
+            this.priorityTracker.loadDevPriorities()
+        ]);
         this.ready = true;
+    }
+
+    updatePrioritySettings(settings) {
+        this.priorityTracker.updateSettings(settings);
     }
 
     analyzeItem(itemIdOrName, progress = {}) {
@@ -141,7 +151,13 @@ export class AdvisorEngine {
         });
 
         // ---------------------------------------------------------
-        // 6. Formulate Final Verdict
+        // 6. Check Prioritization
+        // ---------------------------------------------------------
+        const priorityResult = this.priorityTracker.checkItem(node);
+        analysis.setPrioritization(priorityResult);
+
+        // ---------------------------------------------------------
+        // 7. Formulate Final Verdict
         // ---------------------------------------------------------
         
         if (analysis.demand.totalRequired > 0) {

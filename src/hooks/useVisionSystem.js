@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import VisionWorker from '../workers/vision.worker.js?worker';
 
-export function useVisionSystem(stationLevels, activeQuests) {
+export function useVisionSystem(stationLevels, activeQuests, prioritySettings = {}) {
   // --- REFS (Single Source of Truth for Loop) ---
   const videoRef = useRef(null);
   const miniFeedCanvasRef = useRef(null);
@@ -177,11 +177,15 @@ export function useVisionSystem(stationLevels, activeQuests) {
         type: 'UPDATE_USER_STATE',
         payload: {
           stationLevels: stationLevels || {},
-          activeQuestTitles: activeQuests || []
+          activeQuestTitles: activeQuests || [],
+          // Priority settings
+          devPrioritiesEnabled: prioritySettings.devPrioritiesEnabled ?? true,
+          userPrioritiesEnabled: prioritySettings.userPrioritiesEnabled ?? true,
+          userPriorities: prioritySettings.userPriorities || []
         }
       });
     }
-  }, [stationLevels, activeQuests]);
+  }, [stationLevels, activeQuests, prioritySettings]);
 
   // --- START CAPTURE ACTION ---
   const startCapture = async () => {

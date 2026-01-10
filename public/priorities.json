@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "priorities": [
+    {
+      "itemId": "trigger_nade",
+      "itemName": "Trigger 'Nade",
+      "direct": true,
+      "craftTo": true,
+      "recycleTo": true
+    }
+  ]
+}
