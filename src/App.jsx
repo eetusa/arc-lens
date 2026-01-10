@@ -3,7 +3,8 @@ import { styles, theme } from './styles';
 
 // --- IMPORTS ---
 import StationPanel from './components/StationPanel';
-import AdvisorCard from './components/AdvisorCard'; // <--- NEW IMPORT
+import AdvisorCard from './components/AdvisorCard';
+import InfoModal from './components/InfoModal';
 import { usePersistentState } from './hooks/usePersistentState';
 import { useVisionSystem } from './hooks/useVisionSystem';
 
@@ -11,6 +12,7 @@ function App() {
   // --- UI STATE ---
   const [showDebug, setShowDebug] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
   const [allQuestNames, setAllQuestNames] = useState([]);
   const [allItems, setAllItems] = useState([]);
   const [devPriorities, setDevPriorities] = useState([]);
@@ -230,6 +232,18 @@ function App() {
               </div>
           </div>
       </div>
+
+      {/* INFO BUTTON */}
+      <button
+        style={styles.infoButton(isStreaming && showDebug)}
+        onClick={() => setShowInfo(true)}
+        title="About this app"
+      >
+        i
+      </button>
+
+      {/* INFO MODAL */}
+      {showInfo && <InfoModal onClose={() => setShowInfo(false)} />}
 
     </div>
   );

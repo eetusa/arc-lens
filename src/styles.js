@@ -20,25 +20,25 @@ export const styles = {
     alignItems: 'center', justifyContent: 'center', overflow: 'hidden'
   },
   resultCard: {
-    display: 'flex', 
-    width: '700px', 
+    display: 'flex',
+    width: '700px',
     height: '500px', // Slightly taller to breathe
     backgroundColor: theme.cardBg,
-    border: `1px solid ${theme.border}`, 
+    border: `1px solid ${theme.border}`,
     borderRadius: '16px',
-    boxShadow: '0 10px 40px rgba(0,0,0,0.5)', 
+    boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
     overflow: 'hidden',
-    transition: 'all 0.3s ease', 
-    position: 'relative', 
+    transition: 'all 0.3s ease',
+    position: 'relative',
     zIndex: 10
   },
   infoCol: {
-    flex: 1, 
-    padding: '24px', 
-    display: 'flex', 
+    flex: 1,
+    padding: '24px',
+    display: 'flex',
     flexDirection: 'column',
     // CRITICAL FIX: explicit overflow hidden helps, but flex child behavior is key
-    overflow: 'hidden', 
+    overflow: 'hidden',
     position: 'relative'
   },
   imageCol: {
@@ -52,7 +52,7 @@ export const styles = {
     zIndex: 20, pointerEvents: 'none'
   },
   spinner: {
-    width: '14px', height: '14px', border: `2px solid ${theme.cardBg}`, 
+    width: '14px', height: '14px', border: `2px solid ${theme.cardBg}`,
     borderTop: `2px solid ${theme.accent}`, borderRadius: '50%',
     animation: 'spin 0.8s linear infinite'
   },
@@ -127,7 +127,7 @@ export const styles = {
     display: 'flex', flexDirection: 'column'
   },
   toggleLabel: {
-    display: 'flex', alignItems: 'center', gap: '8px', 
+    display: 'flex', alignItems: 'center', gap: '8px',
     cursor: 'pointer', userSelect: 'none'
   },
   switchTrack: (isOn) => ({
@@ -137,7 +137,7 @@ export const styles = {
     boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.5)'
   }),
   switchKnob: (isOn) => ({
-    position: 'absolute', top: '2px', 
+    position: 'absolute', top: '2px',
     left: isOn ? '20px' : '2px', // Slide logic
     width: '14px', height: '14px',
     backgroundColor: '#fff', borderRadius: '50%',
@@ -148,7 +148,7 @@ export const styles = {
     fontSize: '11px', fontWeight: 'bold', color: theme.textDim, textTransform: 'uppercase'
   },
   sidebarToggle: {
-    position: 'absolute', top: '50%', right: '0', 
+    position: 'absolute', top: '50%', right: '0',
     transform: 'translateY(-50%)',
     width: '24px', height: '40px', // Smaller toggle
     backgroundColor: theme.cardBg,
@@ -163,7 +163,7 @@ export const styles = {
   sidebar: (isOpen) => ({
     position: 'absolute', top: 0, right: isOpen ? 0 : '-300px', // Slightly narrower
     width: '300px', height: '100%',
-    backgroundColor: 'rgba(15, 15, 15, 0.96)', 
+    backgroundColor: 'rgba(15, 15, 15, 0.96)',
     backdropFilter: 'blur(5px)',
     borderLeft: `1px solid ${theme.border}`,
     zIndex: 50,
@@ -181,15 +181,15 @@ export const styles = {
   },
   // --- COMPACT ROW LAYOUT ---
   stationRow: {
-    display: 'flex', 
-    justifyContent: 'space-between', 
+    display: 'flex',
+    justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: '8px',
     paddingBottom: '8px',
     borderBottom: '1px solid #222' // Subtle separator
   },
   stationLabel: {
-    fontSize: '11px', color: theme.textDim, fontWeight: '600', 
+    fontSize: '11px', color: theme.textDim, fontWeight: '600',
     textTransform: 'uppercase', letterSpacing: '0.5px'
   },
   levelSelector: {
@@ -214,7 +214,7 @@ export const styles = {
     position: 'relative' // Important for absolute dropdown positioning
   },
   sectionTitle: {
-    fontSize: '11px', color: theme.textMain, fontWeight: 'bold', 
+    fontSize: '11px', color: theme.textMain, fontWeight: 'bold',
     letterSpacing: '1px', marginBottom: '10px', display: 'block'
   },
   inputWrapper: {
@@ -403,7 +403,35 @@ export const styles = {
     color: '#9c27b0',
     fontStyle: 'italic'
   },
-  // --- PRIORITY MODAL STYLES ---
+  // --- INFO BUTTON & MODAL ---
+  infoButton: (debugVisible) => ({
+    position: 'absolute',
+    bottom: debugVisible ? '240px' : '20px',
+    left: '20px',
+    width: '32px',
+    height: '32px',
+    minWidth: '32px',
+    minHeight: '32px',
+    padding: 0,
+    boxSizing: 'border-box',
+    borderRadius: '50%',
+    backgroundColor: theme.cardBg,
+    border: `1px solid ${theme.border}`,
+    color: theme.accent,
+    fontSize: '18px',
+    fontWeight: 'bold',
+    fontStyle: 'italic',
+    fontFamily: 'Georgia, serif',
+    lineHeight: 1,
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 5,
+    transition: 'all 0.3s ease',
+    boxShadow: '0 2px 10px rgba(0,0,0,0.3)'
+  }),
+  // --- SHARED MODAL STYLES ---
   modalBackdrop: {
     position: 'fixed',
     top: 0,
@@ -416,6 +444,88 @@ export const styles = {
     justifyContent: 'center',
     zIndex: 200
   },
+  // --- INFO MODAL STYLES ---
+  modalContainer: {
+    width: '500px',
+    maxHeight: '80vh',
+    backgroundColor: theme.cardBg,
+    border: `1px solid ${theme.border}`,
+    borderRadius: '12px',
+    boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden'
+  },
+  modalHeader: {
+    padding: '16px 20px',
+    borderBottom: `1px solid ${theme.border}`,
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.03)'
+  },
+  modalTitle: {
+    fontSize: '16px',
+    fontWeight: 'bold',
+    color: theme.textMain,
+    margin: 0
+  },
+  modalClose: {
+    width: '28px',
+    height: '28px',
+    minWidth: '28px',
+    minHeight: '28px',
+    padding: 0,
+    boxSizing: 'border-box',
+    borderRadius: '50%',
+    backgroundColor: 'transparent',
+    border: `1px solid ${theme.border}`,
+    color: theme.textDim,
+    fontSize: '18px',
+    lineHeight: 1,
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'all 0.2s ease'
+  },
+  modalContent: {
+    padding: '20px',
+    overflowY: 'auto',
+    flex: 1,
+    fontSize: '13px',
+    lineHeight: '1.6',
+    color: theme.textMain
+  },
+  modalSection: {
+    marginBottom: '20px'
+  },
+  modalSectionTitle: {
+    fontSize: '14px',
+    fontWeight: 'bold',
+    color: theme.accent,
+    marginBottom: '8px',
+    display: 'block'
+  },
+  modalList: {
+    margin: '8px 0',
+    paddingLeft: '20px'
+  },
+  modalListItem: {
+    marginBottom: '6px',
+    color: theme.textDim
+  },
+  verdictBadge: (color) => ({
+    display: 'inline-block',
+    padding: '2px 8px',
+    borderRadius: '3px',
+    fontSize: '11px',
+    fontWeight: 'bold',
+    backgroundColor: color,
+    color: '#000',
+    marginRight: '8px'
+  }),
+  // --- PRIORITY MODAL STYLES ---
   priorityModalContainer: {
     width: '450px',
     maxHeight: '70vh',

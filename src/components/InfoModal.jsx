@@ -1,0 +1,96 @@
+import { styles } from '../styles';
+
+function InfoModal({ onClose }) {
+  const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
+  return (
+    <div style={styles.modalBackdrop} onClick={handleBackdropClick}>
+      <div style={styles.modalContainer}>
+        <div style={styles.modalHeader}>
+          <h2 style={styles.modalTitle}>ARC Inventory Seer</h2>
+          <button style={styles.modalClose} onClick={onClose}>&times;</button>
+        </div>
+
+        <div style={styles.modalContent}>
+          {/* What is this */}
+          <div style={styles.modalSection}>
+            <span style={styles.modalSectionTitle}>What is this?</span>
+            <p style={{ margin: 0 }}>
+              ARC Inventory Seer is a real-time inventory advisor for ARC Raiders.
+              It analyzes items you hover over in your inventory and recommends
+              whether to keep, sell, or recycle them based on your current game progress.
+            </p>
+          </div>
+
+          {/* How to use */}
+          <div style={styles.modalSection}>
+            <span style={styles.modalSectionTitle}>How to use</span>
+            <ol style={styles.modalList}>
+              <li style={styles.modalListItem}>
+                Click <strong>"SELECT WINDOW"</strong> and choose your ARC Raiders game window
+              </li>
+              <li style={styles.modalListItem}>
+                Open your inventory in-game
+              </li>
+              <li style={styles.modalListItem}>
+                Hover over items to see recommendations
+              </li>
+              <li style={styles.modalListItem}>
+                Configure your station levels and active quests using the sidebar
+                (click the <strong>&#8249;</strong> button on the right edge)
+              </li>
+            </ol>
+          </div>
+
+          {/* Understanding Verdicts */}
+          <div style={styles.modalSection}>
+            <span style={styles.modalSectionTitle}>Understanding Verdicts</span>
+            <div style={{ marginTop: '10px' }}>
+              <div style={{ marginBottom: '10px' }}>
+                <span style={styles.verdictBadge('#00ff00')}>KEEP</span>
+                <span>Item is needed for active quests or station upgrades</span>
+              </div>
+              <div style={{ marginBottom: '10px' }}>
+                <span style={styles.verdictBadge('#ffd700')}>SELL</span>
+                <span>Item is worth more when sold directly</span>
+              </div>
+              <div style={{ marginBottom: '10px' }}>
+                <span style={styles.verdictBadge('#00bfff')}>RECYCLE</span>
+                <span>Item gives better value when recycled</span>
+              </div>
+              <div style={{ marginBottom: '10px' }}>
+                <span style={styles.verdictBadge('#888888')}>PREFERENCE</span>
+                <span>Personal choice based on your playstyle</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Tips */}
+          <div style={styles.modalSection}>
+            <span style={styles.modalSectionTitle}>Tips</span>
+            <ul style={styles.modalList}>
+              <li style={styles.modalListItem}>
+                Keep your inventory panel open for continuous analysis
+              </li>
+              <li style={styles.modalListItem}>
+                Set your station levels accurately for better recommendations
+              </li>
+              <li style={styles.modalListItem}>
+                Add active quests to prevent accidentally selling needed materials
+              </li>
+              <li style={styles.modalListItem}>
+                Items with crafting utility will show what they can be used to craft
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default InfoModal;
