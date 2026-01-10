@@ -5,8 +5,10 @@ import { styles, theme } from './styles';
 import StationPanel from './components/StationPanel';
 import AdvisorCard from './components/AdvisorCard';
 import InfoModal from './components/InfoModal';
+import RecycleTabs from './components/RecycleTabs';
 import { usePersistentState } from './hooks/usePersistentState';
 import { useVisionSystem } from './hooks/useVisionSystem';
+import { preloadAllItemImages } from './utils/imagePreloader';
 
 function App() {
   // --- UI STATE ---
@@ -81,6 +83,9 @@ function App() {
       .then(res => res.json())
       .then(data => setDevPriorities(data.priorities || []))
       .catch(e => console.error("Priorities load error", e));
+
+    // Preload all item images in background
+    preloadAllItemImages();
   }, []);
 
   // --- HANDLERS ---
@@ -180,46 +185,51 @@ function App() {
       </div>
 
       {/* MAIN CONTENT */}
-      <div style={styles.resultCard}>
-        <div style={styles.imageCol}>
-            <canvas ref={analyticsCanvasRef} style={{...styles.cropCanvas, display: hasData ? 'block' : 'none'}} />
-            {!hasData && <div style={{color: '#333', fontSize: '12px'}}>NO IMAGE</div>}
+      <div style={styles.mainContentWrapper}>
+        <div style={styles.resultCard}>
+          <div style={styles.imageCol}>
+              <canvas ref={analyticsCanvasRef} style={{...styles.cropCanvas, display: hasData ? 'block' : 'none'}} />
+              {!hasData && <div style={{color: '#333', fontSize: '12px'}}>NO IMAGE</div>}
+          </div>
+
+          <div style={styles.infoCol}>
+              {isAnalyzing && (
+                  <div style={styles.loaderContainer}>
+                      <div style={styles.spinner}></div>
+                      <span style={styles.loadingText}>Analyzing</span>
+                  </div>
+              )}
+
+              {!isStreaming ? (
+                  <div style={styles.placeholder}>
+                      <button style={styles.button} onClick={startCapture}>SELECT WINDOW</button>
+                  </div>
+              ) : !currentAnalysis ? (
+                  <div style={styles.placeholder}>
+                      <div style={{fontSize:'16px', color: theme.accent}}>Waiting for item...</div>
+                      <div style={{fontSize:'12px'}}>Open Inventory & Hover Item</div>
+                  </div>
+              ) : (
+                  <div style={{
+                      opacity: isAnalyzing ? 0.5 : 1,
+                      transition: 'opacity 0.2s',
+                      flex: 1,
+                      height: '100%',
+                      minHeight: 0,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      overflow: 'hidden'
+                  }}>
+                      <AdvisorCard analysis={currentAnalysis} />
+                  </div>
+              )}
+          </div>
         </div>
 
-        <div style={styles.infoCol}>
-            {isAnalyzing && (
-                <div style={styles.loaderContainer}>
-                    <div style={styles.spinner}></div>
-                    <span style={styles.loadingText}>Analyzing</span>
-                </div>
-            )}
-
-            {!isStreaming ? (
-                <div style={styles.placeholder}>
-                    <button style={styles.button} onClick={startCapture}>SELECT WINDOW</button>
-                </div>
-            ) : !currentAnalysis ? ( // <--- CHECK OBJECT HERE
-                <div style={styles.placeholder}>
-                    <div style={{fontSize:'16px', color: theme.accent}}>Waiting for item...</div>
-                    <div style={{fontSize:'12px'}}>Open Inventory & Hover Item</div>
-                </div>
-            ) : (
-                <div style={{ 
-                    opacity: isAnalyzing ? 0.5 : 1, 
-                    transition: 'opacity 0.2s',
-                    /* CRITICAL FIXES START */
-                    flex: 1,                // Grow to fill infoCol
-                    height: '100%',         // Force explicit height context
-                    minHeight: 0,           // Allow flex shrinking
-                    display: 'flex',        // Pass flex context down
-                    flexDirection: 'column',
-                    overflow: 'hidden'      // Hard clip anything spilling out
-                    /* CRITICAL FIXES END */
-                }}>
-                    <AdvisorCard analysis={currentAnalysis} />
-                </div>
-            )}
-        </div>
+        {/* RECYCLE TABS - Shows what current item breaks into */}
+        {currentAnalysis && currentAnalysis.recycleOutputs && currentAnalysis.recycleOutputs.length > 0 && (
+          <RecycleTabs outputs={currentAnalysis.recycleOutputs} />
+        )}
       </div>
 
       <video ref={videoRef} style={{ display: 'none' }} autoPlay muted playsInline></video>

@@ -74,6 +74,32 @@ export class PriorityTracker {
     }
 
     /**
+     * Quick check if an item ID is directly prioritized
+     * Used for recycle output highlighting
+     * @param {string} itemId - The item ID to check
+     * @returns {boolean}
+     */
+    isDirectlyPrioritized(itemId) {
+        if (!itemId) return false;
+
+        // Check developer priorities
+        if (this.devEnabled) {
+            for (const p of this.devPriorities) {
+                if (p.direct && p.itemId === itemId) return true;
+            }
+        }
+
+        // Check user priorities
+        if (this.userEnabled) {
+            for (const p of this.userPriorities) {
+                if (p.direct && p.itemId === itemId) return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Check if an item matches any priority rules
      * @param {Object} itemNode - The item node from ItemDatabase
      * @returns {Object} { isPrioritized: boolean, matches: Array }

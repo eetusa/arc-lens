@@ -19,6 +19,11 @@ export const styles = {
     color: theme.textMain, fontFamily: '"Segoe UI", Roboto, Helvetica, sans-serif',
     alignItems: 'center', justifyContent: 'center', overflow: 'hidden'
   },
+  mainContentWrapper: {
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'stretch'
+  },
   resultCard: {
     display: 'flex',
     width: '700px',
@@ -715,5 +720,84 @@ export const styles = {
     backgroundColor: 'rgba(156, 39, 176, 0.2)',
     padding: '1px 4px',
     borderRadius: '2px'
+  },
+  // --- RECYCLE TABS STYLES ---
+  recycleTabsContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '4px',
+    marginLeft: '-1px', // Overlap with card border
+    paddingTop: '20px'
+  },
+  recycleTab: (index) => ({
+    position: 'relative',
+    width: '60px',
+    minHeight: '60px',
+    backgroundColor: theme.cardBg,
+    border: `1px solid ${theme.border}`,
+    borderLeft: 'none',
+    borderTopRightRadius: '8px',
+    borderBottomRightRadius: '8px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '6px',
+    boxSizing: 'border-box',
+    transition: 'all 0.2s ease',
+    cursor: 'default',
+    boxShadow: '4px 2px 10px rgba(0,0,0,0.3)'
+  }),
+  recycleTabInner: {
+    position: 'relative',
+    width: '44px',
+    height: '44px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  recycleTabImage: {
+    maxWidth: '100%',
+    maxHeight: '100%',
+    objectFit: 'contain'
+  },
+  recycleTabPlaceholder: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    border: `1px dashed ${theme.border}`,
+    borderRadius: '4px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  recycleTabPlaceholderText: {
+    fontSize: '10px',
+    fontWeight: 'bold',
+    color: theme.textDim,
+    textAlign: 'center'
+  },
+  recycleTabQuantity: {
+    position: 'absolute',
+    bottom: '-2px',
+    right: '-2px',
+    backgroundColor: theme.accent,
+    color: '#fff',
+    fontSize: '9px',
+    fontWeight: 'bold',
+    padding: '1px 4px',
+    borderRadius: '3px',
+    minWidth: '16px',
+    textAlign: 'center'
+  },
+  recycleTabName: {
+    fontSize: '8px',
+    color: theme.textDim,
+    textAlign: 'center',
+    marginTop: '2px',
+    maxWidth: '56px',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap'
   }
 };

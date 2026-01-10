@@ -157,7 +157,20 @@ export class AdvisorEngine {
         analysis.setPrioritization(priorityResult);
 
         // ---------------------------------------------------------
-        // 7. Formulate Final Verdict
+        // 7. Fill Recycle Outputs
+        // ---------------------------------------------------------
+        const yieldsFromRecycle = node.yieldsFromRecycle || {};
+        for (const [outputId, amount] of Object.entries(yieldsFromRecycle)) {
+            const outputNode = this.db.items[outputId];
+            if (outputNode) {
+                const rarity = outputNode.rarity || 'common';
+                const isPrioritized = this.priorityTracker.isDirectlyPrioritized(outputId);
+                analysis.addRecycleOutput(outputId, outputNode.name, amount, rarity, isPrioritized);
+            }
+        }
+
+        // ---------------------------------------------------------
+        // 8. Formulate Final Verdict
         // ---------------------------------------------------------
         
         if (analysis.demand.totalRequired > 0) {
