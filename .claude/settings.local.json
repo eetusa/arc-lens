@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(npm run dev:*)",
-      "Bash(ping:*)"
+      "Bash(ping:*)",
+      "Bash(npm run build:*)"
     ]
   }
 }

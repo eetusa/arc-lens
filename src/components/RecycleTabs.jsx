@@ -55,13 +55,35 @@ const RecycleTabs = ({ outputs = [] }) => {
         const backgroundColor = getBackgroundColor(output);
         const borderColor = getBorderColor(output);
 
+        const tooltipText = `${output.name}${output.isPrioritized ? ' ★' : ''}`;
+
         return (
           <div
             key={output.id}
             style={styles.recycleTab(index)}
-            title={`${output.name}${output.isPrioritized ? ' (Prioritized)' : ''}`}
+            className="recycle-tab"
           >
-            <div style={styles.recycleTabInner}>
+            {/* Instant tooltip */}
+            <div style={{
+              position: 'absolute',
+              right: '100%',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              marginRight: '8px',
+              backgroundColor: 'rgba(0, 0, 0, 0.9)',
+              color: '#fff',
+              padding: '4px 8px',
+              borderRadius: '4px',
+              fontSize: '11px',
+              whiteSpace: 'nowrap',
+              opacity: 0,
+              pointerEvents: 'none',
+              transition: 'opacity 0.1s',
+              zIndex: 100
+            }} className="recycle-tooltip">
+              {tooltipText}
+            </div>
+            <div style={{...styles.recycleTabInner, pointerEvents: 'none'}}>
               {/* Colored background square */}
               <div style={{
                 position: 'absolute',
@@ -99,14 +121,15 @@ const RecycleTabs = ({ outputs = [] }) => {
                 right: '4px',
                 color: '#FFD700',
                 fontSize: '11px',
-                textShadow: '0 0 4px rgba(255, 215, 0, 0.9), 0 0 8px rgba(255, 165, 0, 0.6)'
+                textShadow: '0 0 4px rgba(255, 215, 0, 0.9), 0 0 8px rgba(255, 165, 0, 0.6)',
+                pointerEvents: 'none'
               }}>
                 ★
               </div>
             )}
             {/* Show name below for items without images */}
             {!hasImage && (
-              <div style={styles.recycleTabName}>
+              <div style={{...styles.recycleTabName, pointerEvents: 'none'}}>
                 {output.name}
               </div>
             )}
