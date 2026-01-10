@@ -39,8 +39,19 @@ export class AdvisorAnalysis {
 
         // 5. Utility (Crafting)
         this.utility = {
-            craftingOptions: [] 
+            craftingOptions: []
         };
+
+        // 6. Prioritization
+        this.prioritization = {
+            isPrioritized: false,
+            matches: []
+        };
+    }
+
+    setPrioritization(priorityResult) {
+        this.prioritization.isPrioritized = priorityResult.isPrioritized;
+        this.prioritization.matches = priorityResult.matches || [];
     }
 
     setVerdict(action, amount = 0, reason = "") {

@@ -2,15 +2,27 @@ import React from 'react';
 import { STATIONS_DATA } from '../logic/constants';
 import { styles, theme } from '../styles';
 import QuestSelector from './QuestSelector';
+import PrioritySelector from './PrioritySelector';
 
-const StationPanel = ({ 
-  levels, 
-  onStationUpdate, 
-  activeQuests, 
-  allQuests, 
-  onQuestAdd, 
-  onQuestRemove, 
-  onClose 
+const StationPanel = ({
+  levels,
+  onStationUpdate,
+  activeQuests,
+  allQuests,
+  onQuestAdd,
+  onQuestRemove,
+  // Priority props
+  userPriorities,
+  devPriorities,
+  allItems,
+  onPriorityAdd,
+  onPriorityRemove,
+  onPriorityUpdate,
+  devPrioritiesEnabled,
+  userPrioritiesEnabled,
+  onDevPrioritiesToggle,
+  onUserPrioritiesToggle,
+  onClose
 }) => {
   return (
     <div style={styles.sidebar(true)}>
@@ -46,11 +58,24 @@ const StationPanel = ({
            );
         })}
 
-        <QuestSelector 
+        <QuestSelector
           activeQuests={activeQuests}
-          allQuests={allQuests} 
+          allQuests={allQuests}
           onAdd={onQuestAdd}
           onRemove={onQuestRemove}
+        />
+
+        <PrioritySelector
+          userPriorities={userPriorities || []}
+          devPriorities={devPriorities || []}
+          allItems={allItems || []}
+          onAdd={onPriorityAdd}
+          onRemove={onPriorityRemove}
+          onUpdate={onPriorityUpdate}
+          devEnabled={devPrioritiesEnabled}
+          userEnabled={userPrioritiesEnabled}
+          onDevToggle={onDevPrioritiesToggle}
+          onUserToggle={onUserPrioritiesToggle}
         />
       </div>
     </div>

@@ -270,5 +270,325 @@ export const styles = {
     fontWeight: 'bold',
     fontSize: '12px',
     lineHeight: '1'
+  },
+  // --- PRIORITY STYLES ---
+  priorityContainer: {
+    marginTop: '20px',
+    borderTop: `1px solid ${theme.border}`,
+    paddingTop: '15px'
+  },
+  priorityToggles: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
+    marginBottom: '12px'
+  },
+  priorityToggleLabel: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    cursor: 'pointer'
+  },
+  priorityToggleText: {
+    fontSize: '11px',
+    color: theme.textDim
+  },
+  priorityCheckbox: {
+    width: '14px',
+    height: '14px',
+    accentColor: theme.accent,
+    cursor: 'pointer'
+  },
+  priorityAddSection: {
+    marginBottom: '12px'
+  },
+  priorityOptions: {
+    display: 'flex',
+    gap: '12px',
+    marginTop: '8px'
+  },
+  priorityOptionLabel: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+    cursor: 'pointer'
+  },
+  priorityOptionText: {
+    fontSize: '10px',
+    color: theme.textDim
+  },
+  priorityList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
+    marginTop: '12px'
+  },
+  priorityItem: {
+    backgroundColor: 'rgba(156, 39, 176, 0.1)',
+    border: '1px solid #9c27b0',
+    borderRadius: '6px',
+    padding: '8px 10px'
+  },
+  priorityItemHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '4px'
+  },
+  priorityItemName: {
+    fontSize: '11px',
+    fontWeight: 'bold',
+    color: theme.textMain
+  },
+  priorityStar: {
+    color: '#9c27b0',
+    marginRight: '4px'
+  },
+  priorityItemRemove: {
+    cursor: 'pointer',
+    color: '#9c27b0',
+    fontWeight: 'bold',
+    fontSize: '14px',
+    lineHeight: '1'
+  },
+  priorityItemFlags: {
+    display: 'flex',
+    gap: '6px'
+  },
+  priorityFlag: (active) => ({
+    fontSize: '9px',
+    padding: '1px 4px',
+    borderRadius: '2px',
+    backgroundColor: active ? 'rgba(156, 39, 176, 0.3)' : 'transparent',
+    color: active ? '#ce93d8' : theme.textDim,
+    border: `1px solid ${active ? '#9c27b0' : theme.border}`
+  }),
+  // --- PRIORITY BADGE IN ADVISOR CARD ---
+  priorityBadge: {
+    marginTop: '12px',
+    padding: '10px',
+    backgroundColor: 'rgba(156, 39, 176, 0.15)',
+    border: '1px solid #9c27b0',
+    borderRadius: '6px',
+    boxShadow: '0 0 10px rgba(156, 39, 176, 0.2)'
+  },
+  priorityBadgeHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    marginBottom: '6px'
+  },
+  priorityBadgeIcon: {
+    color: '#ce93d8',
+    fontSize: '14px'
+  },
+  priorityBadgeTitle: {
+    fontSize: '11px',
+    fontWeight: 'bold',
+    color: '#ce93d8',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px'
+  },
+  priorityBadgeList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '4px'
+  },
+  priorityBadgeItem: {
+    fontSize: '10px',
+    color: theme.textDim,
+    paddingLeft: '8px'
+  },
+  priorityMatchType: {
+    color: '#9c27b0',
+    fontStyle: 'italic'
+  },
+  // --- PRIORITY MODAL STYLES ---
+  modalBackdrop: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100vw',
+    height: '100vh',
+    backgroundColor: 'rgba(0, 0, 0, 0.85)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 200
+  },
+  priorityModalContainer: {
+    width: '450px',
+    maxHeight: '70vh',
+    backgroundColor: theme.cardBg,
+    border: '1px solid #9c27b0',
+    borderRadius: '12px',
+    boxShadow: '0 0 30px rgba(156, 39, 176, 0.3)',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden'
+  },
+  priorityModalHeader: {
+    padding: '16px 20px',
+    borderBottom: '1px solid #9c27b0',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'rgba(156, 39, 176, 0.1)'
+  },
+  priorityModalTitle: {
+    fontSize: '16px',
+    fontWeight: 'bold',
+    color: '#ce93d8',
+    margin: 0,
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px'
+  },
+  priorityModalClose: {
+    width: '28px',
+    height: '28px',
+    minWidth: '28px',
+    minHeight: '28px',
+    padding: 0,
+    boxSizing: 'border-box',
+    borderRadius: '50%',
+    backgroundColor: 'transparent',
+    border: '1px solid #9c27b0',
+    color: '#ce93d8',
+    fontSize: '18px',
+    lineHeight: 1,
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  priorityModalContent: {
+    padding: '16px',
+    overflowY: 'auto',
+    flex: 1
+  },
+  priorityModalAddSection: {
+    marginBottom: '16px',
+    paddingBottom: '16px',
+    borderBottom: `1px solid ${theme.border}`
+  },
+  priorityModalAddOptions: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    marginTop: '10px',
+    flexWrap: 'wrap'
+  },
+  priorityModalAddLabel: {
+    fontSize: '11px',
+    color: theme.textDim
+  },
+  priorityModalEmpty: {
+    textAlign: 'center',
+    color: theme.textDim,
+    fontSize: '13px',
+    padding: '30px 20px'
+  },
+  priorityModalList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '10px'
+  },
+  priorityModalItem: {
+    backgroundColor: 'rgba(156, 39, 176, 0.08)',
+    border: '1px solid rgba(156, 39, 176, 0.3)',
+    borderRadius: '8px',
+    padding: '12px'
+  },
+  priorityModalItemHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '8px'
+  },
+  priorityModalItemName: {
+    fontSize: '13px',
+    fontWeight: 'bold',
+    color: theme.textMain
+  },
+  priorityModalItemRemove: {
+    cursor: 'pointer',
+    color: '#9c27b0',
+    fontWeight: 'bold',
+    fontSize: '16px',
+    lineHeight: 1,
+    padding: '2px 6px',
+    borderRadius: '4px',
+    transition: 'background-color 0.2s'
+  },
+  priorityModalItemFlags: {
+    display: 'flex',
+    gap: '16px'
+  },
+  priorityModalFlagLabel: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    cursor: 'pointer'
+  },
+  priorityModalFlagText: (active) => ({
+    fontSize: '11px',
+    color: active ? '#ce93d8' : theme.textDim
+  }),
+  // View/Edit buttons for sidebar
+  priorityRowWithButton: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '8px'
+  },
+  priorityViewButton: {
+    fontSize: '10px',
+    padding: '3px 8px',
+    backgroundColor: 'transparent',
+    border: '1px solid #9c27b0',
+    color: '#ce93d8',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    transition: 'all 0.2s'
+  },
+  // Quick glance list in sidebar
+  priorityQuickList: {
+    marginTop: '8px',
+    marginLeft: '4px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '4px'
+  },
+  priorityQuickItem: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    fontSize: '11px',
+    padding: '4px 8px',
+    backgroundColor: 'rgba(156, 39, 176, 0.08)',
+    borderRadius: '4px',
+    borderLeft: '2px solid #9c27b0'
+  },
+  priorityQuickName: {
+    color: '#ce93d8',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    flex: 1,
+    marginRight: '8px'
+  },
+  priorityQuickFlags: {
+    display: 'flex',
+    gap: '3px',
+    flexShrink: 0
+  },
+  priorityQuickFlag: {
+    fontSize: '9px',
+    fontWeight: 'bold',
+    color: '#9c27b0',
+    backgroundColor: 'rgba(156, 39, 176, 0.2)',
+    padding: '1px 4px',
+    borderRadius: '2px'
   }
 };

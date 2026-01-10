@@ -12,14 +12,29 @@ function App() {
   const [showDebug, setShowDebug] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [allQuestNames, setAllQuestNames] = useState([]);
+  const [allItems, setAllItems] = useState([]);
+  const [devPriorities, setDevPriorities] = useState([]);
 
   // --- HOOKS ---
-  const { 
-    stationLevels, 
-    setStationLevels, 
-    activeQuests, 
-    setActiveQuests 
+  const {
+    stationLevels,
+    setStationLevels,
+    activeQuests,
+    setActiveQuests,
+    userPriorities,
+    setUserPriorities,
+    devPrioritiesEnabled,
+    setDevPrioritiesEnabled,
+    userPrioritiesEnabled,
+    setUserPrioritiesEnabled
   } = usePersistentState();
+
+  // Priority settings object for vision system
+  const prioritySettings = {
+    devPrioritiesEnabled,
+    userPrioritiesEnabled,
+    userPriorities
+  };
 
   // --- VISION SYSTEM HOOK ---
   const {
@@ -30,20 +45,39 @@ function App() {
     menuDebugRef,
     isStreaming,
     workerStatus,
-    currentAnalysis, // <--- CHANGED: Using object instead of HTML string
+    currentAnalysis,
     hasData,
     isAnalyzing,
     debugRawText,
     isInventoryOpen,
     startCapture
-  } = useVisionSystem(stationLevels, activeQuests);
+  } = useVisionSystem(stationLevels, activeQuests, prioritySettings);
 
   // --- INITIAL DATA FETCH ---
   useEffect(() => {
+    // Load quest names
     fetch('/quests.json')
       .then(res => res.json())
       .then(data => setAllQuestNames(Object.keys(data)))
       .catch(e => console.error("Quest load error", e));
+
+    // Load item names for priority selector
+    fetch('/items_db.json')
+      .then(res => res.json())
+      .then(data => {
+        const items = Object.values(data).map(item => ({
+          id: item.id,
+          name: item.name
+        }));
+        setAllItems(items);
+      })
+      .catch(e => console.error("Items load error", e));
+
+    // Load developer priorities
+    fetch('/priorities.json')
+      .then(res => res.json())
+      .then(data => setDevPriorities(data.priorities || []))
+      .catch(e => console.error("Priorities load error", e));
   }, []);
 
   // --- HANDLERS ---
@@ -55,6 +89,21 @@ function App() {
   };
   const handleQuestRemove = (quest) => {
     setActiveQuests(prev => prev.filter(q => q !== quest));
+  };
+
+  // Priority handlers
+  const handlePriorityAdd = (priority) => {
+    if (!userPriorities.find(p => p.itemId === priority.itemId)) {
+      setUserPriorities(prev => [...prev, priority]);
+    }
+  };
+  const handlePriorityRemove = (itemId) => {
+    setUserPriorities(prev => prev.filter(p => p.itemId !== itemId));
+  };
+  const handlePriorityUpdate = (updatedPriority) => {
+    setUserPriorities(prev =>
+      prev.map(p => p.itemId === updatedPriority.itemId ? updatedPriority : p)
+    );
   };
 
   // --- RENDER ---
@@ -91,13 +140,24 @@ function App() {
       {/* SIDEBAR (Modular Component) */}
       <div style={styles.sidebar(sidebarOpen)}>
         {sidebarOpen && (
-          <StationPanel 
-            levels={stationLevels} 
+          <StationPanel
+            levels={stationLevels}
             onStationUpdate={handleStationUpdate}
             activeQuests={activeQuests}
             allQuests={allQuestNames}
             onQuestAdd={handleQuestAdd}
             onQuestRemove={handleQuestRemove}
+            // Priority props
+            userPriorities={userPriorities}
+            devPriorities={devPriorities}
+            allItems={allItems}
+            onPriorityAdd={handlePriorityAdd}
+            onPriorityRemove={handlePriorityRemove}
+            onPriorityUpdate={handlePriorityUpdate}
+            devPrioritiesEnabled={devPrioritiesEnabled}
+            userPrioritiesEnabled={userPrioritiesEnabled}
+            onDevPrioritiesToggle={setDevPrioritiesEnabled}
+            onUserPrioritiesToggle={setUserPrioritiesEnabled}
             onClose={() => setSidebarOpen(false)}
           />
         )}
