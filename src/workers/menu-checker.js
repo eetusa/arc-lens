@@ -6,7 +6,7 @@ export class MenuChecker {
         this.ready = false;
         
         // --- CONFIG ---
-        this.MATCH_THRESHOLD = 0.45; 
+        this.MATCH_THRESHOLD = 0.30; 
         this.PILL_ASPECT_RATIO_MIN = 2.0;
         this.PILL_WIDTH_MIN = 60; 
         this.PADDING = 6; 
@@ -126,7 +126,12 @@ export class MenuChecker {
             }
 
             if (!bestPillRect) {
+                if (this.debug) console.log('No pill found');
                 return this.finalize(cv, false, 0, this.debugMat);
+            }
+
+            if (this.debug) {
+                console.log(`Pill found: ${bestPillRect.width}x${bestPillRect.height}, aspect: ${(bestPillRect.width/bestPillRect.height).toFixed(2)}`);
             }
 
             // --- 6. MATCHING LOGIC ---
@@ -156,43 +161,86 @@ export class MenuChecker {
             let pillRect = new cv.Rect(pX, pY, pW, pH);
             pillMat = this.maskedGray.roi(pillRect);
 
-            // Resize/Scale Logic
+            // Hybrid Resize/Scale Logic:
+            // - Small size difference: upscale pill (preserves template quality)
+            // - Large size difference: scale template down (avoids excessive distortion)
             let scaleX = 1.0;
             let scaleY = 1.0;
             let matToMatch = pillMat;
+            let templateToUse = this.templateMat;
 
-            if (pillMat.cols < this.templateMat.cols || pillMat.rows < this.templateMat.rows) {
-                 let newW = Math.max(pillMat.cols, this.templateMat.cols);
-                 let newH = Math.max(pillMat.rows, this.templateMat.rows);
-                 
-                 scaleX = pillMat.cols / newW;
-                 scaleY = pillMat.rows / newH;
+            const pillTooSmall = pillMat.cols < this.templateMat.cols || pillMat.rows < this.templateMat.rows;
 
-                 this.resizedPill.create(newH, newW, cv.CV_8UC1);
-                 cv.resize(pillMat, this.resizedPill, new cv.Size(newW, newH), 0, 0, cv.INTER_LINEAR);
-                 matToMatch = this.resizedPill;
+            if (pillTooSmall) {
+                // Calculate how much upscaling would be needed
+                const upscaleW = this.templateMat.cols / pillMat.cols;
+                const upscaleH = this.templateMat.rows / pillMat.rows;
+                const maxUpscale = Math.max(upscaleW, upscaleH);
+
+                if (maxUpscale <= 1.15) {
+                    // Small difference (<15%): upscale pill to template size (original behavior)
+                    let newW = Math.max(pillMat.cols, this.templateMat.cols);
+                    let newH = Math.max(pillMat.rows, this.templateMat.rows);
+
+                    scaleX = pillMat.cols / newW;
+                    scaleY = pillMat.rows / newH;
+
+                    this.resizedPill.create(newH, newW, cv.CV_8UC1);
+                    cv.resize(pillMat, this.resizedPill, new cv.Size(newW, newH), 0, 0, cv.INTER_LINEAR);
+                    matToMatch = this.resizedPill;
+
+                    if (this.debug) {
+                        console.log(`Upscaled pill: ${newW}x${newH} (factor: ${maxUpscale.toFixed(2)})`);
+                    }
+                } else {
+                    // Large difference (>15%): scale template down to fit in pill
+                    const maxTemplateW = pillMat.cols - 4;
+                    const maxTemplateH = pillMat.rows - 4;
+                    const scaleW = maxTemplateW / this.templateMat.cols;
+                    const scaleH = maxTemplateH / this.templateMat.rows;
+                    const scale = Math.min(scaleW, scaleH);
+
+                    const newW = Math.round(this.templateMat.cols * scale);
+                    const newH = Math.round(this.templateMat.rows * scale);
+
+                    if (!this.scaledTemplate) {
+                        this.scaledTemplate = new cv.Mat();
+                    }
+                    this.scaledTemplate.create(newH, newW, cv.CV_8UC1);
+                    cv.resize(this.templateMat, this.scaledTemplate,
+                             new cv.Size(newW, newH), 0, 0, cv.INTER_LINEAR);
+                    templateToUse = this.scaledTemplate;
+
+                    if (this.debug) {
+                        console.log(`Scaled template down: ${newW}x${newH} (scale: ${scale.toFixed(2)})`);
+                    }
+                }
             }
 
             cv.threshold(matToMatch, matToMatch, this.BINARY_THRESHOLD, 255, cv.THRESH_BINARY);
 
-            let resultCols = matToMatch.cols - this.templateMat.cols + 1;
-            let resultRows = matToMatch.rows - this.templateMat.rows + 1;
+            if (this.debug) {
+                console.log(`matToMatch: ${matToMatch.cols}x${matToMatch.rows}, templateToUse: ${templateToUse.cols}x${templateToUse.rows}`);
+            }
+
+            let resultCols = matToMatch.cols - templateToUse.cols + 1;
+            let resultRows = matToMatch.rows - templateToUse.rows + 1;
             this.resultMat.create(resultRows, resultCols, cv.CV_32FC1);
-            
-            cv.matchTemplate(matToMatch, this.templateMat, this.resultMat, cv.TM_CCOEFF_NORMED);
-            
+
+            cv.matchTemplate(matToMatch, templateToUse, this.resultMat, cv.TM_CCOEFF_NORMED);
+
             let matchVal = cv.minMaxLoc(this.resultMat).maxVal;
             let isMatch = (matchVal >= this.MATCH_THRESHOLD);
 
             if (isMatch) {
                 // Draw Green Match Box
                 let maxLoc = cv.minMaxLoc(this.resultMat).maxLoc;
-                let relativeX = maxLoc.x * scaleX; 
+                let relativeX = maxLoc.x * scaleX;
                 let relativeY = maxLoc.y * scaleY;
                 let drawX = pX + relativeX;
                 let drawY = pY + relativeY;
-                let drawW = this.templateMat.cols * scaleX;
-                let drawH = this.templateMat.rows * scaleY;
+                let drawW = templateToUse.cols * scaleX;
+                let drawH = templateToUse.rows * scaleY;
 
                 cv.rectangle(this.debugMat, 
                     new cv.Point(drawX, drawY), 
