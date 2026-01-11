@@ -21,7 +21,7 @@ const PrioritySelector = ({
     <div style={styles.priorityContainer}>
       <span style={styles.sectionTitle}>PRIORITIES</span>
 
-      {/* Suggested Priorities Row */}
+      {/* Default Priorities Row */}
       <div style={styles.priorityRowWithButton}>
         <label style={styles.priorityToggleLabel}>
           <input
@@ -30,7 +30,7 @@ const PrioritySelector = ({
             onChange={(e) => onDevToggle(e.target.checked)}
             style={styles.priorityCheckbox}
           />
-          <span style={styles.priorityToggleText}>Suggested Priorities</span>
+          <span style={styles.priorityToggleText}>Default Priorities</span>
         </label>
         <button
           style={styles.priorityViewButton}
@@ -82,7 +82,7 @@ const PrioritySelector = ({
         </div>
       )}
 
-      {/* Suggested Priorities Modal (read-only) */}
+      {/* Default Priorities Modal (read-only) */}
       <PriorityModal
         isOpen={showDevModal}
         onClose={() => setShowDevModal(false)}

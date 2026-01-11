@@ -2,10 +2,17 @@
   "version": 1,
   "priorities": [
     {
-      "itemId": "trigger_nade",
-      "itemName": "Trigger 'Nade",
+      "itemId": "processor",
+      "itemName": "Processor",
       "direct": true,
-      "craftTo": true,
+      "craftTo": false,
+      "recycleTo": true
+    },
+    {
+      "itemId": "battery",
+      "itemName": "Battery",
+      "direct": true,
+      "craftTo": false,
       "recycleTo": true
     }
   ]
