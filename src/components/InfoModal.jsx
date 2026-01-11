@@ -90,6 +90,30 @@ function InfoModal({ onClose }) {
               </li>
             </ul>
           </div>
+
+          {/* Privacy */}
+          <div style={styles.modalSection}>
+            <span style={styles.modalSectionTitle}>Privacy</span>
+            <p style={{ margin: 0, color: '#999' }}>
+              ARC Lens runs entirely in your browser. Your screen capture is processed locally
+              and never leaves your device. No data is collected, stored, or sent to any server.
+              Your settings are saved only in your browser's local storage.
+            </p>
+          </div>
+
+          {/* Disclaimer */}
+          <div style={{
+            marginTop: '20px',
+            paddingTop: '16px',
+            borderTop: '1px solid #333',
+            fontSize: '11px',
+            color: '#666',
+            lineHeight: '1.5'
+          }}>
+            <strong style={{ color: '#888' }}>Disclaimer:</strong> ARC Lens is an independent fan-made project created by the community.
+            It is not affiliated with, endorsed by, sponsored by, or officially connected to Embark Studios AB or the ARC Raiders game.
+            All game-related content, names, and assets belong to their respective owners.
+          </div>
         </div>
       </div>
     </div>

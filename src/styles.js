@@ -25,6 +25,19 @@ export const styles = {
     userSelect: 'none',
     zIndex: 5
   },
+  disclaimer: {
+    position: 'absolute',
+    bottom: '16px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    fontSize: '10px',
+    color: 'rgba(255, 255, 255, 0.35)',
+    textAlign: 'center',
+    maxWidth: '500px',
+    lineHeight: '1.4',
+    userSelect: 'none',
+    zIndex: 5
+  },
   container: {
     position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
     margin: 0, padding: 0, boxSizing: 'border-box',
