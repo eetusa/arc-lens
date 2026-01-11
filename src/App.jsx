@@ -283,6 +283,11 @@ function App() {
       {/* INFO MODAL */}
       {showInfo && <InfoModal onClose={() => setShowInfo(false)} />}
 
+      {/* DISCLAIMER */}
+      <div style={styles.disclaimer}>
+        ARC Lens is an independent fan project and is not affiliated with, endorsed by, or connected to Embark Studios or ARC Raiders.
+      </div>
+
     </div>
   );
 }

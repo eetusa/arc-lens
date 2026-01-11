@@ -90,6 +90,20 @@ function InfoModal({ onClose }) {
               </li>
             </ul>
           </div>
+
+          {/* Disclaimer */}
+          <div style={{
+            marginTop: '20px',
+            paddingTop: '16px',
+            borderTop: '1px solid #333',
+            fontSize: '11px',
+            color: '#666',
+            lineHeight: '1.5'
+          }}>
+            <strong style={{ color: '#888' }}>Disclaimer:</strong> ARC Lens is an independent fan-made project created by the community.
+            It is not affiliated with, endorsed by, sponsored by, or officially connected to Embark Studios AB or the ARC Raiders game.
+            All game-related content, names, and assets belong to their respective owners.
+          </div>
         </div>
       </div>
     </div>
