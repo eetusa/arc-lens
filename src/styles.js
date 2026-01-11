@@ -12,6 +12,19 @@ export const theme = {
 
 
 export const styles = {
+  // --- BRANDING ---
+  brandMark: {
+    position: 'absolute',
+    top: '16px',
+    left: '20px',
+    fontSize: '14px',
+    fontWeight: '600',
+    letterSpacing: '2px',
+    color: 'rgba(255, 255, 255, 0.4)',
+    textTransform: 'uppercase',
+    userSelect: 'none',
+    zIndex: 5
+  },
   container: {
     position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
     margin: 0, padding: 0, boxSizing: 'border-box',
