@@ -71,3 +71,8 @@ button:focus-visible {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* Instant tooltip for recycle tabs */
+.recycle-tab:hover .recycle-tooltip {
+  opacity: 1 !important;
+}

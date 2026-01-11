@@ -47,6 +47,13 @@ export class AdvisorAnalysis {
             isPrioritized: false,
             matches: []
         };
+
+        // 7. Recycle Outputs (what this item breaks into)
+        this.recycleOutputs = [];
+    }
+
+    addRecycleOutput(id, name, amount, rarity = 'common', isPrioritized = false) {
+        this.recycleOutputs.push({ id, name, amount, rarity, isPrioritized });
     }
 
     setPrioritization(priorityResult) {

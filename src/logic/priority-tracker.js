@@ -74,6 +74,46 @@ export class PriorityTracker {
     }
 
     /**
+     * Check if an item should be highlighted in recycle output tabs
+     * This checks:
+     * 1. Direct match: item itself is prioritized with direct: true
+     * 2. Craft-to match: item crafts into a priority item with craftTo: true
+     *
+     * @param {string} itemId - The item ID to check
+     * @returns {boolean}
+     */
+    isRecycleOutputPrioritized(itemId) {
+        if (!itemId) return false;
+
+        // Get the item node to check craftsInto
+        const itemNode = this.db?.items?.[itemId];
+        const craftsInto = itemNode?.craftsInto || [];
+
+        // Get all active priorities
+        const activePriorities = [];
+        if (this.devEnabled) {
+            activePriorities.push(...this.devPriorities);
+        }
+        if (this.userEnabled) {
+            activePriorities.push(...this.userPriorities);
+        }
+
+        for (const p of activePriorities) {
+            // Direct match: item itself is the priority item
+            if (p.direct && p.itemId === itemId) {
+                return true;
+            }
+
+            // Craft-to match: this item crafts INTO the priority item
+            if (p.craftTo && craftsInto.includes(p.itemId)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Check if an item matches any priority rules
      * @param {Object} itemNode - The item node from ItemDatabase
      * @returns {Object} { isPrioritized: boolean, matches: Array }
