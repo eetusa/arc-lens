@@ -91,6 +91,16 @@ function InfoModal({ onClose }) {
             </ul>
           </div>
 
+          {/* Privacy */}
+          <div style={styles.modalSection}>
+            <span style={styles.modalSectionTitle}>Privacy</span>
+            <p style={{ margin: 0, color: '#999' }}>
+              ARC Lens runs entirely in your browser. Your screen capture is processed locally
+              and never leaves your device. No data is collected, stored, or sent to any server.
+              Your settings are saved only in your browser's local storage.
+            </p>
+          </div>
+
           {/* Disclaimer */}
           <div style={{
             marginTop: '20px',
