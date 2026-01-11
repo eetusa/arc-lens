@@ -128,7 +128,10 @@ function App() {
     backgroundRepeat: 'repeat, no-repeat, no-repeat',
     backgroundBlendMode: 'overlay, normal, normal' // Blends the noise into the image
   }}>
-      
+
+      {/* BRAND MARK */}
+      <div style={styles.brandMark}>ARC Lens</div>
+
       {/* STATUS BAR */}
       <div style={styles.statusBar}>
         <div style={styles.ledContainer}>
