@@ -121,7 +121,7 @@ function App() {
     backgroundImage: `
       ${TV_STATIC}, 
       radial-gradient(circle, rgba(60, 54, 65, 0.2) 10%, rgba(20, 27, 41, 1) 100%),
-      url('/arc_bg.png')
+      url('/arc_bg.avif')
     `,
     backgroundSize: '150px 150px, cover, cover', // Tiles the noise, covers the rest
     backgroundPosition: 'center',
