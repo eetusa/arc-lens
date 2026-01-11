@@ -1,0 +1,11 @@
+# robots.txt for ARC Lens
+# https://arclens.app
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://arclens.app/sitemap.xml
+
+# Disallow internal/development paths
+Disallow: /src/

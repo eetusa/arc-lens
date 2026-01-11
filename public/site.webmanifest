@@ -1,21 +1,26 @@
 {
   "name": "ARC Lens",
   "short_name": "ARC Lens",
-  "description": "Real-time inventory analysis and item advisor for ARC Raiders",
+  "description": "Real-time inventory analysis and item advisor for ARC Raiders. Know what to keep, sell, or recycle instantly.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#1a1a2e",
+  "background_color": "#1a1a2e",
+  "categories": ["games", "utilities"],
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "/android-chrome-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
-  ],
-  "theme_color": "#1a1a2e",
-  "background_color": "#1a1a2e",
-  "display": "standalone",
-  "start_url": "/"
+  ]
 }
