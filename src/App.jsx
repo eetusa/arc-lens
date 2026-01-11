@@ -113,10 +113,21 @@ function App() {
       prev.map(p => p.itemId === updatedPriority.itemId ? updatedPriority : p)
     );
   };
-
+  const TV_STATIC = `url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.4"/%3E%3C/svg%3E')`;
   // --- RENDER ---
   return (
-    <div style={styles.container}>
+    <div style={{
+    ...styles.container,
+    backgroundImage: `
+      ${TV_STATIC}, 
+      radial-gradient(circle, rgba(60, 54, 65, 0.2) 10%, rgba(20, 27, 41, 1) 100%),
+      url('/arc_bg.png')
+    `,
+    backgroundSize: '150px 150px, cover, cover', // Tiles the noise, covers the rest
+    backgroundPosition: 'center',
+    backgroundRepeat: 'repeat, no-repeat, no-repeat',
+    backgroundBlendMode: 'overlay, normal, normal' // Blends the noise into the image
+  }}>
       
       {/* STATUS BAR */}
       <div style={styles.statusBar}>
