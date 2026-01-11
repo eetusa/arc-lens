@@ -11,7 +11,7 @@ function InfoModal({ onClose }) {
     <div style={styles.modalBackdrop} onClick={handleBackdropClick}>
       <div style={styles.modalContainer}>
         <div style={styles.modalHeader}>
-          <h2 style={styles.modalTitle}>ARC Inventory Seer</h2>
+          <h2 style={styles.modalTitle}>ARC Lens</h2>
           <button style={styles.modalClose} onClick={onClose}>&times;</button>
         </div>
 
@@ -20,7 +20,7 @@ function InfoModal({ onClose }) {
           <div style={styles.modalSection}>
             <span style={styles.modalSectionTitle}>What is this?</span>
             <p style={{ margin: 0 }}>
-              ARC Inventory Seer is a real-time inventory advisor for ARC Raiders.
+              ARC Lens is a real-time inventory advisor for ARC Raiders.
               It analyzes items you hover over in your inventory and recommends
               whether to keep, sell, or recycle them based on your current game progress.
             </p>

@@ -1,7 +1,8 @@
 {
-  "name": "arc-inventory-seer-web",
+  "name": "arc-lens",
+  "description": "Real-time inventory analysis and item advisor for ARC Raiders",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",

@@ -1,16 +1,60 @@
-# React + Vite
+# ARC Lens
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Real-time inventory analysis and item advisor for ARC Raiders.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Real-time inventory detection** - Automatically detects when your inventory is open
+- **Item recognition** - Uses OCR to read item names from your screen
+- **Item advisor** - Provides recommendations on item value and recycling decisions
+- **Multi-resolution support** - Works across different screen resolutions (1080p, 1440p, etc.)
 
-## React Compiler
+## How It Works
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+ARC Lens uses computer vision (OpenCV.js) and OCR to analyze your screen in real-time:
 
-## Expanding the ESLint configuration
+1. Screen capture via browser's Screen Capture API
+2. Menu detection to identify when inventory is open
+3. Tooltip detection and text extraction
+4. Item matching against game database
+5. Value analysis and recommendations
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Development
+
+### Prerequisites
+
+- Node.js 18+
+- npm
+
+### Setup
+
+```bash
+npm install
+npm run dev
+```
+
+### Testing
+
+```bash
+npm test        # Watch mode
+npm run test:run  # Single run
+```
+
+### Build
+
+```bash
+npm run build
+npm run preview
+```
+
+## Tech Stack
+
+- React 19
+- Vite
+- OpenCV.js (computer vision)
+- ONNX Runtime (OCR inference)
+- Vitest (testing)
+
+## License
+
+Private - All rights reserved
