@@ -19,8 +19,9 @@ const PRIORITY_BORDER_COLOR = '#9c27b0';
  * Images are preloaded globally by imagePreloader.js on app startup
  *
  * @param {array} outputs - Array of { id, name, amount, rarity, isPrioritized } objects
+ * @param {boolean} isMobile - Whether to render in mobile layout (horizontal)
  */
-const RecycleTabs = ({ outputs = [] }) => {
+const RecycleTabs = ({ outputs = [], isMobile = false }) => {
   const [failedImages, setFailedImages] = useState(new Set());
 
   if (!outputs || outputs.length === 0) {
@@ -47,8 +48,18 @@ const RecycleTabs = ({ outputs = [] }) => {
     return 'transparent';
   };
 
+  const containerStyle = isMobile ? {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: '8px',
+    width: 'calc(100vw - 32px)',
+    maxWidth: '500px',
+    overflowX: 'auto',
+    paddingBottom: '8px'
+  } : styles.recycleTabsContainer;
+
   return (
-    <div style={styles.recycleTabsContainer}>
+    <div style={containerStyle}>
       {outputs.map((output, index) => {
         const imagePath = `/images/${output.id}.webp`;
         const hasImage = !failedImages.has(output.id);
@@ -57,32 +68,53 @@ const RecycleTabs = ({ outputs = [] }) => {
 
         const tooltipText = `${output.name}${output.isPrioritized ? ' ★' : ''}`;
 
+        const tabStyle = isMobile ? {
+          position: 'relative',
+          width: '60px',
+          minWidth: '60px',
+          height: '60px',
+          backgroundColor: styles.recycleTab(index).backgroundColor,
+          border: styles.recycleTab(index).border,
+          borderRadius: '8px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '6px',
+          boxSizing: 'border-box',
+          transition: 'all 0.2s ease',
+          cursor: 'default',
+          flexShrink: 0
+        } : styles.recycleTab(index);
+
         return (
           <div
             key={output.id}
-            style={styles.recycleTab(index)}
+            style={tabStyle}
             className="recycle-tab"
           >
-            {/* Instant tooltip */}
-            <div style={{
-              position: 'absolute',
-              right: '100%',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              marginRight: '8px',
-              backgroundColor: 'rgba(0, 0, 0, 0.9)',
-              color: '#fff',
-              padding: '4px 8px',
-              borderRadius: '4px',
-              fontSize: '11px',
-              whiteSpace: 'nowrap',
-              opacity: 0,
-              pointerEvents: 'none',
-              transition: 'opacity 0.1s',
-              zIndex: 100
-            }} className="recycle-tooltip">
-              {tooltipText}
-            </div>
+            {/* Instant tooltip - positioned differently for mobile */}
+            {!isMobile && (
+              <div style={{
+                position: 'absolute',
+                right: '100%',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                marginRight: '8px',
+                backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                color: '#fff',
+                padding: '4px 8px',
+                borderRadius: '4px',
+                fontSize: '11px',
+                whiteSpace: 'nowrap',
+                opacity: 0,
+                pointerEvents: 'none',
+                transition: 'opacity 0.1s',
+                zIndex: 100
+              }} className="recycle-tooltip">
+                {tooltipText}
+              </div>
+            )}
             <div style={{...styles.recycleTabInner, pointerEvents: 'none'}}>
               {/* Colored background square */}
               <div style={{

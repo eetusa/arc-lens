@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { styles, theme } from '../styles';
 
-const ItemSearcher = ({ allItems, onSelect }) => {
+const ItemSearcher = ({ allItems, onSelect, compact = false }) => {
   const [inputValue, setInputValue] = useState("");
   const [isFocused, setIsFocused] = useState(false);
 
@@ -38,6 +38,47 @@ const ItemSearcher = ({ allItems, onSelect }) => {
       }
     }
   };
+
+  if (compact) {
+    return (
+      <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
+        <span style={{fontSize: '11px', fontWeight: 'bold', color: theme.textMuted, textTransform: 'uppercase', letterSpacing: '0.5px'}}>
+          ITEM SEARCH
+        </span>
+        <div style={{position: 'relative'}}>
+          <input
+            style={{
+              ...styles.input,
+              borderColor: isFocused ? theme.accent : theme.border,
+              width: '100%',
+              padding: '10px 12px',
+              fontSize: '14px'
+            }}
+            placeholder="Type item name..."
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setTimeout(() => setIsFocused(false), 200)}
+            onKeyDown={handleKeyDown}
+          />
+
+          {isFocused && suggestions.length > 0 && (
+            <div style={styles.dropdown}>
+              {suggestions.map((item, idx) => (
+                <div
+                  key={item.id}
+                  style={styles.suggestionItem(idx === 0)}
+                  onClick={() => handleSelect(item)}
+                >
+                  {item.name}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={styles.questContainer}>

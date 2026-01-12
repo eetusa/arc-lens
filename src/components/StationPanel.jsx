@@ -25,6 +25,7 @@ const StationPanel = ({
   onUserPrioritiesToggle,
   // Item search props
   onItemSelect,
+  isMobile,
   onClose
 }) => {
   return (
@@ -68,10 +69,13 @@ const StationPanel = ({
           onRemove={onQuestRemove}
         />
 
-        <ItemSearcher
-          allItems={allItems}
-          onSelect={onItemSelect}
-        />
+        {/* Hide Item Search on mobile - it's on the main screen instead */}
+        {!isMobile && (
+          <ItemSearcher
+            allItems={allItems}
+            onSelect={onItemSelect}
+          />
+        )}
 
         <PrioritySelector
           userPriorities={userPriorities || []}

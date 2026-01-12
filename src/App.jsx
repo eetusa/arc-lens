@@ -6,8 +6,10 @@ import StationPanel from './components/StationPanel';
 import AdvisorCard from './components/AdvisorCard';
 import InfoModal from './components/InfoModal';
 import RecycleTabs from './components/RecycleTabs';
+import ItemSearcher from './components/ItemSearcher';
 import { usePersistentState } from './hooks/usePersistentState';
 import { useVisionSystem } from './hooks/useVisionSystem';
+import { useIsMobile } from './hooks/useIsMobile';
 import { preloadAllItemImages } from './utils/imagePreloader';
 import { AdvisorEngine } from './logic/advisor-engine';
 
@@ -26,6 +28,8 @@ function App() {
   const advisorEngineRef = useRef(null);
 
   // --- HOOKS ---
+  const isMobile = useIsMobile();
+
   const {
     stationLevels,
     setStationLevels,
@@ -182,8 +186,9 @@ function App() {
       {/* BRAND MARK */}
       <div style={styles.brandMark}>ARC Lens</div>
 
-      {/* STATUS BAR */}
-      <div style={styles.statusBar}>
+      {/* STATUS BAR - Hidden on mobile */}
+      {!isMobile && (
+        <div style={styles.statusBar}>
         <div style={styles.ledContainer}>
             <div style={styles.led(isInventoryOpen, inventoryOverride)}></div>
             <span style={styles.ledText(isInventoryOpen)}>
@@ -213,17 +218,60 @@ function App() {
             <span style={styles.toggleText}>DEBUG VIEW</span>
         </div>
       </div>
+      )}
 
-      {/* SIDEBAR TOGGLE */}
-      <div
-        style={{...styles.sidebarToggle, right: sidebarOpen ? '300px' : '0'}}
-        onClick={() => setSidebarOpen(!sidebarOpen)}
-      >
-        <span style={{color: theme.accent, fontSize: '18px'}}>{sidebarOpen ? '›' : '‹'}</span>
-      </div>
+      {/* MOBILE HAMBURGER MENU */}
+      {isMobile && !sidebarOpen && (
+        <button
+          style={{
+            position: 'absolute',
+            top: '20px',
+            right: '20px',
+            width: '40px',
+            height: '40px',
+            backgroundColor: theme.cardBg,
+            border: `1px solid ${theme.border}`,
+            borderRadius: '8px',
+            cursor: 'pointer',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '4px',
+            zIndex: 60,
+            padding: '8px'
+          }}
+          onClick={() => setSidebarOpen(true)}
+        >
+          <div style={{width: '20px', height: '2px', backgroundColor: theme.accent, borderRadius: '2px'}}></div>
+          <div style={{width: '20px', height: '2px', backgroundColor: theme.accent, borderRadius: '2px'}}></div>
+          <div style={{width: '20px', height: '2px', backgroundColor: theme.accent, borderRadius: '2px'}}></div>
+        </button>
+      )}
+
+      {/* SIDEBAR TOGGLE - Desktop only */}
+      {!isMobile && (
+        <div
+          style={{
+            ...styles.sidebarToggle,
+            right: sidebarOpen ? '300px' : '0'
+          }}
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+        >
+          <span style={{color: theme.accent, fontSize: '18px'}}>{sidebarOpen ? '›' : '‹'}</span>
+        </div>
+      )}
 
       {/* SIDEBAR (Modular Component) */}
-      <div style={styles.sidebar(sidebarOpen)}>
+      <div style={{
+        ...styles.sidebar(sidebarOpen),
+        ...(isMobile && {
+          width: '85vw',
+          right: sidebarOpen ? 0 : '-85vw',
+          borderLeft: 'none',
+          boxShadow: 'none'
+        })
+      }}>
         {sidebarOpen && (
           <StationPanel
             levels={stationLevels}
@@ -245,18 +293,52 @@ function App() {
             onUserPrioritiesToggle={setUserPrioritiesEnabled}
             // Item search props
             onItemSelect={handleItemSelect}
+            isMobile={isMobile}
             onClose={() => setSidebarOpen(false)}
           />
         )}
       </div>
 
+      {/* MOBILE ITEM SEARCH - Always visible above main container on mobile */}
+      {isMobile && (
+        <div style={{
+          width: 'calc(100vw - 32px)',
+          maxWidth: '500px',
+          marginBottom: '12px'
+        }}>
+          <ItemSearcher
+            allItems={allItems}
+            onSelect={handleItemSelect}
+            compact={true}
+          />
+        </div>
+      )}
+
       {/* MAIN CONTENT */}
-      <div style={styles.mainContentWrapper}>
-        <div style={styles.resultCard}>
-          <div style={styles.imageCol}>
-              <canvas ref={analyticsCanvasRef} style={{...styles.cropCanvas, display: hasData ? 'block' : 'none'}} />
-              {!hasData && <div style={{color: '#333', fontSize: '12px'}}>NO IMAGE</div>}
-          </div>
+      <div style={{
+        ...styles.mainContentWrapper,
+        ...(isMobile && {
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '12px'
+        })
+      }}>
+        <div style={{
+          ...styles.resultCard,
+          ...(isMobile && {
+            width: 'calc(100vw - 32px)',
+            maxWidth: '500px',
+            height: '60vh',
+            minHeight: '400px'
+          })
+        }}>
+          {/* Hide image column on mobile */}
+          {!isMobile && (
+            <div style={styles.imageCol}>
+                <canvas ref={analyticsCanvasRef} style={{...styles.cropCanvas, display: hasData ? 'block' : 'none'}} />
+                {!hasData && <div style={{color: '#333', fontSize: '12px'}}>NO IMAGE</div>}
+            </div>
+          )}
 
           <div style={styles.infoCol}>
               {isAnalyzing && (
@@ -268,17 +350,23 @@ function App() {
 
               {!isStreaming && !manualAnalysis ? (
                   <div style={styles.placeholder}>
-                      <button style={styles.button} onClick={startCapture}>SELECT WINDOW</button>
-                      <div style={{fontSize:'12px', marginTop: '16px', color: theme.textMuted}}>
-                        Or use Item Search in the sidebar
+                      {!isMobile && (
+                        <button style={styles.button} onClick={startCapture}>SELECT WINDOW</button>
+                      )}
+                      <div style={{fontSize:'12px', marginTop: isMobile ? '0' : '16px', color: theme.textMuted}}>
+                        {isMobile ? 'Search for an item above to view detailed analysis' : 'Or use Item Search in the sidebar'}
                       </div>
                   </div>
               ) : !(currentAnalysis || manualAnalysis) ? (
                   <div style={styles.placeholder}>
-                      <div style={{fontSize:'16px', color: theme.accent}}>Waiting for item...</div>
-                      <div style={{fontSize:'12px'}}>Open Inventory & Hover Item</div>
-                      <div style={{fontSize:'12px', marginTop: '8px', color: theme.textMuted}}>
-                        Or use Item Search in the sidebar
+                      {!isMobile && (
+                        <>
+                          <div style={{fontSize:'16px', color: theme.accent}}>Waiting for item...</div>
+                          <div style={{fontSize:'12px'}}>Open Inventory & Hover Item</div>
+                        </>
+                      )}
+                      <div style={{fontSize:'12px', marginTop: isMobile ? '0' : '8px', color: theme.textMuted}}>
+                        {isMobile ? 'Search for an item above to view detailed analysis' : 'Or use Item Search in the sidebar'}
                       </div>
                   </div>
               ) : (
@@ -339,7 +427,7 @@ function App() {
 
         {/* RECYCLE TABS - Shows what current item breaks into */}
         {(manualAnalysis || currentAnalysis) && (manualAnalysis || currentAnalysis).recycleOutputs && (manualAnalysis || currentAnalysis).recycleOutputs.length > 0 && (
-          <RecycleTabs outputs={(manualAnalysis || currentAnalysis).recycleOutputs} />
+          <RecycleTabs outputs={(manualAnalysis || currentAnalysis).recycleOutputs} isMobile={isMobile} />
         )}
       </div>
 
@@ -381,9 +469,11 @@ function App() {
       {showInfo && <InfoModal onClose={() => setShowInfo(false)} />}
 
       {/* DISCLAIMER */}
-      <div style={styles.disclaimer}>
-        ARC Lens is an independent fan project and is not affiliated with, endorsed by, or connected to Embark Studios or ARC Raiders.
-      </div>
+      {!isMobile && (
+        <div style={styles.disclaimer}>
+          ARC Lens is an independent fan project and is not affiliated with, endorsed by, or connected to Embark Studios or ARC Raiders.
+        </div>
+      )}
 
     </div>
   );
