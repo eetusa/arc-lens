@@ -101,6 +101,49 @@ function InfoModal({ onClose }) {
             </p>
           </div>
 
+          {/* Created By */}
+          <div style={styles.modalSection}>
+            <span style={styles.modalSectionTitle}>Created By</span>
+            <div style={{
+              display: 'flex',
+              gap: '12px',
+              alignItems: 'center',
+              color: '#a0a0a0',
+              flexWrap: 'wrap'
+            }}>
+              <span>Built by Eetu Salli</span>
+              <a
+                href="https://www.linkedin.com/in/eetu-salli-8a2160232/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  color: '#0078d4',
+                  textDecoration: 'none',
+                  transition: 'color 0.2s'
+                }}
+                onMouseEnter={(e) => e.target.style.color = '#00a9f2'}
+                onMouseLeave={(e) => e.target.style.color = '#0078d4'}
+              >
+                LinkedIn
+              </a>
+              <span style={{ color: '#444' }}>•</span>
+              <a
+                href="https://github.com/eetusa"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  color: '#0078d4',
+                  textDecoration: 'none',
+                  transition: 'color 0.2s'
+                }}
+                onMouseEnter={(e) => e.target.style.color = '#00a9f2'}
+                onMouseLeave={(e) => e.target.style.color = '#0078d4'}
+              >
+                GitHub
+              </a>
+            </div>
+          </div>
+
           {/* Disclaimer */}
           <div style={{
             marginTop: '20px',
