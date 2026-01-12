@@ -52,7 +52,7 @@ const ItemSearcher = ({ allItems, onSelect, compact = false }) => {
               borderColor: isFocused ? theme.accent : theme.border,
               width: '100%',
               padding: '10px 12px',
-              fontSize: '14px'
+              fontSize: '16px'
             }}
             placeholder="Type item name..."
             value={inputValue}

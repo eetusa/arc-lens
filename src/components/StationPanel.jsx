@@ -29,13 +29,20 @@ const StationPanel = ({
   onClose
 }) => {
   return (
-    <div style={styles.sidebar(true)}>
+    <>
       <div style={styles.sidebarHeader}>
         <span style={{fontSize: '12px', fontWeight:'bold', color: theme.textMain, letterSpacing: '1px'}}>ADVISOR CONFIG</span>
-        <button onClick={onClose} style={{background:'none', border:'none', color: theme.textDim, cursor:'pointer', fontSize:'16px'}}>×</button>
+        {!isMobile && (
+          <button onClick={onClose} style={{background:'none', border:'none', color: theme.textDim, cursor:'pointer', fontSize:'16px'}}>×</button>
+        )}
       </div>
-      
-      <div style={styles.sidebarContent}>
+
+      <div style={{
+        ...styles.sidebarContent,
+        ...(isMobile && {
+          padding: '16px 16px 16px 12px'
+        })
+      }}>
         <span style={styles.sectionTitle}>STATION LEVELS</span>
         
         {STATIONS_DATA.map((station) => {
@@ -90,7 +97,7 @@ const StationPanel = ({
           onUserToggle={onUserPrioritiesToggle}
         />
       </div>
-    </div>
+    </>
   );
 };
 
