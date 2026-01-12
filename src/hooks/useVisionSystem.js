@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import VisionWorker from '../workers/vision.worker.js?worker';
 
-export function useVisionSystem(stationLevels, activeQuests, prioritySettings = {}, inventoryOverride = false) {
+export function useVisionSystem(stationLevels, activeQuests, prioritySettings = {}, inventoryOverride = false, isMobile = false) {
   // --- REFS (Single Source of Truth for Loop) ---
   const videoRef = useRef(null);
   const miniFeedCanvasRef = useRef(null);
@@ -140,6 +140,12 @@ export function useVisionSystem(stationLevels, activeQuests, prioritySettings = 
 
   // --- INIT WORKER & LISTENER ---
   useEffect(() => {
+    // Skip worker initialization entirely on mobile devices
+    if (isMobile) {
+      setWorkerStatus("Mobile (Vision System Disabled)");
+      return;
+    }
+
     try {
       workerRef.current = new VisionWorker();
     } catch (e) {
@@ -178,7 +184,7 @@ export function useVisionSystem(stationLevels, activeQuests, prioritySettings = 
         }
       }
     };
-  }, []);
+  }, [isMobile]);
 
   // --- DATA SYNC ---
   // Merged the two useEffects into one for cleaner logic
