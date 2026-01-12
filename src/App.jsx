@@ -120,6 +120,10 @@ function App() {
   }, [currentAnalysis]);
 
   // --- HANDLERS ---
+  const handleClearManualAnalysis = () => {
+    setManualAnalysis(null);
+  };
+
   const handleStationUpdate = (name, level) => {
     setStationLevels(prev => ({ ...prev, [name]: level }));
   };
@@ -286,8 +290,47 @@ function App() {
                       minHeight: 0,
                       display: 'flex',
                       flexDirection: 'column',
-                      overflow: 'hidden'
+                      overflow: 'hidden',
+                      position: 'relative'
                   }}>
+                      {/* Dismiss button for manual analysis when not streaming */}
+                      {manualAnalysis && !isStreaming && (
+                        <button
+                          onClick={handleClearManualAnalysis}
+                          style={{
+                            position: 'absolute',
+                            top: '8px',
+                            right: '8px',
+                            width: '28px',
+                            height: '28px',
+                            borderRadius: '50%',
+                            border: `1px solid ${theme.border}`,
+                            backgroundColor: theme.cardBg,
+                            color: theme.textMuted,
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '18px',
+                            lineHeight: '1',
+                            zIndex: 100,
+                            transition: 'all 0.2s',
+                          }}
+                          onMouseEnter={(e) => {
+                            e.target.style.backgroundColor = theme.accent;
+                            e.target.style.color = '#fff';
+                            e.target.style.borderColor = theme.accent;
+                          }}
+                          onMouseLeave={(e) => {
+                            e.target.style.backgroundColor = theme.cardBg;
+                            e.target.style.color = theme.textMuted;
+                            e.target.style.borderColor = theme.border;
+                          }}
+                          title="Clear and show Select Window"
+                        >
+                          ×
+                        </button>
+                      )}
                       <AdvisorCard analysis={manualAnalysis || currentAnalysis} />
                   </div>
               )}
