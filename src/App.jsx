@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { styles, theme } from './styles';
 
 // --- IMPORTS ---
@@ -9,6 +9,7 @@ import RecycleTabs from './components/RecycleTabs';
 import { usePersistentState } from './hooks/usePersistentState';
 import { useVisionSystem } from './hooks/useVisionSystem';
 import { preloadAllItemImages } from './utils/imagePreloader';
+import { AdvisorEngine } from './logic/advisor-engine';
 
 function App() {
   // --- UI STATE ---
@@ -19,6 +20,10 @@ function App() {
   const [allQuestNames, setAllQuestNames] = useState([]);
   const [allItems, setAllItems] = useState([]);
   const [devPriorities, setDevPriorities] = useState([]);
+  const [manualAnalysis, setManualAnalysis] = useState(null);
+
+  // --- REFS ---
+  const advisorEngineRef = useRef(null);
 
   // --- HOOKS ---
   const {
@@ -60,6 +65,14 @@ function App() {
 
   // --- INITIAL DATA FETCH ---
   useEffect(() => {
+    // Initialize AdvisorEngine for manual item search
+    const initAdvisor = async () => {
+      advisorEngineRef.current = new AdvisorEngine();
+      await advisorEngineRef.current.init();
+      console.log("AdvisorEngine initialized for item search");
+    };
+    initAdvisor();
+
     // Load quest names
     fetch('/quests.json')
       .then(res => res.json())
@@ -88,6 +101,24 @@ function App() {
     preloadAllItemImages();
   }, []);
 
+  // Update AdvisorEngine when priority settings change
+  useEffect(() => {
+    if (advisorEngineRef.current) {
+      advisorEngineRef.current.updatePrioritySettings({
+        devPrioritiesEnabled,
+        userPrioritiesEnabled,
+        userPriorities
+      });
+    }
+  }, [devPrioritiesEnabled, userPrioritiesEnabled, userPriorities]);
+
+  // Clear manual analysis when OCR detects a new item
+  useEffect(() => {
+    if (currentAnalysis) {
+      setManualAnalysis(null);
+    }
+  }, [currentAnalysis]);
+
   // --- HANDLERS ---
   const handleStationUpdate = (name, level) => {
     setStationLevels(prev => ({ ...prev, [name]: level }));
@@ -97,6 +128,21 @@ function App() {
   };
   const handleQuestRemove = (quest) => {
     setActiveQuests(prev => prev.filter(q => q !== quest));
+  };
+
+  // Handle manual item search
+  const handleItemSelect = (itemName) => {
+    if (!advisorEngineRef.current) {
+      console.error("AdvisorEngine not ready");
+      return;
+    }
+
+    const analysis = advisorEngineRef.current.analyzeItem(itemName, {
+      activeQuestTitles: activeQuests,
+      stationLevels: stationLevels
+    });
+
+    setManualAnalysis(analysis);
   };
 
   // Priority handlers
@@ -193,6 +239,8 @@ function App() {
             userPrioritiesEnabled={userPrioritiesEnabled}
             onDevPrioritiesToggle={setDevPrioritiesEnabled}
             onUserPrioritiesToggle={setUserPrioritiesEnabled}
+            // Item search props
+            onItemSelect={handleItemSelect}
             onClose={() => setSidebarOpen(false)}
           />
         )}
@@ -214,14 +262,20 @@ function App() {
                   </div>
               )}
 
-              {!isStreaming ? (
+              {!isStreaming && !manualAnalysis ? (
                   <div style={styles.placeholder}>
                       <button style={styles.button} onClick={startCapture}>SELECT WINDOW</button>
+                      <div style={{fontSize:'12px', marginTop: '16px', color: theme.textMuted}}>
+                        Or use Item Search in the sidebar
+                      </div>
                   </div>
-              ) : !currentAnalysis ? (
+              ) : !(currentAnalysis || manualAnalysis) ? (
                   <div style={styles.placeholder}>
                       <div style={{fontSize:'16px', color: theme.accent}}>Waiting for item...</div>
                       <div style={{fontSize:'12px'}}>Open Inventory & Hover Item</div>
+                      <div style={{fontSize:'12px', marginTop: '8px', color: theme.textMuted}}>
+                        Or use Item Search in the sidebar
+                      </div>
                   </div>
               ) : (
                   <div style={{
@@ -234,15 +288,15 @@ function App() {
                       flexDirection: 'column',
                       overflow: 'hidden'
                   }}>
-                      <AdvisorCard analysis={currentAnalysis} />
+                      <AdvisorCard analysis={manualAnalysis || currentAnalysis} />
                   </div>
               )}
           </div>
         </div>
 
         {/* RECYCLE TABS - Shows what current item breaks into */}
-        {currentAnalysis && currentAnalysis.recycleOutputs && currentAnalysis.recycleOutputs.length > 0 && (
-          <RecycleTabs outputs={currentAnalysis.recycleOutputs} />
+        {(manualAnalysis || currentAnalysis) && (manualAnalysis || currentAnalysis).recycleOutputs && (manualAnalysis || currentAnalysis).recycleOutputs.length > 0 && (
+          <RecycleTabs outputs={(manualAnalysis || currentAnalysis).recycleOutputs} />
         )}
       </div>
 

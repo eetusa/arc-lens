@@ -2,6 +2,7 @@ import React from 'react';
 import { STATIONS_DATA } from '../logic/constants';
 import { styles, theme } from '../styles';
 import QuestSelector from './QuestSelector';
+import ItemSearcher from './ItemSearcher';
 import PrioritySelector from './PrioritySelector';
 
 const StationPanel = ({
@@ -22,6 +23,8 @@ const StationPanel = ({
   userPrioritiesEnabled,
   onDevPrioritiesToggle,
   onUserPrioritiesToggle,
+  // Item search props
+  onItemSelect,
   onClose
 }) => {
   return (
@@ -63,6 +66,11 @@ const StationPanel = ({
           allQuests={allQuests}
           onAdd={onQuestAdd}
           onRemove={onQuestRemove}
+        />
+
+        <ItemSearcher
+          allItems={allItems}
+          onSelect={onItemSelect}
         />
 
         <PrioritySelector
