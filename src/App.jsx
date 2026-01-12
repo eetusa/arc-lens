@@ -65,7 +65,7 @@ function App() {
     debugRawText,
     isInventoryOpen,
     startCapture
-  } = useVisionSystem(stationLevels, activeQuests, prioritySettings, inventoryOverride);
+  } = useVisionSystem(stationLevels, activeQuests, prioritySettings, inventoryOverride, isMobile);
 
   // --- INITIAL DATA FETCH ---
   useEffect(() => {
