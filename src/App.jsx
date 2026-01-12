@@ -215,8 +215,8 @@ function App() {
       </div>
 
       {/* SIDEBAR TOGGLE */}
-      <div 
-        style={{...styles.sidebarToggle, right: sidebarOpen ? '320px' : '0'}} 
+      <div
+        style={{...styles.sidebarToggle, right: sidebarOpen ? '300px' : '0'}}
         onClick={() => setSidebarOpen(!sidebarOpen)}
       >
         <span style={{color: theme.accent, fontSize: '18px'}}>{sidebarOpen ? '›' : '‹'}</span>

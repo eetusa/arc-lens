@@ -201,7 +201,7 @@ export const styles = {
     border: `1px solid ${theme.border}`,
     borderRight: 'none',
     borderTopLeftRadius: '6px', borderBottomLeftRadius: '6px',
-    cursor: 'pointer', zIndex: 40,
+    cursor: 'pointer', zIndex: 51,
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     boxShadow: '-2px 0 10px rgba(0,0,0,0.5)',
     transition: 'right 0.3s ease'
