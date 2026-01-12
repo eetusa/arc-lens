@@ -273,7 +273,7 @@ export const styles = {
     border: `1px solid ${theme.border}`,
     color: theme.textMain,
     padding: '8px 10px',
-    fontSize: '12px',
+    fontSize: '16px',
     borderRadius: '4px',
     outline: 'none',
     transition: 'border-color 0.2s'

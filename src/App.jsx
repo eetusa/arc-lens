@@ -220,8 +220,8 @@ function App() {
       </div>
       )}
 
-      {/* MOBILE HAMBURGER MENU */}
-      {isMobile && !sidebarOpen && (
+      {/* MOBILE HAMBURGER/CLOSE MENU */}
+      {isMobile && (
         <button
           style={{
             position: 'absolute',
@@ -241,11 +241,22 @@ function App() {
             zIndex: 60,
             padding: '8px'
           }}
-          onClick={() => setSidebarOpen(true)}
+          onClick={() => setSidebarOpen(!sidebarOpen)}
         >
-          <div style={{width: '20px', height: '2px', backgroundColor: theme.accent, borderRadius: '2px'}}></div>
-          <div style={{width: '20px', height: '2px', backgroundColor: theme.accent, borderRadius: '2px'}}></div>
-          <div style={{width: '20px', height: '2px', backgroundColor: theme.accent, borderRadius: '2px'}}></div>
+          {sidebarOpen ? (
+            <div style={{
+              fontSize: '24px',
+              color: theme.accent,
+              lineHeight: '1',
+              fontWeight: 'bold'
+            }}>×</div>
+          ) : (
+            <>
+              <div style={{width: '20px', height: '2px', backgroundColor: theme.accent, borderRadius: '2px'}}></div>
+              <div style={{width: '20px', height: '2px', backgroundColor: theme.accent, borderRadius: '2px'}}></div>
+              <div style={{width: '20px', height: '2px', backgroundColor: theme.accent, borderRadius: '2px'}}></div>
+            </>
+          )}
         </button>
       )}
 
@@ -458,7 +469,12 @@ function App() {
 
       {/* INFO BUTTON */}
       <button
-        style={styles.infoButton(isStreaming && showDebug)}
+        style={{
+          ...styles.infoButton(isStreaming && showDebug),
+          ...(isMobile && {
+            bottom: '80px'
+          })
+        }}
         onClick={() => setShowInfo(true)}
         title="About this app"
       >
