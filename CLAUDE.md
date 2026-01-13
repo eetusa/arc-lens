@@ -35,11 +35,17 @@ src/
 │   └── imagePreloader.js        # Preload item images
 ├── workers/
 │   └── visionWorker.js          # Web Worker for CV/OCR processing
-├── data/
-│   ├── itemDatabase.js          # Game item database
-│   └── advisorLogic.js          # Keep/Sell/Recycle logic
+├── logic/
+│   ├── advisor-engine.js        # Main advisor engine orchestrating analysis
+│   ├── advisor-analysis.js      # AdvisorAnalysis class (result structure)
+│   ├── item-database.js         # ItemDatabase class
+│   ├── quest-tracker.js         # QuestTracker class
+│   ├── priority-tracker.js      # PriorityTracker class (dev + user)
+│   ├── constants.js             # Action, QuestStatus enums
+│   └── string-utils.js          # String utility functions
 └── public/
     ├── *.wasm                   # ONNX Runtime WASM files
+    ├── priorities.json          # Developer-managed item priorities
     └── item-images/             # Preloaded item images
 ```
 
@@ -95,10 +101,26 @@ These headers are also set in `netlify.toml` (if it exists) or via Netlify dashb
 - Matches OCR text against item database
 - Sends results back to main thread
 
-### `src/data/advisorLogic.js`
+### `src/logic/advisor-engine.js`
+- Main orchestrator for item analysis
+- Coordinates ItemDatabase, QuestTracker, and PriorityTracker
 - Contains Keep/Sell/Recycle decision logic
 - Considers item rarity, type, station level, quest requirements
-- Uses priority system for user overrides
+- Returns AdvisorAnalysis objects with verdict and reasoning
+
+### `src/logic/advisor-analysis.js`
+- Data structure class for analysis results
+- Contains: meta (item info), verdict (action + reason), economics (prices/ratios), demand (quests/stations), utility (crafting), prioritization
+
+### `src/logic/priority-tracker.js`
+- Manages item priorities (dev + user)
+- Supports priority matching: direct, craftTo, recycleTo
+- Loads from `public/priorities.json` and localStorage
+
+### `src/logic/item-database.js`
+- ItemDatabase class managing game item data
+- Provides item lookup by ID or name
+- Used by advisor engine and priority tracker
 
 ### `src/utils/analytics.js`
 - Wrapper for Umami Analytics (privacy-focused, cookie-less)
@@ -286,7 +308,7 @@ Don't try to enable it - mobile devices can't handle the processing load.
 Git may warn about CRLF/LF conversion. This is normal for Windows development.
 
 ### 6. Item Database Updates
-When adding new items to `src/data/itemDatabase.js`, update images in `public/item-images/` and run:
+When adding new items to `src/logic/item-database.js`, update images in `public/item-images/` and run:
 ```bash
 npm run generate-manifest
 ```
@@ -297,8 +319,11 @@ ALWAYS start from master and create a new branch. Don't work on existing feature
 ## File Locations Reference
 
 - **Environment vars**: `.env` (local), Netlify dashboard (production)
-- **Item database**: `src/data/itemDatabase.js`
-- **Advisor logic**: `src/data/advisorLogic.js`
+- **Item database**: `src/logic/item-database.js`
+- **Advisor engine**: `src/logic/advisor-engine.js`
+- **Advisor analysis**: `src/logic/advisor-analysis.js`
+- **Priority tracker**: `src/logic/priority-tracker.js`
+- **Quest tracker**: `src/logic/quest-tracker.js`
 - **Vision worker**: `src/workers/visionWorker.js`
 - **Analytics**: `src/utils/analytics.js`
 - **Build config**: `vite.config.js`
