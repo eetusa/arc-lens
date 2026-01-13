@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import VisionWorker from '../workers/vision.worker.js?worker';
+import { trackSessionStart, trackSessionEnd, trackItemRecognition } from '../utils/analytics.js';
 
 export function useVisionSystem(stationLevels, activeQuests, prioritySettings = {}, inventoryOverride = false, isMobile = false) {
   // --- REFS (Single Source of Truth for Loop) ---
@@ -13,6 +14,7 @@ export function useVisionSystem(stationLevels, activeQuests, prioritySettings = 
   const offscreenRef = useRef(null);
   const scanDelayRef = useRef(1000);
   const inventoryOverrideRef = useRef(inventoryOverride);
+  const sessionStartTimeRef = useRef(null);
 
   // --- STATE ---
   const [isStreaming, setIsStreaming] = useState(false);
@@ -166,7 +168,12 @@ export function useVisionSystem(stationLevels, activeQuests, prioritySettings = 
       // CHANGED: Handle Object Update
       if (type === 'RESULT_TEXT_UPDATE') {
         // payload.analysis is the AdvisorAnalysis object
-        if (payload.analysis) setCurrentAnalysis(payload.analysis);
+        if (payload.analysis) {
+          setCurrentAnalysis(payload.analysis);
+
+          // Track item recognition event
+          trackItemRecognition(payload.analysis);
+        }
       }
 
       if (type === 'RESULT') {
@@ -223,11 +230,15 @@ export function useVisionSystem(stationLevels, activeQuests, prioritySettings = 
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         videoRef.current.play();
-        
+
         setIsStreaming(true);
         isLooping.current = true;
         setWorkerStatus("Scanning...");
-        
+
+        // Track session start
+        sessionStartTimeRef.current = Date.now();
+        trackSessionStart();
+
         requestAnimationFrame(captureSingleFrame);
       }
     } catch (err) { 
@@ -240,7 +251,13 @@ export function useVisionSystem(stationLevels, activeQuests, prioritySettings = 
   const stopCapture = () => {
     // 1. Stop the loop
     isLooping.current = false;
-    
+
+    // Track session end before clearing state
+    if (sessionStartTimeRef.current) {
+      trackSessionEnd(sessionStartTimeRef.current);
+      sessionStartTimeRef.current = null;
+    }
+
     // 2. Clear video source
     if (videoRef.current) {
       videoRef.current.srcObject = null;

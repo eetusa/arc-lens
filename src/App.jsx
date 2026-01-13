@@ -12,6 +12,7 @@ import { useVisionSystem } from './hooks/useVisionSystem';
 import { useIsMobile } from './hooks/useIsMobile';
 import { preloadAllItemImages } from './utils/imagePreloader';
 import { AdvisorEngine } from './logic/advisor-engine';
+import { trackManualSearch } from './utils/analytics';
 
 function App() {
   // --- UI STATE ---
@@ -151,6 +152,9 @@ function App() {
     });
 
     setManualAnalysis(analysis);
+
+    // Track manual search event
+    trackManualSearch(itemName);
   };
 
   // Priority handlers
