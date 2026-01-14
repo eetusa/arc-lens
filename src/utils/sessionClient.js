@@ -12,7 +12,11 @@ export class SessionClient {
   connect(sessionId, serverHost) {
     // Use environment variable or fallback to parameter
     // PartyKit expects just the host (e.g., "my-party.username.partykit.dev")
-    const host = serverHost || import.meta.env.VITE_PARTYKIT_HOST || 'localhost:1999';
+    const host = serverHost || import.meta.env.VITE_PARTYKIT_HOST;
+
+    if (!host) {
+      throw new Error('VITE_PARTYKIT_HOST environment variable is not set');
+    }
 
     if (this.socket?.readyState === WebSocket.OPEN) return;
 
