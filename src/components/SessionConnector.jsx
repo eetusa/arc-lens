@@ -8,51 +8,76 @@ function SessionConnector({ onConnect, onCancel }) {
   const [error, setError] = useState('');
   const scannerRef = useRef(null);
 
-  // Cleanup scanner on unmount
+  // Initialize scanner when mode changes to 'scan'
   useEffect(() => {
+    if (mode !== 'scan') return;
+
+    const initScanner = async () => {
+      setIsScanning(true);
+      setError('');
+
+      // Wait for DOM to render
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      try {
+        const html5QrCode = new Html5Qrcode('qr-reader');
+        scannerRef.current = html5QrCode;
+
+        await html5QrCode.start(
+          { facingMode: 'environment' },
+          {
+            fps: 10,
+            qrbox: { width: 250, height: 250 }
+          },
+          (decodedText) => {
+            try {
+              const data = JSON.parse(decodedText);
+              if (data.type === 'arclens-session' && data.sessionId) {
+                stopScanning();
+                onConnect(data.sessionId);
+              }
+            } catch (e) {
+              // Not valid ARC Lens QR code
+              setError('Invalid QR code. Please scan an ARC Lens session QR code.');
+            }
+          },
+          () => {
+            // Ignore scan errors (happens frequently during scanning)
+          }
+        );
+      } catch (err) {
+        console.error('QR Scanner error:', err);
+
+        // Provide helpful error messages based on the error type
+        let errorMessage = 'Unable to access camera. ';
+
+        if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+          errorMessage += 'Please enable camera permissions in your browser settings.';
+        } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+          errorMessage += 'No camera found on this device.';
+        } else if (err.message && err.message.includes('not found')) {
+          errorMessage += 'Camera initialization failed. Please try manual entry instead.';
+        } else {
+          errorMessage += 'Please use manual entry instead.';
+        }
+
+        setError(errorMessage);
+        setIsScanning(false);
+      }
+    };
+
+    initScanner();
+
     return () => {
       if (scannerRef.current) {
         scannerRef.current.stop().catch(() => {});
+        scannerRef.current = null;
       }
     };
-  }, []);
+  }, [mode, onConnect]);
 
-  const startScanning = async () => {
+  const startScanning = () => {
     setMode('scan');
-    setIsScanning(true);
-    setError('');
-
-    try {
-      const html5QrCode = new Html5Qrcode('qr-reader');
-      scannerRef.current = html5QrCode;
-
-      await html5QrCode.start(
-        { facingMode: 'environment' },
-        {
-          fps: 10,
-          qrbox: { width: 250, height: 250 }
-        },
-        (decodedText) => {
-          try {
-            const data = JSON.parse(decodedText);
-            if (data.type === 'arclens-session' && data.sessionId) {
-              stopScanning();
-              onConnect(data.sessionId);
-            }
-          } catch (e) {
-            // Not valid ARC Lens QR code
-            setError('Invalid QR code. Please scan an ARC Lens session QR code.');
-          }
-        },
-        () => {
-          // Ignore scan errors (happens frequently during scanning)
-        }
-      );
-    } catch (err) {
-      console.error('QR Scanner error:', err);
-      setError('Camera access denied. Please enable camera permissions and try again.');
-      setIsScanning(false);
-    }
   };
 
   const stopScanning = () => {
@@ -246,20 +271,41 @@ function SessionConnector({ onConnect, onCancel }) {
             </button>
           </div>
 
-          {/* Error Message */}
+          {/* Error Message with Manual Entry Fallback */}
           {error && (
-            <div
-              style={{
-                padding: '12px',
-                backgroundColor: '#b71c1c',
-                border: '1px solid #ef5350',
-                borderRadius: '8px',
-                color: '#ffebee',
-                fontSize: '14px',
-                marginBottom: '16px'
-              }}
-            >
-              {error}
+            <div style={{ marginBottom: '16px' }}>
+              <div
+                style={{
+                  padding: '12px',
+                  backgroundColor: '#b71c1c',
+                  border: '1px solid #ef5350',
+                  borderRadius: '8px',
+                  color: '#ffebee',
+                  fontSize: '14px',
+                  marginBottom: '12px'
+                }}
+              >
+                {error}
+              </div>
+              <button
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  backgroundColor: '#0078d4',
+                  border: 'none',
+                  borderRadius: '6px',
+                  color: '#fff',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  cursor: 'pointer'
+                }}
+                onClick={() => {
+                  stopScanning();
+                  setMode('manual');
+                }}
+              >
+                Use Manual Entry Instead
+              </button>
             </div>
           )}
 
