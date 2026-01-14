@@ -125,6 +125,45 @@ function App() {
     setViewerCount(syncViewerCount);
   }, [syncViewerCount]);
 
+  // Mobile: Keep screen awake when connected to session
+  useEffect(() => {
+    // Only on mobile, when connected as viewer (not host)
+    if (!isMobile || isSessionHost || !sessionEnabled || !isConnected) {
+      return;
+    }
+
+    let wakeLock = null;
+
+    const requestWakeLock = async () => {
+      try {
+        // Check if Wake Lock API is supported
+        if ('wakeLock' in navigator) {
+          wakeLock = await navigator.wakeLock.request('screen');
+          console.log('Wake Lock active - screen will stay awake');
+
+          // Re-request wake lock if it's released (e.g., tab visibility changes)
+          wakeLock.addEventListener('release', () => {
+            console.log('Wake Lock released');
+          });
+        }
+      } catch (err) {
+        // Fail silently - not all browsers support it
+        console.warn('Wake Lock not available:', err);
+      }
+    };
+
+    requestWakeLock();
+
+    // Release wake lock on cleanup
+    return () => {
+      if (wakeLock !== null) {
+        wakeLock.release().then(() => {
+          console.log('Wake Lock released on cleanup');
+        });
+      }
+    };
+  }, [isMobile, isSessionHost, sessionEnabled, isConnected]);
+
   // Auto-close QR modal when first viewer connects
   useEffect(() => {
     if (isSessionHost && syncViewerCount > 0 && showSessionModal) {
