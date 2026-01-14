@@ -366,9 +366,9 @@ function App() {
           viewerCount={viewerCount}
           onToggle={() => {
             if (!sessionEnabled) {
-              // Generate short session ID (12 hex chars)
-              const newSessionId = Array.from(crypto.getRandomValues(new Uint8Array(6)))
-                .map(b => b.toString(16).padStart(2, '0'))
+              // Generate short session ID (12 digits, numbers only for easy mobile input)
+              const newSessionId = Array.from(crypto.getRandomValues(new Uint32Array(3)))
+                .map(n => (n % 10000).toString().padStart(4, '0'))
                 .join('');
               setSessionId(newSessionId);
               setIsSessionHost(true);
