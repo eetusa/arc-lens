@@ -130,23 +130,14 @@ These headers are also set in `netlify.toml` (if it exists) or via Netlify dashb
 
 ## Environment Variables
 
-### Required for Deployment
+Currently, this project **does not require any environment variables** for deployment.
 
-```bash
-# Umami Analytics (set in Netlify dashboard)
-VITE_UMAMI_WEBSITE_ID=<website-id-from-umami>
-VITE_UMAMI_SRC=<umami-script-url>
-```
+### Analytics Configuration
 
-### Local Development
-
-Create `.env` (gitignored):
-```bash
-VITE_UMAMI_WEBSITE_ID=1b37575c-a2ab-45ab-9140-e9336ba2f998
-VITE_UMAMI_SRC=https://umami-chi-eight-52.vercel.app/script.js
-```
-
-Use `.env.example` as a template.
+Umami analytics is configured via:
+- **Hardcoded** in `index.html` (website ID, domains)
+- **Proxied** through Netlify redirects in `netlify.toml` (`/stats/*` → Umami instance)
+- No environment variables needed - works out of the box
 
 ## Build & Deployment
 
@@ -213,6 +204,7 @@ Tests cover:
 - Respects Do Not Track header
 - Domain filtering (production only)
 - Anonymous IP hashing
+- **Proxied** through `/stats/*` to bypass ad blockers (appears as first-party request)
 
 ## Common Patterns
 
@@ -318,7 +310,6 @@ ALWAYS start from master and create a new branch. Don't work on existing feature
 
 ## File Locations Reference
 
-- **Environment vars**: `.env` (local), Netlify dashboard (production)
 - **Item database**: `src/logic/item-database.js`
 - **Advisor engine**: `src/logic/advisor-engine.js`
 - **Advisor analysis**: `src/logic/advisor-analysis.js`
@@ -339,7 +330,7 @@ ALWAYS start from master and create a new branch. Don't work on existing feature
 ### Netlify
 - **Hosting**: Static site hosting
 - **Builds**: Automatic on push to master
-- **Env vars**: Set in dashboard under Site configuration → Environment variables
+- **Proxy**: Rewrites `/stats/*` to Umami instance (bypasses ad blockers)
 - **Free tier**: 100GB bandwidth/month
 
 ## Need Help?
