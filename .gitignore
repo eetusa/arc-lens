@@ -29,3 +29,8 @@ dist-ssr
 
 # Claude Code temporary files
 tmpclaude-*
+
+# Server
+server/node_modules
+server/.env
+.vercel

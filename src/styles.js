@@ -154,9 +154,18 @@ export const styles = {
   }),
   // -----------------------
   button: {
-    marginTop: '20px', backgroundColor: theme.accent, color: 'white',
-    border: 'none', padding: '12px 24px', borderRadius: '6px',
-    fontSize: '14px', fontWeight: 'bold', cursor: 'pointer', boxShadow: theme.glow
+    marginTop: '20px',
+    backgroundColor: 'transparent',
+    color: theme.accent,
+    border: `1px solid ${theme.accent}`,
+    padding: '10px 20px',
+    borderRadius: '4px',
+    fontSize: '12px',
+    fontWeight: '600',
+    letterSpacing: '0.5px',
+    textTransform: 'uppercase',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease'
   },
   debugTextOverlay: {
     position: 'absolute', bottom: 0, left: 0, width: '100%',

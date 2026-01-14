@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { styles, theme } from './styles';
 
 // --- IMPORTS ---
@@ -7,9 +7,13 @@ import AdvisorCard from './components/AdvisorCard';
 import InfoModal from './components/InfoModal';
 import RecycleTabs from './components/RecycleTabs';
 import ItemSearcher from './components/ItemSearcher';
+import SessionModal from './components/SessionModal';
+import SessionStatus from './components/SessionStatus';
+import SessionConnector from './components/SessionConnector';
 import { usePersistentState } from './hooks/usePersistentState';
 import { useVisionSystem } from './hooks/useVisionSystem';
 import { useIsMobile } from './hooks/useIsMobile';
+import { useSessionSync } from './hooks/useSessionSync';
 import { preloadAllItemImages } from './utils/imagePreloader';
 import { AdvisorEngine } from './logic/advisor-engine';
 import { trackManualSearch } from './utils/analytics';
@@ -24,6 +28,14 @@ function App() {
   const [allItems, setAllItems] = useState([]);
   const [devPriorities, setDevPriorities] = useState([]);
   const [manualAnalysis, setManualAnalysis] = useState(null);
+
+  // --- SESSION STATE ---
+  const [sessionEnabled, setSessionEnabled] = useState(false);
+  const [sessionId, setSessionId] = useState(null);
+  const [isSessionHost, setIsSessionHost] = useState(false);
+  const [showSessionModal, setShowSessionModal] = useState(false);
+  const [showSessionConnector, setShowSessionConnector] = useState(false);
+  const [viewerCount, setViewerCount] = useState(0);
 
   // --- REFS ---
   const advisorEngineRef = useRef(null);
@@ -67,6 +79,58 @@ function App() {
     isInventoryOpen,
     startCapture
   } = useVisionSystem(stationLevels, activeQuests, prioritySettings, inventoryOverride, isMobile);
+
+  // --- SESSION CALLBACKS ---
+  const handleSessionEnded = useCallback((reason) => {
+    // Reset session state
+    setSessionEnabled(false);
+    setSessionId(null);
+    setIsSessionHost(false);
+    setViewerCount(0);
+  }, []);
+
+  // --- SESSION SYNC HOOK ---
+  const { isConnected, syncSettings, viewerCount: syncViewerCount } = useSessionSync({
+    // State to sync
+    stationLevels,
+    activeQuests,
+    userPriorities,
+    devPrioritiesEnabled,
+    userPrioritiesEnabled,
+    currentAnalysis,
+    manualAnalysis,
+    isInventoryOpen,
+    isStreaming,
+    isAnalyzing,
+
+    // Setters for incoming sync
+    setStationLevels,
+    setActiveQuests,
+    setUserPriorities,
+    setDevPrioritiesEnabled,
+    setUserPrioritiesEnabled,
+    setManualAnalysis,
+
+    // Session config
+    sessionId,
+    isHost: isSessionHost,
+    isEnabled: sessionEnabled,
+
+    // Callbacks
+    onSessionEnded: handleSessionEnded
+  });
+
+  // Update viewer count from session sync
+  useEffect(() => {
+    setViewerCount(syncViewerCount);
+  }, [syncViewerCount]);
+
+  // Auto-close QR modal when first viewer connects
+  useEffect(() => {
+    if (isSessionHost && syncViewerCount > 0 && showSessionModal) {
+      setShowSessionModal(false);
+    }
+  }, [isSessionHost, syncViewerCount, showSessionModal]);
 
   // --- INITIAL DATA FETCH ---
   useEffect(() => {
@@ -130,13 +194,33 @@ function App() {
   };
 
   const handleStationUpdate = (name, level) => {
-    setStationLevels(prev => ({ ...prev, [name]: level }));
+    const newLevels = { ...stationLevels, [name]: level };
+    setStationLevels(newLevels);
+
+    // Sync to connected devices
+    if (sessionEnabled && isConnected) {
+      syncSettings({ stationLevels: newLevels });
+    }
   };
   const handleQuestAdd = (quest) => {
-    if (!activeQuests.includes(quest)) setActiveQuests(prev => [...prev, quest]);
+    if (!activeQuests.includes(quest)) {
+      const newQuests = [...activeQuests, quest];
+      setActiveQuests(newQuests);
+
+      // Sync to connected devices
+      if (sessionEnabled && isConnected) {
+        syncSettings({ activeQuests: newQuests });
+      }
+    }
   };
   const handleQuestRemove = (quest) => {
-    setActiveQuests(prev => prev.filter(q => q !== quest));
+    const newQuests = activeQuests.filter(q => q !== quest);
+    setActiveQuests(newQuests);
+
+    // Sync to connected devices
+    if (sessionEnabled && isConnected) {
+      syncSettings({ activeQuests: newQuests });
+    }
   };
 
   // Handle manual item search
@@ -160,16 +244,34 @@ function App() {
   // Priority handlers
   const handlePriorityAdd = (priority) => {
     if (!userPriorities.find(p => p.itemId === priority.itemId)) {
-      setUserPriorities(prev => [...prev, priority]);
+      const newPriorities = [...userPriorities, priority];
+      setUserPriorities(newPriorities);
+
+      // Sync to connected devices
+      if (sessionEnabled && isConnected) {
+        syncSettings({ userPriorities: newPriorities });
+      }
     }
   };
   const handlePriorityRemove = (itemId) => {
-    setUserPriorities(prev => prev.filter(p => p.itemId !== itemId));
+    const newPriorities = userPriorities.filter(p => p.itemId !== itemId);
+    setUserPriorities(newPriorities);
+
+    // Sync to connected devices
+    if (sessionEnabled && isConnected) {
+      syncSettings({ userPriorities: newPriorities });
+    }
   };
   const handlePriorityUpdate = (updatedPriority) => {
-    setUserPriorities(prev =>
-      prev.map(p => p.itemId === updatedPriority.itemId ? updatedPriority : p)
+    const newPriorities = userPriorities.map(p =>
+      p.itemId === updatedPriority.itemId ? updatedPriority : p
     );
+    setUserPriorities(newPriorities);
+
+    // Sync to connected devices
+    if (sessionEnabled && isConnected) {
+      syncSettings({ userPriorities: newPriorities });
+    }
   };
   const TV_STATIC = `url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.4"/%3E%3C/svg%3E')`;
   // --- RENDER ---
@@ -189,6 +291,42 @@ function App() {
 
       {/* BRAND MARK */}
       <div style={styles.brandMark}>ARC Lens</div>
+
+      {/* MOBILE CONNECTION STATUS */}
+      {isMobile && sessionEnabled && (
+        <div style={{
+          position: 'fixed',
+          top: '60px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          padding: '8px 16px',
+          backgroundColor: theme.cardBg,
+          border: `1px solid ${theme.border}`,
+          borderRadius: '20px',
+          fontSize: '11px',
+          color: isConnected ? theme.textMain : theme.textDim,
+          zIndex: 100,
+          backdropFilter: 'blur(10px)',
+          fontWeight: '600',
+          letterSpacing: '0.5px'
+        }}>
+          <div style={{
+            width: '10px',
+            height: '10px',
+            borderRadius: '50%',
+            backgroundColor: isConnected ? theme.success : theme.off,
+            boxShadow: isConnected ? `0 0 10px ${theme.success}` : 'inset 0 0 3px #000',
+            border: `1px solid ${isConnected ? theme.success : '#444'}`,
+            transition: 'all 0.2s ease'
+          }} />
+          <span style={{ textTransform: 'uppercase' }}>
+            {isConnected ? 'CONNECTED' : 'CONNECTING...'}
+          </span>
+        </div>
+      )}
 
       {/* STATUS BAR - Hidden on mobile */}
       {!isMobile && (
@@ -221,6 +359,24 @@ function App() {
             </div>
             <span style={styles.toggleText}>DEBUG VIEW</span>
         </div>
+        <div style={{width:'1px', height:'14px', backgroundColor:'#333', margin:'0 10px'}}></div>
+        <SessionStatus
+          isConnected={isConnected}
+          role={sessionEnabled ? (isSessionHost ? 'host' : 'viewer') : null}
+          viewerCount={viewerCount}
+          onToggle={() => {
+            if (!sessionEnabled) {
+              // Generate short session ID (12 hex chars)
+              const newSessionId = Array.from(crypto.getRandomValues(new Uint8Array(6)))
+                .map(b => b.toString(16).padStart(2, '0'))
+                .join('');
+              setSessionId(newSessionId);
+              setIsSessionHost(true);
+              setSessionEnabled(true);
+            }
+            setShowSessionModal(true);
+          }}
+        />
       </div>
       )}
 
@@ -314,8 +470,46 @@ function App() {
         )}
       </div>
 
+      {/* MOBILE: CONNECT TO DESKTOP BUTTON */}
+      {isMobile && !sessionEnabled && (
+        <button
+          onClick={() => setShowSessionConnector(true)}
+          style={{
+            width: 'calc(100vw - 32px)',
+            maxWidth: '500px',
+            marginBottom: '16px',
+            padding: '12px 16px',
+            fontSize: '11px',
+            backgroundColor: 'transparent',
+            border: `1px solid ${theme.accent}`,
+            borderRadius: '6px',
+            color: theme.accent,
+            fontWeight: '600',
+            letterSpacing: '0.5px',
+            textTransform: 'uppercase',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            transition: 'all 0.2s'
+          }}
+          onTouchStart={(e) => {
+            e.currentTarget.style.backgroundColor = theme.accent;
+            e.currentTarget.style.color = '#fff';
+          }}
+          onTouchEnd={(e) => {
+            e.currentTarget.style.backgroundColor = 'transparent';
+            e.currentTarget.style.color = theme.accent;
+          }}
+        >
+          <span>◉</span>
+          <span>Connect to Desktop</span>
+        </button>
+      )}
+
       {/* MOBILE ITEM SEARCH - Always visible above main container on mobile */}
-      {isMobile && (
+      {isMobile && !sessionEnabled && (
         <div style={{
           width: 'calc(100vw - 32px)',
           maxWidth: '500px',
@@ -366,7 +560,20 @@ function App() {
               {!isStreaming && !manualAnalysis ? (
                   <div style={styles.placeholder}>
                       {!isMobile && (
-                        <button style={styles.button} onClick={startCapture}>SELECT WINDOW</button>
+                        <button
+                          style={styles.button}
+                          onClick={startCapture}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = theme.accent;
+                            e.currentTarget.style.color = '#fff';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = 'transparent';
+                            e.currentTarget.style.color = theme.accent;
+                          }}
+                        >
+                          START CAPTURE
+                        </button>
                       )}
                       <div style={{fontSize:'12px', marginTop: isMobile ? '0' : '16px', color: theme.textMuted}}>
                         {isMobile ? 'Search for an item above to view detailed analysis' : 'Or use Item Search in the sidebar'}
@@ -487,6 +694,27 @@ function App() {
 
       {/* INFO MODAL */}
       {showInfo && <InfoModal onClose={() => setShowInfo(false)} />}
+
+      {/* SESSION MODAL */}
+      {showSessionModal && sessionId && (
+        <SessionModal
+          sessionId={sessionId}
+          onClose={() => setShowSessionModal(false)}
+        />
+      )}
+
+      {/* SESSION CONNECTOR (MOBILE) */}
+      {showSessionConnector && (
+        <SessionConnector
+          onConnect={(id) => {
+            setSessionId(id);
+            setIsSessionHost(false);
+            setSessionEnabled(true);
+            setShowSessionConnector(false);
+          }}
+          onCancel={() => setShowSessionConnector(false)}
+        />
+      )}
 
       {/* DISCLAIMER */}
       {!isMobile && (
