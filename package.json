@@ -16,7 +16,11 @@
     "generate-manifest": "node scripts/generate-image-manifest.js"
   },
   "dependencies": {
+    "html5-qrcode": "^2.3.8",
     "onnxruntime-web": "^1.23.2",
+    "partykit": "^0.0.115",
+    "partysocket": "^1.1.10",
+    "qrcode.react": "^4.2.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "tesseract.js": "^7.0.0"
