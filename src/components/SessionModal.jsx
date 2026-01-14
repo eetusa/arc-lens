@@ -3,7 +3,6 @@ import { QRCodeSVG } from 'qrcode.react';
 function SessionModal({ sessionId, onClose }) {
   // Format session ID as XXXX-XXXX-XXXX for display
   const displaySessionId = sessionId
-    .toUpperCase()
     .match(/.{1,4}/g)
     .join('-');
 

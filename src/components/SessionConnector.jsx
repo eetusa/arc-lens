@@ -88,16 +88,40 @@ function SessionConnector({ onConnect, onCancel }) {
     setIsScanning(false);
   };
 
+  const handleSessionIdChange = (value) => {
+    // Remove all non-digit characters
+    const digitsOnly = value.replace(/\D/g, '');
+
+    // Limit to 12 digits
+    const limited = digitsOnly.slice(0, 12);
+
+    // Auto-format with dashes: XXXX-XXXX-XXXX
+    let formatted = limited;
+    if (limited.length > 4) {
+      formatted = limited.slice(0, 4) + '-' + limited.slice(4);
+    }
+    if (limited.length > 8) {
+      formatted = limited.slice(0, 4) + '-' + limited.slice(4, 8) + '-' + limited.slice(8);
+    }
+
+    setSessionId(formatted);
+  };
+
   const handleManualConnect = () => {
     // Clean session ID (remove dashes)
-    const cleaned = sessionId.replace(/-/g, '').toLowerCase();
+    const cleaned = sessionId.replace(/-/g, '');
 
     if (cleaned.length !== 12) {
-      setError('Invalid session ID format. Expected: XXXX-XXXX-XXXX');
+      setError('Invalid session ID format. Expected: 1234-5678-9012');
       return;
     }
 
-    // Reconstruct UUID format (simplified - server will handle validation)
+    // Validate it's all digits
+    if (!/^\d+$/.test(cleaned)) {
+      setError('Session ID must contain only numbers');
+      return;
+    }
+
     onConnect(cleaned);
   };
 
@@ -411,14 +435,16 @@ function SessionConnector({ onConnect, onCancel }) {
           {/* Input Form */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <label style={{ fontSize: '14px', color: '#bbb' }}>
-              Session ID (format: XXXX-XXXX-XXXX)
+              Session ID (12 digits)
             </label>
             <input
               type="text"
+              inputMode="numeric"
               value={sessionId}
-              onChange={(e) => setSessionId(e.target.value.toUpperCase())}
-              placeholder="A1B2-C3D4-E5F6"
+              onChange={(e) => handleSessionIdChange(e.target.value)}
+              placeholder="1234-5678-9012"
               maxLength={14}
+              autoComplete="off"
               style={{
                 padding: '12px',
                 backgroundColor: '#2a2a2a',
