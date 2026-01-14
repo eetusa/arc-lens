@@ -3,10 +3,15 @@ import { Html5Qrcode } from 'html5-qrcode';
 
 function SessionConnector({ onConnect, onCancel }) {
   const [mode, setMode] = useState('choose'); // 'choose' | 'scan' | 'manual'
-  const [sessionId, setSessionId] = useState('');
+  const [part1, setPart1] = useState('');
+  const [part2, setPart2] = useState('');
+  const [part3, setPart3] = useState('');
   const [isScanning, setIsScanning] = useState(false);
   const [error, setError] = useState('');
   const scannerRef = useRef(null);
+  const input1Ref = useRef(null);
+  const input2Ref = useRef(null);
+  const input3Ref = useRef(null);
 
   // Initialize scanner when mode changes to 'scan'
   useEffect(() => {
@@ -88,41 +93,44 @@ function SessionConnector({ onConnect, onCancel }) {
     setIsScanning(false);
   };
 
-  const handleSessionIdChange = (value) => {
-    // Remove all non-digit characters
+  const handleInputChange = (value, part, setPart, nextRef) => {
+    // Only allow digits
     const digitsOnly = value.replace(/\D/g, '');
 
-    // Limit to 12 digits
-    const limited = digitsOnly.slice(0, 12);
+    // Limit to 4 digits
+    const limited = digitsOnly.slice(0, 4);
 
-    // Auto-format with dashes: XXXX-XXXX-XXXX
-    let formatted = limited;
-    if (limited.length > 4) {
-      formatted = limited.slice(0, 4) + '-' + limited.slice(4);
-    }
-    if (limited.length > 8) {
-      formatted = limited.slice(0, 4) + '-' + limited.slice(4, 8) + '-' + limited.slice(8);
-    }
+    setPart(limited);
 
-    setSessionId(formatted);
+    // Auto-focus next input when current is filled
+    if (limited.length === 4 && nextRef?.current) {
+      nextRef.current.focus();
+    }
+  };
+
+  const handleKeyDown = (e, part, setPart, prevRef) => {
+    // Handle backspace: if current field is empty, go to previous field
+    if (e.key === 'Backspace' && part === '' && prevRef?.current) {
+      prevRef.current.focus();
+    }
   };
 
   const handleManualConnect = () => {
-    // Clean session ID (remove dashes)
-    const cleaned = sessionId.replace(/-/g, '');
+    // Combine all three parts
+    const combined = part1 + part2 + part3;
 
-    if (cleaned.length !== 12) {
-      setError('Invalid session ID format. Expected: 1234-5678-9012');
+    if (combined.length !== 12) {
+      setError('Please enter all 12 digits');
       return;
     }
 
-    // Validate it's all digits
-    if (!/^\d+$/.test(cleaned)) {
+    // Validate it's all digits (should always be true due to input validation)
+    if (!/^\d+$/.test(combined)) {
       setError('Session ID must contain only numbers');
       return;
     }
 
-    onConnect(cleaned);
+    onConnect(combined);
   };
 
   const handleBackdropClick = (e) => {
@@ -437,26 +445,100 @@ function SessionConnector({ onConnect, onCancel }) {
             <label style={{ fontSize: '14px', color: '#bbb' }}>
               Session ID (12 digits)
             </label>
-            <input
-              type="text"
-              inputMode="numeric"
-              value={sessionId}
-              onChange={(e) => handleSessionIdChange(e.target.value)}
-              placeholder="1234-5678-9012"
-              maxLength={14}
-              autoComplete="off"
-              style={{
-                padding: '12px',
-                backgroundColor: '#2a2a2a',
-                border: '1px solid #444',
-                borderRadius: '8px',
-                color: '#fff',
-                fontSize: '18px',
-                fontFamily: 'monospace',
-                letterSpacing: '2px',
-                textAlign: 'center'
-              }}
-            />
+
+            {/* Three-part input with hyphens */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              justifyContent: 'center'
+            }}>
+              <input
+                ref={input1Ref}
+                type="text"
+                inputMode="numeric"
+                value={part1}
+                onChange={(e) => handleInputChange(e.target.value, part1, setPart1, input2Ref)}
+                onKeyDown={(e) => handleKeyDown(e, part1, setPart1, null)}
+                placeholder="1234"
+                maxLength={4}
+                autoComplete="off"
+                style={{
+                  width: '80px',
+                  padding: '12px 8px',
+                  backgroundColor: '#2a2a2a',
+                  border: '1px solid #444',
+                  borderRadius: '8px',
+                  color: '#fff',
+                  fontSize: '20px',
+                  fontFamily: 'monospace',
+                  letterSpacing: '3px',
+                  textAlign: 'center'
+                }}
+              />
+
+              <span style={{
+                color: '#666',
+                fontSize: '24px',
+                fontWeight: 'bold',
+                userSelect: 'none'
+              }}>-</span>
+
+              <input
+                ref={input2Ref}
+                type="text"
+                inputMode="numeric"
+                value={part2}
+                onChange={(e) => handleInputChange(e.target.value, part2, setPart2, input3Ref)}
+                onKeyDown={(e) => handleKeyDown(e, part2, setPart2, input1Ref)}
+                placeholder="5678"
+                maxLength={4}
+                autoComplete="off"
+                style={{
+                  width: '80px',
+                  padding: '12px 8px',
+                  backgroundColor: '#2a2a2a',
+                  border: '1px solid #444',
+                  borderRadius: '8px',
+                  color: '#fff',
+                  fontSize: '20px',
+                  fontFamily: 'monospace',
+                  letterSpacing: '3px',
+                  textAlign: 'center'
+                }}
+              />
+
+              <span style={{
+                color: '#666',
+                fontSize: '24px',
+                fontWeight: 'bold',
+                userSelect: 'none'
+              }}>-</span>
+
+              <input
+                ref={input3Ref}
+                type="text"
+                inputMode="numeric"
+                value={part3}
+                onChange={(e) => handleInputChange(e.target.value, part3, setPart3, null)}
+                onKeyDown={(e) => handleKeyDown(e, part3, setPart3, input2Ref)}
+                placeholder="9012"
+                maxLength={4}
+                autoComplete="off"
+                style={{
+                  width: '80px',
+                  padding: '12px 8px',
+                  backgroundColor: '#2a2a2a',
+                  border: '1px solid #444',
+                  borderRadius: '8px',
+                  color: '#fff',
+                  fontSize: '20px',
+                  fontFamily: 'monospace',
+                  letterSpacing: '3px',
+                  textAlign: 'center'
+                }}
+              />
+            </div>
 
             <button
               style={{
