@@ -144,7 +144,7 @@ function InfoModal({ onClose }) {
             </div>
           </div>
 
-          {/* Disclaimer */}
+          {/* Data Attribution */}
           <div style={{
             marginTop: '20px',
             paddingTop: '16px',
@@ -153,9 +153,28 @@ function InfoModal({ onClose }) {
             color: '#666',
             lineHeight: '1.5'
           }}>
-            <strong style={{ color: '#888' }}>Disclaimer:</strong> ARC Lens is an independent fan-made project created by the community.
-            It is not affiliated with, endorsed by, sponsored by, or officially connected to Embark Studios AB or the ARC Raiders game.
-            All game-related content, names, and assets belong to their respective owners.
+            <div style={{ marginBottom: '12px' }}>
+              Game data partially provided by{' '}
+              <a
+                href="https://ardb.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  color: '#0078d4',
+                  textDecoration: 'none',
+                  transition: 'color 0.2s'
+                }}
+                onMouseEnter={(e) => e.target.style.color = '#00a9f2'}
+                onMouseLeave={(e) => e.target.style.color = '#0078d4'}
+              >
+                ardb.app
+              </a>
+            </div>
+            <div>
+              <strong style={{ color: '#888' }}>Disclaimer:</strong> ARC Lens is an independent fan-made project created by the community.
+              It is not affiliated with, endorsed by, sponsored by, or officially connected to Embark Studios AB or the ARC Raiders game.
+              All game-related content, names, and assets belong to their respective owners.
+            </div>
           </div>
         </div>
       </div>
