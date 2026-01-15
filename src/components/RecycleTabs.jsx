@@ -51,15 +51,34 @@ const RecycleTabs = ({ outputs = [], isMobile = false }) => {
   const containerStyle = isMobile ? {
     display: 'flex',
     flexDirection: 'row',
-    gap: '8px',
-    width: 'calc(100vw - 32px)',
+    gap: '6px',
+    width: '100%',
     maxWidth: '500px',
     overflowX: 'auto',
-    paddingBottom: '8px'
+    paddingBottom: '8px',
+    WebkitOverflowScrolling: 'touch'
   } : styles.recycleTabsContainer;
 
   return (
     <div style={containerStyle}>
+      {/* Label for mobile */}
+      {isMobile && (
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minWidth: '70px',
+          padding: '0 8px',
+          fontSize: '9px',
+          fontWeight: 'bold',
+          color: '#00bcd4',
+          textTransform: 'uppercase',
+          letterSpacing: '0.5px',
+          flexShrink: 0
+        }}>
+          Recycles Into
+        </div>
+      )}
       {outputs.map((output, index) => {
         const imagePath = `/images/${output.id}.webp`;
         const hasImage = !failedImages.has(output.id);
@@ -70,9 +89,9 @@ const RecycleTabs = ({ outputs = [], isMobile = false }) => {
 
         const tabStyle = isMobile ? {
           position: 'relative',
-          width: '60px',
-          minWidth: '60px',
-          height: '60px',
+          width: '52px',
+          minWidth: '52px',
+          height: '52px',
           backgroundColor: styles.recycleTab(index).backgroundColor,
           border: styles.recycleTab(index).border,
           borderRadius: '8px',
@@ -80,10 +99,8 @@ const RecycleTabs = ({ outputs = [], isMobile = false }) => {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: '6px',
+          padding: '4px',
           boxSizing: 'border-box',
-          transition: 'all 0.2s ease',
-          cursor: 'default',
           flexShrink: 0
         } : styles.recycleTab(index);
 

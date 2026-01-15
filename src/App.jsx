@@ -409,8 +409,14 @@ function App() {
   return (
     <div style={{
     ...styles.container,
+    // Use dynamic viewport height on mobile to handle address bar
+    ...(isMobile && {
+      height: '100dvh',
+      justifyContent: 'flex-start',
+      paddingTop: '70px' // Space for header area (brand + hamburger + connection status)
+    }),
     backgroundImage: `
-      ${TV_STATIC}, 
+      ${TV_STATIC},
       radial-gradient(circle, rgba(60, 54, 65, 0.2) 10%, rgba(20, 27, 41, 1) 100%),
       url('/arclensbg1_cropped.avif')
     `,
@@ -421,17 +427,19 @@ function App() {
   }}>
 
       {/* BRAND MARK */}
-      <div style={styles.brandMark}>ARC Lens</div>
+      <div style={{
+        ...styles.brandMark,
+        ...(isMobile && { fontSize: '12px', top: '12px', left: '16px' })
+      }}>ARC Lens</div>
 
-      {/* MOBILE CONNECTION STATUS */}
+      {/* MOBILE CONNECTION STATUS - Positioned in top area with proper spacing */}
       {isMobile && sessionEnabled && (
         <div style={{
-          position: 'fixed',
-          top: '60px',
+          position: 'absolute',
+          top: '8px',
           left: '50%',
           transform: 'translateX(-50%)',
           display: 'flex',
-          flexDirection: 'column',
           alignItems: 'center',
           gap: '8px',
           zIndex: 100
@@ -440,56 +448,48 @@ function App() {
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '8px',
-            padding: '8px 16px',
+            gap: '6px',
+            padding: '6px 12px',
             backgroundColor: theme.cardBg,
             border: `1px solid ${theme.border}`,
-            borderRadius: '20px',
-            fontSize: '11px',
+            borderRadius: '16px',
+            fontSize: '10px',
             color: isConnected ? theme.textMain : theme.textDim,
-            backdropFilter: 'blur(10px)',
             fontWeight: '600',
             letterSpacing: '0.5px'
           }}>
             <div style={{
-              width: '10px',
-              height: '10px',
+              width: '8px',
+              height: '8px',
               borderRadius: '50%',
               backgroundColor: isConnected ? theme.success : theme.off,
-              boxShadow: isConnected ? `0 0 10px ${theme.success}` : 'inset 0 0 3px #000',
-              border: `1px solid ${isConnected ? theme.success : '#444'}`,
-              transition: 'all 0.2s ease'
+              boxShadow: isConnected ? `0 0 8px ${theme.success}` : 'inset 0 0 2px #000',
+              border: `1px solid ${isConnected ? theme.success : '#444'}`
             }} />
             <span style={{ textTransform: 'uppercase' }}>
-              {isConnected ? 'CONNECTED' : 'CONNECTING...'}
+              {isConnected ? 'CONNECTED' : 'CONNECTING'}
             </span>
           </div>
 
-          {/* Keep Screen On toggle - only show when connected */}
+          {/* Keep Screen On toggle - compact for mobile */}
           {isConnected && (
             <button
               onClick={toggleKeepScreenAwake}
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '8px',
-                padding: '8px 16px',
+                gap: '4px',
+                padding: '6px 10px',
                 backgroundColor: keepScreenAwake ? theme.accent : theme.cardBg,
                 border: `1px solid ${keepScreenAwake ? theme.accent : theme.border}`,
-                borderRadius: '20px',
-                fontSize: '11px',
+                borderRadius: '16px',
+                fontSize: '10px',
                 color: keepScreenAwake ? '#fff' : theme.textDim,
-                backdropFilter: 'blur(10px)',
                 fontWeight: '600',
-                letterSpacing: '0.5px',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
+                cursor: 'pointer'
               }}
             >
-              <span style={{ fontSize: '14px' }}>{keepScreenAwake ? '☀️' : '🌙'}</span>
-              <span style={{ textTransform: 'uppercase' }}>
-                {keepScreenAwake ? 'SCREEN ON' : 'KEEP SCREEN ON'}
-              </span>
+              <span style={{ fontSize: '12px' }}>{keepScreenAwake ? '☀️' : '🌙'}</span>
             </button>
           )}
         </div>
@@ -642,10 +642,11 @@ function App() {
         <button
           onClick={() => setShowSessionConnector(true)}
           style={{
-            width: 'calc(100vw - 32px)',
+            width: 'calc(100% - 32px)',
             maxWidth: '500px',
-            marginBottom: '16px',
-            padding: '12px 16px',
+            marginTop: '4px',
+            marginBottom: '12px',
+            padding: '10px 16px',
             fontSize: '11px',
             backgroundColor: 'transparent',
             border: `1px solid ${theme.accent}`,
@@ -659,7 +660,7 @@ function App() {
             alignItems: 'center',
             justifyContent: 'center',
             gap: '8px',
-            transition: 'all 0.2s'
+            flexShrink: 0
           }}
           onTouchStart={(e) => {
             e.currentTarget.style.backgroundColor = theme.accent;
@@ -675,12 +676,13 @@ function App() {
         </button>
       )}
 
-      {/* MOBILE ITEM SEARCH - Always visible above main container on mobile */}
+      {/* MOBILE ITEM SEARCH */}
       {isMobile && !sessionEnabled && (
         <div style={{
-          width: 'calc(100vw - 32px)',
+          width: 'calc(100% - 32px)',
           maxWidth: '500px',
-          marginBottom: '12px'
+          marginBottom: '12px',
+          flexShrink: 0
         }}>
           <ItemSearcher
             allItems={allItems}
@@ -696,16 +698,28 @@ function App() {
         ...(isMobile && {
           flexDirection: 'column',
           alignItems: 'center',
-          gap: '12px'
+          gap: '12px',
+          width: '100%',
+          padding: '0 16px',
+          boxSizing: 'border-box',
+          // Make scrollable on mobile so recycle tabs don't cause layout jumps
+          flex: '1 1 auto',
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          paddingBottom: '60px', // Space for info button
+          WebkitOverflowScrolling: 'touch'
         })
       }}>
         <div style={{
           ...styles.resultCard,
           ...(isMobile && {
-            width: 'calc(100vw - 32px)',
+            width: '100%',
             maxWidth: '500px',
-            height: '60vh',
-            minHeight: '400px'
+            // Use calc to ensure card fits with space for info button
+            height: 'auto',
+            minHeight: '280px',
+            maxHeight: 'calc(100dvh - 180px)',
+            flex: '1 1 auto'
           })
         }}>
           {/* Hide image column on mobile */}
@@ -808,7 +822,7 @@ function App() {
                           ×
                         </button>
                       )}
-                      <AdvisorCard analysis={manualAnalysis || currentAnalysis} />
+                      <AdvisorCard analysis={manualAnalysis || currentAnalysis} isMobile={isMobile} />
                   </div>
               )}
           </div>
@@ -852,7 +866,10 @@ function App() {
             ? styles.infoButtonPulsing(isStreaming && showDebug)
             : styles.infoButton(isStreaming && showDebug)),
           ...(isMobile && {
-            bottom: '80px'
+            bottom: '16px',
+            left: '16px',
+            // Ensure button stays above safe area on iOS
+            paddingBottom: 'env(safe-area-inset-bottom, 0px)'
           })
         }}
         onClick={() => setShowInfo(true)}
