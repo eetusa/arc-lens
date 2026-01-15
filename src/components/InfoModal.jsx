@@ -26,12 +26,60 @@ function InfoModal({ onClose }) {
             </p>
           </div>
 
+          {/* Mobile Companion - NEW FEATURE */}
+          <div style={{
+            ...styles.modalSection,
+            background: 'linear-gradient(135deg, rgba(0, 191, 255, 0.1) 0%, rgba(0, 255, 128, 0.1) 100%)',
+            border: '1px solid rgba(0, 191, 255, 0.3)',
+            borderRadius: '8px',
+            padding: '16px'
+          }}>
+            <span style={{
+              ...styles.modalSectionTitle,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              Mobile Companion
+              <span style={{
+                fontSize: '10px',
+                background: '#00bfff',
+                color: '#000',
+                padding: '2px 6px',
+                borderRadius: '4px',
+                fontWeight: 'bold'
+              }}>NEW</span>
+            </span>
+            <p style={{ margin: '0 0 12px 0' }}>
+              Only have one monitor? Use your phone as a second screen!
+              Join a session from your mobile device to see item recommendations
+              in real-time while you play.
+            </p>
+            <div style={{ fontSize: '13px', color: '#a0a0a0' }}>
+              <strong style={{ color: '#ccc' }}>How it works:</strong>
+              <ol style={{ ...styles.modalList, marginTop: '8px', marginBottom: 0 }}>
+                <li style={styles.modalListItem}>
+                  Start a session on your PC with <strong>"START CAPTURE"</strong>
+                </li>
+                <li style={styles.modalListItem}>
+                  Click <strong>"Connect Mobile"</strong> to display a QR code
+                </li>
+                <li style={styles.modalListItem}>
+                  Scan the QR code with your phone, or enter the Session ID manually as a fallback
+                </li>
+                <li style={styles.modalListItem}>
+                  Your phone will display recommendations as you hover over items on PC
+                </li>
+              </ol>
+            </div>
+          </div>
+
           {/* How to use */}
           <div style={styles.modalSection}>
-            <span style={styles.modalSectionTitle}>How to use</span>
+            <span style={styles.modalSectionTitle}>How to use (Desktop)</span>
             <ol style={styles.modalList}>
               <li style={styles.modalListItem}>
-                Click <strong>"SELECT WINDOW"</strong> and choose your ARC Raiders game window
+                Click <strong>"START CAPTURE"</strong> and choose your ARC Raiders game window
               </li>
               <li style={styles.modalListItem}>
                 Open your inventory in-game
@@ -95,9 +143,10 @@ function InfoModal({ onClose }) {
           <div style={styles.modalSection}>
             <span style={styles.modalSectionTitle}>Privacy</span>
             <p style={{ margin: 0, color: '#999' }}>
-              ARC Lens runs entirely in your browser. Your screen capture is processed locally
-              and never leaves your device. No data is collected, stored, or sent to any server.
-              Your settings are saved only in your browser's local storage.
+              ARC Lens processes your screen capture locally in your browser - no images
+              are ever sent to any server. When using Mobile Companion, only item analysis
+              results (item names and recommendations) are transmitted via WebSocket to
+              your connected devices. Your settings are saved in your browser's local storage.
             </p>
           </div>
 
