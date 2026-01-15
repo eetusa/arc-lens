@@ -471,25 +471,26 @@ function App() {
             </span>
           </div>
 
-          {/* Keep Screen On toggle - compact for mobile */}
+          {/* Keep Screen Awake toggle - clear button affordance */}
           {isConnected && (
             <button
               onClick={toggleKeepScreenAwake}
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '4px',
                 padding: '6px 10px',
-                backgroundColor: keepScreenAwake ? theme.accent : theme.cardBg,
-                border: `1px solid ${keepScreenAwake ? theme.accent : theme.border}`,
+                backgroundColor: keepScreenAwake ? theme.accent : 'transparent',
+                border: keepScreenAwake ? `1px solid ${theme.accent}` : `1px solid ${theme.accent}`,
                 borderRadius: '16px',
-                fontSize: '10px',
-                color: keepScreenAwake ? '#fff' : theme.textDim,
+                fontSize: '9px',
+                color: keepScreenAwake ? '#fff' : theme.accent,
                 fontWeight: '600',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px'
               }}
             >
-              <span style={{ fontSize: '12px' }}>{keepScreenAwake ? '☀️' : '🌙'}</span>
+              {keepScreenAwake ? 'SCREEN AWAKE: ON' : 'SCREEN AWAKE'}
             </button>
           )}
         </div>

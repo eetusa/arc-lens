@@ -123,9 +123,9 @@ export default function AdvisorCard({ analysis, isMobile = false }) {
       overflow: 'hidden'
     }}>
 
-      {/* --- TOP SECTION (Main content - always fully visible on desktop, no scroll) --- */}
+      {/* --- TOP SECTION (Main content - cannot shrink, always gets priority) --- */}
       <div style={{
-        flex: '1 1 auto',
+        flex: isMobile ? '1 0 auto' : '1 1 auto',
         overflow: isMobile ? 'auto' : 'visible',
         display: 'flex',
         flexDirection: 'column'
@@ -183,11 +183,11 @@ export default function AdvisorCard({ analysis, isMobile = false }) {
         </div>
       </div>
 
-      {/* --- BOTTOM SECTION (Crafting - capped, yields space to top section) --- */}
+      {/* --- BOTTOM SECTION (Crafting - uses remaining space after top section) --- */}
       {utility.craftingOptions && utility.craftingOptions.length > 0 && (
         <div style={{
-          flex: '0 1 auto',
-          maxHeight: isMobile ? '35%' : '150px',
+          flex: '1 1 auto',
+          minHeight: 0,
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column'
