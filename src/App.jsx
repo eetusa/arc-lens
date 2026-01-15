@@ -14,6 +14,7 @@ import { usePersistentState } from './hooks/usePersistentState';
 import { useVisionSystem } from './hooks/useVisionSystem';
 import { useIsMobile } from './hooks/useIsMobile';
 import { useSessionSync } from './hooks/useSessionSync';
+import { useVersionTracking } from './hooks/useVersionTracking';
 import { preloadAllItemImages } from './utils/imagePreloader';
 import { AdvisorEngine } from './logic/advisor-engine';
 import { trackManualSearch } from './utils/analytics';
@@ -58,6 +59,16 @@ function App() {
     userPrioritiesEnabled,
     setUserPrioritiesEnabled
   } = usePersistentState();
+
+  const {
+    currentVersion,
+    lastSeenVersion,
+    showVersionNotification,
+    markVersionSeen
+  } = useVersionTracking();
+
+  // First-time visitor (no version stored yet)
+  const isFirstTimeVisitor = lastSeenVersion === null;
 
   // Priority settings object for vision system
   const prioritySettings = {
@@ -580,7 +591,7 @@ function App() {
       {!isMobile && (
         <div
           style={{
-            ...styles.sidebarToggle,
+            ...(isFirstTimeVisitor ? styles.sidebarTogglePulsing : styles.sidebarToggle),
             right: sidebarOpen ? '300px' : '0'
           }}
           onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -837,7 +848,9 @@ function App() {
       {/* INFO BUTTON */}
       <button
         style={{
-          ...styles.infoButton(isStreaming && showDebug),
+          ...(showVersionNotification
+            ? styles.infoButtonPulsing(isStreaming && showDebug)
+            : styles.infoButton(isStreaming && showDebug)),
           ...(isMobile && {
             bottom: '80px'
           })
@@ -849,7 +862,14 @@ function App() {
       </button>
 
       {/* INFO MODAL */}
-      {showInfo && <InfoModal onClose={() => setShowInfo(false)} />}
+      {showInfo && (
+        <InfoModal
+          onClose={() => setShowInfo(false)}
+          currentVersion={currentVersion}
+          isNewVersion={showVersionNotification}
+          onVersionSeen={markVersionSeen}
+        />
+      )}
 
       {/* SESSION MODAL */}
       {showSessionModal && sessionId && (

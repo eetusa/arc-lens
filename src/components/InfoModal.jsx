@@ -1,6 +1,13 @@
-import { styles } from '../styles';
+import { useEffect } from 'react';
+import { styles, theme } from '../styles';
 
-function InfoModal({ onClose }) {
+function InfoModal({ onClose, currentVersion, isNewVersion, onVersionSeen }) {
+  // Mark version as seen when modal opens
+  useEffect(() => {
+    if (isNewVersion && onVersionSeen) {
+      onVersionSeen();
+    }
+  }, [isNewVersion, onVersionSeen]);
   const handleBackdropClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
@@ -11,11 +18,49 @@ function InfoModal({ onClose }) {
     <div style={styles.modalBackdrop} onClick={handleBackdropClick}>
       <div style={styles.modalContainer}>
         <div style={styles.modalHeader}>
-          <h2 style={styles.modalTitle}>ARC Lens</h2>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px' }}>
+            <h2 style={styles.modalTitle}>ARC Lens</h2>
+            {currentVersion && (
+              <span style={{
+                fontSize: '11px',
+                color: theme.textDim,
+                fontWeight: '500'
+              }}>
+                v{currentVersion}
+              </span>
+            )}
+          </div>
           <button style={styles.modalClose} onClick={onClose}>&times;</button>
         </div>
 
         <div style={styles.modalContent}>
+          {/* What's New - shown when there's a version update */}
+          {isNewVersion && (
+            <div style={{
+              ...styles.modalSection,
+              backgroundColor: 'rgba(0, 120, 212, 0.1)',
+              border: `1px solid ${theme.accent}`,
+              borderRadius: '8px',
+              padding: '12px',
+              marginBottom: '20px'
+            }}>
+              <span style={{
+                ...styles.modalSectionTitle,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                marginBottom: '10px'
+              }}>
+                <span style={{ color: theme.accent }}>&#9733;</span>
+                What's New in v{currentVersion}
+              </span>
+              <ul style={{ ...styles.modalList, marginBottom: 0 }}>
+                <li style={styles.modalListItem}>Added version tracking and update notifications</li>
+                <li style={styles.modalListItem}>Info button now pulses when new updates are available</li>
+              </ul>
+            </div>
+          )}
+
           {/* What is this */}
           <div style={styles.modalSection}>
             <span style={styles.modalSectionTitle}>What is this?</span>
@@ -125,13 +170,10 @@ function InfoModal({ onClose }) {
                 Keep your inventory panel open for continuous analysis
               </li>
               <li style={styles.modalListItem}>
-                Set your station levels accurately for better recommendations
+                Configure your station levels and active quests in the sidebar for recommendations tailored to your progression
               </li>
               <li style={styles.modalListItem}>
-                Add active quests to prevent accidentally selling needed materials
-              </li>
-              <li style={styles.modalListItem}>
-                Use Priorities in the sidebar to flag specific items you want to track
+                Use Priorities to flag specific items you want to keep regardless of other factors
               </li>
               <li style={styles.modalListItem}>
                 Items with crafting utility will show what they can be used to craft

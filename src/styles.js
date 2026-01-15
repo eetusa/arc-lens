@@ -215,6 +215,18 @@ export const styles = {
     boxShadow: '-2px 0 10px rgba(0,0,0,0.5)',
     transition: 'right 0.3s ease'
   },
+  sidebarTogglePulsing: {
+    position: 'absolute', top: '50%', right: '0',
+    transform: 'translateY(-50%)',
+    width: '24px', height: '40px',
+    backgroundColor: theme.cardBg,
+    border: `1px solid ${theme.accent}`,
+    borderRight: 'none',
+    borderTopLeftRadius: '6px', borderBottomLeftRadius: '6px',
+    cursor: 'pointer', zIndex: 51,
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    animation: 'pulse-glow 1.5s ease-in-out infinite'
+  },
   sidebar: (isOpen) => ({
     position: 'absolute', top: 0, right: isOpen ? 0 : '-300px', // Slightly narrower
     width: '300px', height: '100%',
@@ -485,6 +497,32 @@ export const styles = {
     zIndex: 5,
     transition: 'all 0.3s ease',
     boxShadow: '0 2px 10px rgba(0,0,0,0.3)'
+  }),
+  infoButtonPulsing: (debugVisible) => ({
+    position: 'absolute',
+    bottom: debugVisible ? '240px' : '20px',
+    left: '20px',
+    width: '32px',
+    height: '32px',
+    minWidth: '32px',
+    minHeight: '32px',
+    padding: 0,
+    boxSizing: 'border-box',
+    borderRadius: '50%',
+    backgroundColor: theme.cardBg,
+    border: `1px solid ${theme.accent}`,
+    color: theme.accent,
+    fontSize: '18px',
+    fontWeight: 'bold',
+    fontStyle: 'italic',
+    fontFamily: 'Georgia, serif',
+    lineHeight: 1,
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 5,
+    animation: 'pulse-glow 1.5s ease-in-out infinite'
   }),
   // --- SHARED MODAL STYLES ---
   modalBackdrop: {
