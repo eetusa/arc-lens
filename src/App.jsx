@@ -12,7 +12,7 @@ import SessionStatus from './components/SessionStatus';
 import SessionConnector from './components/SessionConnector';
 import { usePersistentState } from './hooks/usePersistentState';
 import { useVisionSystem } from './hooks/useVisionSystem';
-import { useIsMobile } from './hooks/useIsMobile';
+import { useAppMode, AppMode } from './hooks/useAppMode';
 import { useSessionSync } from './hooks/useSessionSync';
 import { useVersionTracking } from './hooks/useVersionTracking';
 import { preloadAllItemImages } from './utils/imagePreloader';
@@ -45,7 +45,9 @@ function App() {
   const noSleepVideoRef = useRef(null);
 
   // --- HOOKS ---
-  const isMobile = useIsMobile();
+  const { isCompanionMode, isGameMode, canToggle, toggleMode } = useAppMode();
+  // For backward compatibility with existing code
+  const isMobile = isCompanionMode;
 
   const {
     stationLevels,
@@ -97,6 +99,14 @@ function App() {
   // --- SESSION CALLBACKS ---
   const handleSessionEnded = useCallback((reason) => {
     // Reset session state
+    setSessionEnabled(false);
+    setSessionId(null);
+    setIsSessionHost(false);
+    setViewerCount(0);
+  }, []);
+
+  const handleDisconnect = useCallback(() => {
+    // Manually disconnect from session
     setSessionEnabled(false);
     setSessionId(null);
     setIsSessionHost(false);
@@ -454,7 +464,32 @@ function App() {
       <div style={{
         ...styles.brandMark,
         ...(isMobile && { fontSize: '12px', top: '12px', left: '16px' })
-      }}>ARC Lens</div>
+      }}>
+        ARC Lens
+        {/* Mode indicator and switch for non-touch devices in Companion mode (hidden when connected) */}
+        {isCompanionMode && canToggle && !(sessionEnabled && isConnected) && (
+          <button
+            onClick={toggleMode}
+            style={{
+              marginLeft: '12px',
+              padding: '2px 8px',
+              fontSize: '9px',
+              backgroundColor: 'transparent',
+              border: `1px solid ${theme.accent}`,
+              borderRadius: '4px',
+              color: theme.accent,
+              cursor: 'pointer',
+              fontWeight: '600',
+              letterSpacing: '0.5px',
+              textTransform: 'uppercase',
+              verticalAlign: 'middle'
+            }}
+            title="Switch to Game Mode for screen capture"
+          >
+            GAME MODE
+          </button>
+        )}
+      </div>
 
       {/* MOBILE CONNECTION STATUS - Positioned in top area with proper spacing */}
       {isMobile && sessionEnabled && (
@@ -493,6 +528,29 @@ function App() {
             <span style={{ textTransform: 'uppercase' }}>
               {isConnected ? 'CONNECTED' : 'CONNECTING'}
             </span>
+            {/* Disconnect button - inside the container */}
+            {isConnected && (
+              <button
+                onClick={handleDisconnect}
+                style={{
+                  width: '18px',
+                  height: '18px',
+                  padding: 0,
+                  marginLeft: '2px',
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  color: theme.textDim,
+                  fontSize: '12px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+                title="Disconnect"
+              >
+                ⏻
+              </button>
+            )}
           </div>
 
           {/* Keep Screen Awake toggle - clear button affordance */}
@@ -568,7 +626,20 @@ function App() {
             }
             setShowSessionModal(true);
           }}
+          onDisconnect={handleDisconnect}
         />
+        {/* Mode toggle - disabled when connected to session */}
+        {!(sessionEnabled && isConnected) && (
+          <>
+            <div style={{width:'1px', height:'14px', backgroundColor:'#333', margin:'0 10px'}}></div>
+            <div style={styles.toggleLabel} onClick={toggleMode}>
+              <div style={styles.switchTrack(isCompanionMode)}>
+                <div style={styles.switchKnob(isCompanionMode)}></div>
+              </div>
+              <span style={styles.toggleText}>COMPANION MODE</span>
+            </div>
+          </>
+        )}
       </div>
       )}
 
@@ -725,13 +796,15 @@ function App() {
           alignItems: 'center',
           gap: '12px',
           width: '100%',
-          padding: '0 16px',
+          paddingTop: 0,
+          paddingRight: '16px',
+          paddingBottom: '60px', // Space for info button
+          paddingLeft: '16px',
           boxSizing: 'border-box',
           // Make scrollable on mobile so recycle tabs don't cause layout jumps
           flex: '1 1 auto',
           overflowY: 'auto',
           overflowX: 'hidden',
-          paddingBottom: '60px', // Space for info button
           WebkitOverflowScrolling: 'touch'
         })
       }}>
