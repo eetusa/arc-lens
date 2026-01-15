@@ -27,8 +27,12 @@ dist-ssr
 *.sln
 *.sw?
 
-# Claude Code temporary files
+# Claude Code
 tmpclaude-*
+.claude/settings.local.json
+
+# Generated files
+public/image-manifest.json
 
 # Server
 server/node_modules
