@@ -36,9 +36,12 @@ function App() {
   const [showSessionModal, setShowSessionModal] = useState(false);
   const [showSessionConnector, setShowSessionConnector] = useState(false);
   const [viewerCount, setViewerCount] = useState(0);
+  const [keepScreenAwake, setKeepScreenAwake] = useState(false);
 
   // --- REFS ---
   const advisorEngineRef = useRef(null);
+  const wakeLockRef = useRef(null);
+  const noSleepVideoRef = useRef(null);
 
   // --- HOOKS ---
   const isMobile = useIsMobile();
@@ -125,44 +128,122 @@ function App() {
     setViewerCount(syncViewerCount);
   }, [syncViewerCount]);
 
-  // Mobile: Keep screen awake when connected to session
-  useEffect(() => {
-    // Only on mobile, when connected as viewer (not host)
-    if (!isMobile || isSessionHost || !sessionEnabled || !isConnected) {
-      return;
-    }
+  // Mobile: Keep screen awake handler (user-triggered via toggle button)
+  // Must be triggered by user gesture for iOS Safari compatibility
+  const toggleKeepScreenAwake = useCallback(async () => {
+    const newState = !keepScreenAwake;
+    setKeepScreenAwake(newState);
 
-    let wakeLock = null;
+    if (newState) {
+      // Enable - try Wake Lock API first, fallback to video trick
+      let wakeLockAcquired = false;
 
-    const requestWakeLock = async () => {
-      try {
-        // Check if Wake Lock API is supported
-        if ('wakeLock' in navigator) {
-          wakeLock = await navigator.wakeLock.request('screen');
+      if ('wakeLock' in navigator) {
+        try {
+          wakeLockRef.current = await navigator.wakeLock.request('screen');
           console.log('Wake Lock active - screen will stay awake');
+          wakeLockAcquired = true;
 
-          // Re-request wake lock if it's released (e.g., tab visibility changes)
-          wakeLock.addEventListener('release', () => {
+          wakeLockRef.current.addEventListener('release', () => {
             console.log('Wake Lock released');
+            // Don't clear ref here - we'll handle re-acquisition in visibility change
           });
+        } catch (err) {
+          console.warn('Wake Lock request failed:', err.name, err.message);
         }
-      } catch (err) {
-        // Fail silently - not all browsers support it
-        console.warn('Wake Lock not available:', err);
+      }
+
+      // Fallback: Create and play a tiny video loop (NoSleep.js technique)
+      // This tricks iOS into thinking media is playing, preventing sleep
+      if (!wakeLockAcquired) {
+        console.log('Using video fallback for screen wake');
+        if (!noSleepVideoRef.current) {
+          const video = document.createElement('video');
+          video.setAttribute('playsinline', '');
+          video.setAttribute('muted', '');
+          video.setAttribute('loop', '');
+          video.style.position = 'absolute';
+          video.style.left = '-9999px';
+          video.style.width = '1px';
+          video.style.height = '1px';
+          // Tiny base64 encoded MP4 (1x1 pixel, ~100 bytes)
+          video.src = 'data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAAIZnJlZQAAAs1tZGF0AAACrgYF//+q3EXpvebZSLeWLNgg2SPu73gyNjQgLSBjb3JlIDE0MiByMjQ3OSBkZDc5YTYxIC0gSC4yNjQvTVBFRy00IEFWQyBjb2RlYyAtIENvcHlsZWZ0IDIwMDMtMjAxNCAtIGh0dHA6Ly93d3cudmlkZW9sYW4ub3JnL3gyNjQuaHRtbCAtIG9wdGlvbnM6IGNhYmFjPTEgcmVmPTMgZGVibG9jaz0xOjA6MCBhbmFseXNlPTB4MzoweDExMyBtZT1oZXggc3VibWU9NyBwc3k9MSBwc3lfcmQ9MS4wMDowLjAwIG1peGVkX3JlZj0xIG1lX3JhbmdlPTE2IGNocm9tYV9tZT0xIHRyZWxsaXM9MSA4eDhkY3Q9MSBjcW09MCBkZWFkem9uZT0yMSwxMSBmYXN0X3Bza2lwPTEgY2hyb21hX3FwX29mZnNldD0tMiB0aHJlYWRzPTYgbG9va2FoZWFkX3RocmVhZHM9MSBzbGljZWRfdGhyZWFkcz0wIG5yPTAgZGVjaW1hdGU9MSBpbnRlcmxhY2VkPTAgYmx1cmF5X2NvbXBhdD0wIGNvbnN0cmFpbmVkX2ludHJhPTAgYmZyYW1lcz0zIGJfcHlyYW1pZD0yIGJfYWRhcHQ9MSBiX2JpYXM9MCBkaXJlY3Q9MSB3ZWlnaHRiPTEgb3Blbl9nb3A9MCB3ZWlnaHRwPTIga2V5aW50PTI1MCBrZXlpbnRfbWluPTEgc2NlbmVjdXQ9NDAgaW50cmFfcmVmcmVzaD0wIHJjX2xvb2thaGVhZD00MCByYz1jcmYgbWJ0cmVlPTEgY3JmPTIzLjAgcWNvbXA9MC42MCBxcG1pbj0wIHFwbWF4PTY5IHFwc3RlcD00IGlwX3JhdGlvPTEuNDAgYXE9MToxLjAwAIAAAAAwZYiEAD//8m+P5OXfBeLGOfKE3xkODvFZuBflHv/+VwJIta6cbpIo4ABLoKBaYTkTAAAC7m1vb3YAAABsbXZoZAAAAAAAAAAAAAAAAAAAA+gAAAPoAAEAAAEAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAgAAABhpb2RzAAAAABCAgIAHAE/QAAAAAiZzdHJhawAAAFx0a2hkAAAAAwAAAAAAAAAAAAAAAQAAAAAAAAPoAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAQAAAABgAAAAQAAAAAAAkZWR0cwAAABxlbHN0AAAAAAAAAAEAAAPoAAAAAAABAAAAAAJVbWRpYQAAACBtZGhkAAAAAAAAAAAAAAAAAAAD6AAAAN8AVcQAAAAAAC1oZGxyAAAAAAAAAAB2aWRlAAAAAAAAAAAAAAAAVmlkZW9IYW5kbGVyAAAAAgBtaW5mAAAAFHZtaGQAAAABAAAAAAAAAAAAAAAkZGluZgAAABxkcmVmAAAAAAAAAAEAAAAMdXJsIAAAAAEAAAHAc3RibAAAAKBzdHNkAAAAAAAAAAEAAACQYXZjMQAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAABAABAAQLQAAAAAABxhcGNuAAAAAAABAAAAAAAAAAAAAAAAEHBhc3AAAAABAAAAAQAAABhzdHRzAAAAAAAAAAEAAAAeAAAD6AAAAAxzdHNjAAAAAAAAAAAAAAASc3RzegAAAAAAAAAAAAAAHgAAAwAAAAAMc3RjbwAAAAAAAAAAAAAAAAQAAAAYc3RzcwAAAAAAAAABAAAAAAAAAABAAAABIHVkdGEAAAEYbWV0YQAAAAAAAAAhaGRscgAAAAAAAAAAbWRpcmFwcGwAAAAAAAAAAAAAAAAraWxzdAAAACOpdG9vAAAAG2RhdGEAAAABAAAAAExhdmY1NC4yMC40';
+          document.body.appendChild(video);
+          noSleepVideoRef.current = video;
+        }
+        try {
+          await noSleepVideoRef.current.play();
+          console.log('Video fallback playing - screen should stay awake');
+        } catch (err) {
+          console.warn('Video fallback failed:', err);
+        }
+      }
+    } else {
+      // Disable - release wake lock and stop video
+      if (wakeLockRef.current) {
+        try {
+          await wakeLockRef.current.release();
+          console.log('Wake Lock released');
+        } catch (err) {
+          // Ignore release errors
+        }
+        wakeLockRef.current = null;
+      }
+      if (noSleepVideoRef.current) {
+        noSleepVideoRef.current.pause();
+        console.log('Video fallback stopped');
+      }
+    }
+  }, [keepScreenAwake]);
+
+  // Re-acquire wake lock when page becomes visible (if keepScreenAwake is enabled)
+  useEffect(() => {
+    if (!keepScreenAwake || !isMobile) return;
+
+    const handleVisibilityChange = async () => {
+      if (document.visibilityState === 'visible') {
+        console.log('Page visible, checking wake lock status');
+        // Try to re-acquire wake lock if it was released
+        if ('wakeLock' in navigator && !wakeLockRef.current) {
+          try {
+            wakeLockRef.current = await navigator.wakeLock.request('screen');
+            console.log('Wake Lock re-acquired');
+          } catch (err) {
+            console.warn('Wake Lock re-acquisition failed:', err.name);
+          }
+        }
+        // Ensure video fallback is still playing
+        if (noSleepVideoRef.current && noSleepVideoRef.current.paused) {
+          try {
+            await noSleepVideoRef.current.play();
+            console.log('Video fallback resumed');
+          } catch (err) {
+            // Ignore play errors
+          }
+        }
       }
     };
 
-    requestWakeLock();
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [keepScreenAwake, isMobile]);
 
-    // Release wake lock on cleanup
-    return () => {
-      if (wakeLock !== null) {
-        wakeLock.release().then(() => {
-          console.log('Wake Lock released on cleanup');
-        });
+  // Cleanup wake lock when disconnecting from session
+  useEffect(() => {
+    if (!sessionEnabled || !isConnected) {
+      // Session ended or disconnected - disable keep awake
+      if (keepScreenAwake) {
+        setKeepScreenAwake(false);
+        if (wakeLockRef.current) {
+          wakeLockRef.current.release().catch(() => {});
+          wakeLockRef.current = null;
+        }
+        if (noSleepVideoRef.current) {
+          noSleepVideoRef.current.pause();
+        }
       }
-    };
-  }, [isMobile, isSessionHost, sessionEnabled, isConnected]);
+    }
+  }, [sessionEnabled, isConnected, keepScreenAwake]);
 
   // Auto-close QR modal when first viewer connects
   useEffect(() => {
@@ -339,31 +420,67 @@ function App() {
           left: '50%',
           transform: 'translateX(-50%)',
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
           gap: '8px',
-          padding: '8px 16px',
-          backgroundColor: theme.cardBg,
-          border: `1px solid ${theme.border}`,
-          borderRadius: '20px',
-          fontSize: '11px',
-          color: isConnected ? theme.textMain : theme.textDim,
-          zIndex: 100,
-          backdropFilter: 'blur(10px)',
-          fontWeight: '600',
-          letterSpacing: '0.5px'
+          zIndex: 100
         }}>
+          {/* Connection indicator */}
           <div style={{
-            width: '10px',
-            height: '10px',
-            borderRadius: '50%',
-            backgroundColor: isConnected ? theme.success : theme.off,
-            boxShadow: isConnected ? `0 0 10px ${theme.success}` : 'inset 0 0 3px #000',
-            border: `1px solid ${isConnected ? theme.success : '#444'}`,
-            transition: 'all 0.2s ease'
-          }} />
-          <span style={{ textTransform: 'uppercase' }}>
-            {isConnected ? 'CONNECTED' : 'CONNECTING...'}
-          </span>
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '8px 16px',
+            backgroundColor: theme.cardBg,
+            border: `1px solid ${theme.border}`,
+            borderRadius: '20px',
+            fontSize: '11px',
+            color: isConnected ? theme.textMain : theme.textDim,
+            backdropFilter: 'blur(10px)',
+            fontWeight: '600',
+            letterSpacing: '0.5px'
+          }}>
+            <div style={{
+              width: '10px',
+              height: '10px',
+              borderRadius: '50%',
+              backgroundColor: isConnected ? theme.success : theme.off,
+              boxShadow: isConnected ? `0 0 10px ${theme.success}` : 'inset 0 0 3px #000',
+              border: `1px solid ${isConnected ? theme.success : '#444'}`,
+              transition: 'all 0.2s ease'
+            }} />
+            <span style={{ textTransform: 'uppercase' }}>
+              {isConnected ? 'CONNECTED' : 'CONNECTING...'}
+            </span>
+          </div>
+
+          {/* Keep Screen On toggle - only show when connected */}
+          {isConnected && (
+            <button
+              onClick={toggleKeepScreenAwake}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '8px 16px',
+                backgroundColor: keepScreenAwake ? theme.accent : theme.cardBg,
+                border: `1px solid ${keepScreenAwake ? theme.accent : theme.border}`,
+                borderRadius: '20px',
+                fontSize: '11px',
+                color: keepScreenAwake ? '#fff' : theme.textDim,
+                backdropFilter: 'blur(10px)',
+                fontWeight: '600',
+                letterSpacing: '0.5px',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <span style={{ fontSize: '14px' }}>{keepScreenAwake ? '☀️' : '🌙'}</span>
+              <span style={{ textTransform: 'uppercase' }}>
+                {keepScreenAwake ? 'SCREEN ON' : 'KEEP SCREEN ON'}
+              </span>
+            </button>
+          )}
         </div>
       )}
 
