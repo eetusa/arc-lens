@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { styles } from '../styles';
 
 // Rarity colors (toned down for backgrounds)
@@ -23,6 +23,7 @@ const PRIORITY_BORDER_COLOR = '#9c27b0';
  */
 const RecycleTabs = ({ outputs = [], isMobile = false }) => {
   const [failedImages, setFailedImages] = useState(new Set());
+  const [selectedTab, setSelectedTab] = useState(null);
 
   if (!outputs || outputs.length === 0) {
     return null;
@@ -31,6 +32,22 @@ const RecycleTabs = ({ outputs = [], isMobile = false }) => {
   const handleImageError = (id) => {
     setFailedImages(prev => new Set([...prev, id]));
   };
+
+  const handleTabTap = (e, id) => {
+    if (isMobile) {
+      e.stopPropagation();
+      setSelectedTab(selectedTab === id ? null : id);
+    }
+  };
+
+  // Dismiss tooltip when tapping anywhere else
+  useEffect(() => {
+    if (!isMobile || !selectedTab) return;
+
+    const handleDocumentClick = () => setSelectedTab(null);
+    document.addEventListener('click', handleDocumentClick);
+    return () => document.removeEventListener('click', handleDocumentClick);
+  }, [isMobile, selectedTab]);
 
   const getBackgroundColor = (output) => {
     // Priority takes precedence over rarity
@@ -51,12 +68,10 @@ const RecycleTabs = ({ outputs = [], isMobile = false }) => {
   const containerStyle = isMobile ? {
     display: 'flex',
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: '6px',
     width: '100%',
-    maxWidth: '500px',
-    overflowX: 'auto',
-    paddingBottom: '8px',
-    WebkitOverflowScrolling: 'touch'
+    paddingBottom: '8px'
   } : styles.recycleTabsContainer;
 
   return (
@@ -104,13 +119,35 @@ const RecycleTabs = ({ outputs = [], isMobile = false }) => {
           flexShrink: 0
         } : styles.recycleTab(index);
 
+        const isSelected = selectedTab === output.id;
+
         return (
           <div
             key={output.id}
             style={tabStyle}
             className="recycle-tab"
+            onClick={(e) => handleTabTap(e, output.id)}
           >
-            {/* Instant tooltip - positioned differently for mobile */}
+            {/* Mobile tap tooltip */}
+            {isMobile && isSelected && (
+              <div style={{
+                position: 'absolute',
+                bottom: '100%',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                marginBottom: '4px',
+                backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                color: '#fff',
+                padding: '4px 8px',
+                borderRadius: '4px',
+                fontSize: '11px',
+                whiteSpace: 'nowrap',
+                zIndex: 100
+              }}>
+                {tooltipText}
+              </div>
+            )}
+            {/* Desktop hover tooltip */}
             {!isMobile && (
               <div style={{
                 position: 'absolute',
