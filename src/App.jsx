@@ -256,9 +256,14 @@ function App() {
     }
   }, [sessionEnabled, isConnected, keepScreenAwake]);
 
-  // Auto-close QR modal when first viewer connects
+  // Auto-close QR modal when a new viewer connects (not when modal opens with existing viewers)
+  const prevViewerCountRef = useRef(syncViewerCount);
   useEffect(() => {
-    if (isSessionHost && syncViewerCount > 0 && showSessionModal) {
+    const prevCount = prevViewerCountRef.current;
+    prevViewerCountRef.current = syncViewerCount;
+
+    // Only close if viewer count increased (new device joined)
+    if (isSessionHost && syncViewerCount > prevCount && showSessionModal) {
       setShowSessionModal(false);
     }
   }, [isSessionHost, syncViewerCount, showSessionModal]);

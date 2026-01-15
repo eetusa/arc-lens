@@ -108,6 +108,33 @@ function SessionConnector({ onConnect, onCancel }) {
     }
   };
 
+  // Handle paste: distribute digits across all three inputs
+  const handlePaste = (e) => {
+    e.preventDefault();
+    const pastedText = e.clipboardData.getData('text');
+    const digitsOnly = pastedText.replace(/\D/g, '');
+
+    if (digitsOnly.length === 0) return;
+
+    // Distribute across the three parts
+    const newPart1 = digitsOnly.slice(0, 4);
+    const newPart2 = digitsOnly.slice(4, 8);
+    const newPart3 = digitsOnly.slice(8, 12);
+
+    setPart1(newPart1);
+    setPart2(newPart2);
+    setPart3(newPart3);
+
+    // Focus the appropriate input based on what was filled
+    if (newPart3.length > 0) {
+      input3Ref.current?.focus();
+    } else if (newPart2.length > 0) {
+      input2Ref.current?.focus();
+    } else if (newPart1.length === 4) {
+      input2Ref.current?.focus();
+    }
+  };
+
   const handleKeyDown = (e, part, setPart, prevRef) => {
     // Handle backspace: if current field is empty, go to previous field
     if (e.key === 'Backspace' && part === '' && prevRef?.current) {
@@ -460,6 +487,7 @@ function SessionConnector({ onConnect, onCancel }) {
                 value={part1}
                 onChange={(e) => handleInputChange(e.target.value, part1, setPart1, input2Ref)}
                 onKeyDown={(e) => handleKeyDown(e, part1, setPart1, null)}
+                onPaste={handlePaste}
                 placeholder="1234"
                 maxLength={4}
                 autoComplete="off"
@@ -491,6 +519,7 @@ function SessionConnector({ onConnect, onCancel }) {
                 value={part2}
                 onChange={(e) => handleInputChange(e.target.value, part2, setPart2, input3Ref)}
                 onKeyDown={(e) => handleKeyDown(e, part2, setPart2, input1Ref)}
+                onPaste={handlePaste}
                 placeholder="5678"
                 maxLength={4}
                 autoComplete="off"
@@ -522,6 +551,7 @@ function SessionConnector({ onConnect, onCancel }) {
                 value={part3}
                 onChange={(e) => handleInputChange(e.target.value, part3, setPart3, null)}
                 onKeyDown={(e) => handleKeyDown(e, part3, setPart3, input2Ref)}
+                onPaste={handlePaste}
                 placeholder="9012"
                 maxLength={4}
                 autoComplete="off"
