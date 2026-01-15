@@ -34,6 +34,15 @@ body {
   100% { transform: rotate(360deg); }
 }
 
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(0, 120, 212, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 120, 212, 0.8), 0 0 30px rgba(0, 120, 212, 0.4);
+  }
+}
+
 /* Instant tooltip for recycle tabs */
 .recycle-tab:hover .recycle-tooltip {
   opacity: 1 !important;
