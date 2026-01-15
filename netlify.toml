@@ -21,3 +21,9 @@
   to = "https://umami-chi-eight-52.vercel.app/:splat"
   status = 200
   force = true
+
+# SPA routing for /join/:sessionId (QR code direct links)
+[[redirects]]
+  from = "/join/*"
+  to = "/index.html"
+  status = 200
