@@ -268,6 +268,25 @@ function App() {
     }
   }, [isSessionHost, syncViewerCount, showSessionModal]);
 
+  // Handle /join/:sessionId URL for direct session joining (e.g., from native camera QR scan)
+  useEffect(() => {
+    const path = window.location.pathname;
+    const joinMatch = path.match(/^\/join\/(\d{12})$/);
+
+    if (joinMatch) {
+      const urlSessionId = joinMatch[1];
+      console.log('Join URL detected, connecting to session:', urlSessionId);
+
+      // Connect as viewer
+      setSessionId(urlSessionId);
+      setIsSessionHost(false);
+      setSessionEnabled(true);
+
+      // Clean up URL without reload
+      window.history.replaceState({}, '', '/');
+    }
+  }, []);
+
   // --- INITIAL DATA FETCH ---
   useEffect(() => {
     // Initialize AdvisorEngine for manual item search
