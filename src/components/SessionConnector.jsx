@@ -224,48 +224,52 @@ function SessionConnector({ onConnect, onCancel }) {
           </div>
 
           {/* Options */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <button
               style={{
                 width: '100%',
-                padding: '16px',
-                fontSize: '16px',
-                backgroundColor: '#00bcd4',
-                border: 'none',
-                borderRadius: '8px',
-                color: '#000',
+                padding: '14px 16px',
+                fontSize: '13px',
+                backgroundColor: 'transparent',
+                border: '1px solid #0078d4',
+                borderRadius: '6px',
+                color: '#0078d4',
                 fontWeight: '600',
+                letterSpacing: '0.5px',
+                textTransform: 'uppercase',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '12px'
+                gap: '10px'
               }}
               onClick={startScanning}
             >
-              <span style={{ fontSize: '24px' }}>📷</span>
+              <span style={{ fontSize: '16px' }}>◎</span>
               Scan QR Code
             </button>
 
             <button
               style={{
                 width: '100%',
-                padding: '16px',
-                fontSize: '16px',
-                backgroundColor: '#1a1a1a',
+                padding: '14px 16px',
+                fontSize: '13px',
+                backgroundColor: 'transparent',
                 border: '1px solid #444',
-                borderRadius: '8px',
-                color: '#fff',
+                borderRadius: '6px',
+                color: '#888',
                 fontWeight: '600',
+                letterSpacing: '0.5px',
+                textTransform: 'uppercase',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '12px'
+                gap: '10px'
               }}
               onClick={() => setMode('manual')}
             >
-              <span style={{ fontSize: '24px' }}>⌨️</span>
+              <span style={{ fontSize: '14px' }}>#</span>
               Enter Session ID
             </button>
           </div>
@@ -574,12 +578,14 @@ function SessionConnector({ onConnect, onCancel }) {
               style={{
                 width: '100%',
                 padding: '14px',
-                fontSize: '16px',
-                backgroundColor: '#00bcd4',
-                border: 'none',
-                borderRadius: '8px',
-                color: '#000',
+                fontSize: '13px',
+                backgroundColor: 'transparent',
+                border: '1px solid #0078d4',
+                borderRadius: '6px',
+                color: '#0078d4',
                 fontWeight: '600',
+                letterSpacing: '0.5px',
+                textTransform: 'uppercase',
                 cursor: 'pointer'
               }}
               onClick={handleManualConnect}

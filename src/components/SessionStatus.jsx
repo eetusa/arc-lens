@@ -8,9 +8,9 @@ const theme = {
   off: '#333333'
 };
 
-function SessionStatus({ isConnected, role, viewerCount, onToggle }) {
-  if (!isConnected && role === null) {
-    // Not in a session
+function SessionStatus({ isConnected, role, viewerCount, onToggle, onDisconnect }) {
+  if (role === null) {
+    // Not in a session (role is null when sessionEnabled is false)
     return (
       <button
         style={{
@@ -73,6 +73,36 @@ function SessionStatus({ isConnected, role, viewerCount, onToggle }) {
           }}>
             {isConnected ? `MOBILE (${viewerCount})` : 'CONNECTING...'}
           </span>
+          {/* Disconnect button - right next to MOBILE text */}
+          {isConnected && (
+            <button
+              style={{
+                width: '18px',
+                height: '18px',
+                padding: 0,
+                marginLeft: '2px',
+                backgroundColor: 'transparent',
+                border: 'none',
+                color: theme.textDim,
+                fontSize: '12px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'color 0.2s'
+              }}
+              onClick={onDisconnect}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#ff4444';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = theme.textDim;
+              }}
+              title="Disconnect session"
+            >
+              ⏻
+            </button>
+          )}
         </div>
         <button
           style={{
@@ -125,6 +155,36 @@ function SessionStatus({ isConnected, role, viewerCount, onToggle }) {
         }}>
           {isConnected ? 'CONNECTED' : 'CONNECTING...'}
         </span>
+        {/* Disconnect button - right next to CONNECTED text */}
+        {isConnected && (
+          <button
+            style={{
+              width: '18px',
+              height: '18px',
+              padding: 0,
+              marginLeft: '2px',
+              backgroundColor: 'transparent',
+              border: 'none',
+              color: theme.textDim,
+              fontSize: '12px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'color 0.2s'
+            }}
+            onClick={onDisconnect}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = '#ff4444';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = theme.textDim;
+            }}
+            title="Disconnect"
+          >
+            ⏻
+          </button>
+        )}
       </div>
     );
   }
