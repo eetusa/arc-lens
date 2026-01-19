@@ -144,8 +144,12 @@ export function useVisionSystem(stationLevels, activeQuests, prioritySettings = 
 
   // --- INIT WORKER & LISTENER ---
   useEffect(() => {
-    // Skip worker initialization entirely on mobile devices
-    if (isMobile) {
+    // Synchronous touch detection - don't rely on isMobile prop which may have race condition
+    // This runs before any async work to prevent worker loading on mobile
+    const isTouchDevice = navigator.maxTouchPoints > 0 || 'ontouchstart' in window;
+
+    // Skip worker initialization entirely on mobile/touch devices
+    if (isMobile || isTouchDevice) {
       setWorkerStatus("Mobile (Vision System Disabled)");
       return;
     }
