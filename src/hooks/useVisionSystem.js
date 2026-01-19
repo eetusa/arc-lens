@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import VisionWorker from '../workers/vision.worker.js?worker';
 import { trackSessionStart, trackSessionEnd, trackItemRecognition } from '../utils/analytics.js';
+
+// NOTE: VisionWorker is dynamically imported only on desktop to prevent
+// mobile browsers from loading WASM/SharedArrayBuffer code that can cause crashes
 
 export function useVisionSystem(stationLevels, activeQuests, prioritySettings = {}, inventoryOverride = false, isMobile = false) {
   // --- REFS (Single Source of Truth for Loop) ---
@@ -148,49 +150,59 @@ export function useVisionSystem(stationLevels, activeQuests, prioritySettings = 
       return;
     }
 
-    try {
-      workerRef.current = new VisionWorker();
-    } catch (e) {
-      console.error("Worker Instantiation Error:", e);
-    }
+    // Dynamically import worker only on desktop
+    // This prevents mobile from loading WASM/SharedArrayBuffer code
+    import('../workers/vision.worker.js?worker').then((module) => {
+      const VisionWorker = module.default;
 
-    workerRef.current.onerror = (evt) => {
-      setWorkerStatus(`Crashed: ${evt.message || "Unknown Error"}`);
-    };
-
-    workerRef.current.onmessage = (e) => {
-      const { type, payload } = e.data;
-      if (type === 'STATUS') setWorkerStatus(payload);
-
-      if (type === 'OCR_STATUS') setIsAnalyzing(payload.isScanning);
-      if (type === 'DEBUG_TEXT') setDebugRawText(payload);
-
-      // CHANGED: Handle Object Update
-      if (type === 'RESULT_TEXT_UPDATE') {
-        // payload.analysis is the AdvisorAnalysis object
-        if (payload.analysis) {
-          setCurrentAnalysis(payload.analysis);
-
-          // Track item recognition event
-          trackItemRecognition(payload.analysis);
-        }
+      try {
+        workerRef.current = new VisionWorker();
+      } catch (e) {
+        console.error("Worker Instantiation Error:", e);
+        return;
       }
 
-      if (type === 'RESULT') {
-        handleWorkerResult(payload);
+      workerRef.current.onerror = (evt) => {
+        setWorkerStatus(`Crashed: ${evt.message || "Unknown Error"}`);
+      };
 
-        // --- LOOP TRIGGER ---
-        if (isLooping.current) {
-          if (scanDelayRef.current > 0) {
-            setTimeout(() => {
-              requestAnimationFrame(captureSingleFrame);
-            }, scanDelayRef.current);
-          } else {
-            requestAnimationFrame(captureSingleFrame);
+      workerRef.current.onmessage = (e) => {
+        const { type, payload } = e.data;
+        if (type === 'STATUS') setWorkerStatus(payload);
+
+        if (type === 'OCR_STATUS') setIsAnalyzing(payload.isScanning);
+        if (type === 'DEBUG_TEXT') setDebugRawText(payload);
+
+        // CHANGED: Handle Object Update
+        if (type === 'RESULT_TEXT_UPDATE') {
+          // payload.analysis is the AdvisorAnalysis object
+          if (payload.analysis) {
+            setCurrentAnalysis(payload.analysis);
+
+            // Track item recognition event
+            trackItemRecognition(payload.analysis);
           }
         }
-      }
-    };
+
+        if (type === 'RESULT') {
+          handleWorkerResult(payload);
+
+          // --- LOOP TRIGGER ---
+          if (isLooping.current) {
+            if (scanDelayRef.current > 0) {
+              setTimeout(() => {
+                requestAnimationFrame(captureSingleFrame);
+              }, scanDelayRef.current);
+            } else {
+              requestAnimationFrame(captureSingleFrame);
+            }
+          }
+        }
+      };
+    }).catch((err) => {
+      console.error("Failed to load vision worker:", err);
+      setWorkerStatus("Failed to load vision system");
+    });
   }, [isMobile]);
 
   // --- DATA SYNC ---
