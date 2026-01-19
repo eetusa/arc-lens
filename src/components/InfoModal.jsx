@@ -1,13 +1,70 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { styles, theme } from '../styles';
 
+// Changelog data - add new entries at the top
+const CHANGELOG = [
+  {
+    version: '0.9.2',
+    date: '19.1.2025',
+    changes: [
+      'Fixed mobile crashes caused by vision system loading on touch devices',
+      'Removed unused OpenCV.js script that was loading on all devices',
+      'Added Changelog tab to Info modal',
+    ]
+  },
+  {
+    version: '0.9.1',
+    date: '14.1.2025',
+    changes: [
+      'Added Game/Companion mode toggle for desktop users',
+      'Added session disconnect functionality',
+      'Added QR code scanning via native camera apps',
+      'Fixed session ID paste and QR modal auto-close',
+      'Improved mobile layout and UX',
+    ]
+  },
+  {
+    version: '0.9.0',
+    date: '10.1.2025',
+    changes: [
+      'Added Mobile Companion feature - use your phone as a second screen',
+      'Added session system with QR code connection',
+      'Added version tracking and update notifications',
+    ]
+  },
+  {
+    version: '0.1 - 0.8',
+    date: 'Jan 2025',
+    changes: [
+      'Real-time inventory analysis via screen capture',
+      'Keep/Sell/Recycle recommendations based on item value',
+      'Station level configuration for upgrade tracking',
+      'Quest tracking to identify needed items',
+      'Priority system for marking items to always keep',
+      'OCR-based item detection using ONNX Runtime',
+    ]
+  }
+];
+
 function InfoModal({ onClose, currentVersion, isNewVersion, onVersionSeen }) {
+  const [activeTab, setActiveTab] = useState('info');
+  const contentRef = useRef(null);
+
   // Mark version as seen when modal opens
   useEffect(() => {
     if (isNewVersion && onVersionSeen) {
       onVersionSeen();
     }
   }, [isNewVersion, onVersionSeen]);
+
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId);
+    // Reset scroll position when switching tabs
+    if (contentRef.current) {
+      contentRef.current.scrollTop = 0;
+    }
+  };
+
   const handleBackdropClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
@@ -33,7 +90,42 @@ function InfoModal({ onClose, currentVersion, isNewVersion, onVersionSeen }) {
           <button style={styles.modalClose} onClick={onClose}>&times;</button>
         </div>
 
-        <div style={styles.modalContent}>
+        {/* Tabs */}
+        <div style={{
+          display: 'flex',
+          gap: '24px',
+          padding: '0 20px',
+          borderBottom: `1px solid ${theme.border}`
+        }}>
+          {[
+            { id: 'info', label: 'Info' },
+            { id: 'changelog', label: 'Changelog' }
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => handleTabChange(tab.id)}
+              style={{
+                padding: '8px 0',
+                fontSize: '13px',
+                fontWeight: activeTab === tab.id ? '600' : '400',
+                background: 'transparent',
+                color: activeTab === tab.id ? theme.accent : theme.textMuted,
+                border: 'none',
+                borderBottom: activeTab === tab.id ? `2px solid ${theme.accent}` : '2px solid transparent',
+                marginBottom: '-1px',
+                cursor: 'pointer',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        <div ref={contentRef} style={styles.modalContent}>
+          {/* INFO TAB */}
+          {activeTab === 'info' && (
+            <>
           {/* What's New - shown when there's a version update */}
           {isNewVersion && (
             <div style={{
@@ -266,6 +358,66 @@ function InfoModal({ onClose, currentVersion, isNewVersion, onVersionSeen }) {
               All game-related content, names, and assets belong to their respective owners.
             </div>
           </div>
+            </>
+          )}
+
+          {/* CHANGELOG TAB */}
+          {activeTab === 'changelog' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {CHANGELOG.map((release, idx) => (
+                <div
+                  key={release.version}
+                  style={{
+                    ...styles.modalSection,
+                    ...(idx === 0 && {
+                      backgroundColor: 'rgba(0, 120, 212, 0.1)',
+                      border: `1px solid ${theme.accent}`,
+                      borderRadius: '8px',
+                      padding: '12px'
+                    })
+                  }}
+                >
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    marginBottom: '8px'
+                  }}>
+                    <span style={{
+                      fontSize: '14px',
+                      fontWeight: '700',
+                      color: idx === 0 ? theme.accent : theme.text
+                    }}>
+                      v{release.version}
+                    </span>
+                    <span style={{
+                      fontSize: '11px',
+                      color: theme.textDim
+                    }}>
+                      {release.date}
+                    </span>
+                    {idx === 0 && (
+                      <span style={{
+                        fontSize: '9px',
+                        background: theme.accent,
+                        color: '#000',
+                        padding: '2px 6px',
+                        borderRadius: '4px',
+                        fontWeight: 'bold'
+                      }}>
+                        LATEST
+                      </span>
+                    )}
+                  </div>
+                  <ul style={{ ...styles.modalList, marginBottom: 0 }}>
+                    {release.changes.map((change, changeIdx) => (
+                      <li key={changeIdx} style={styles.modalListItem}>{change}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
