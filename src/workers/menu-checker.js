@@ -69,10 +69,11 @@ export class MenuChecker {
             const w = srcMat.cols;
 
             // --- 1. SEARCH AREA ---
-            // Adjusted: Look at Top 15%, Horizontal center 60%
-            let x = Math.floor(w * 0.20); 
+            // OPTIMIZED: Reduced from 60% to 40% width (menu header is always centered)
+            // This reduces template matching cost by ~33%
+            let x = Math.floor(w * 0.30);
             let y = 0;
-            let roiW = Math.floor(w * 0.60); 
+            let roiW = Math.floor(w * 0.40);
             let roiH = Math.floor(h * 0.10); 
 
             let rect = new cv.Rect(x, y, roiW, roiH);
@@ -92,7 +93,7 @@ export class MenuChecker {
             // If the brightest pixel is dark grey (<100), it's definitely just a wall/mud.
             const minMax = cv.minMaxLoc(this.gray);
             if (minMax.maxVal < 100) {
-                 // Too dark to contain white UI. 
+                 // Too dark to contain white UI.
                  // Return the debug image so user sees the dark box, then exit.
                  return this.finalize(cv, false, 0, this.debugMat);
             }
@@ -264,10 +265,10 @@ export class MenuChecker {
         let finalDebug = new cv.Mat();
         cv.cvtColor(debugMat, finalDebug, cv.COLOR_RGB2RGBA);
         const debugBuffer = new Uint8ClampedArray(finalDebug.data).buffer.slice(0);
-        
+
         // Clean up the temp mat, but NOT the source debugMat (it's reused)
         finalDebug.delete();
-        
+
         return {
             isOpen: isOpen,
             score: score,

@@ -19,6 +19,22 @@ let lastHeaderMat = null;
 let inventoryOverride = false; // Debug override for menu detection
 const mats = { src: null };
 
+// OPTIMIZED: OffscreenCanvas for ImageBitmap processing
+// This moves getImageData from main thread to worker thread
+let workerCanvas = null;
+let workerCtx = null;
+
+// --- PERFORMANCE: Menu Detection Skip (Optimization A) ---
+// When menu is confirmed open, skip expensive template matching for N frames
+let menuCheckSkipCounter = 0;
+const MENU_CHECK_SKIP_INTERVAL = 10; // Re-check every 10 frames (~166ms at 60fps)
+let lastMenuState = false;
+
+// --- PERFORMANCE: Adaptive Frame Skip (Optimization B) ---
+// When tooltip is stable, progressively skip more frames
+let consecutiveIdenticalFrames = 0;
+let frameSkipCounter = 0;
+
 // NEW: Holds the last confirmed valid item (Image + Text)
 // This serves as the "Latch" to prevent bad data from flickering in the UI.
 let stableState = {
@@ -132,33 +148,70 @@ self.onmessage = (e) => {
 };
 
 // --- 3. MAIN LOOP ---
-async function processFrame({ width, height, buffer }) {
+async function processFrame({ width, height, buffer, bitmap }) {
     let analyticsData = null;
     let debugData = null;
 
     try {
         if (!self.cv || !self.cv.Mat) return;
 
+        // OPTIMIZED: Handle ImageBitmap input (moves getImageData to worker thread)
+        let pixelBuffer = buffer;
+        if (bitmap) {
+            // Initialize or resize worker canvas
+            if (!workerCanvas || workerCanvas.width !== width || workerCanvas.height !== height) {
+                workerCanvas = new OffscreenCanvas(width, height);
+                workerCtx = workerCanvas.getContext('2d', { willReadFrequently: true });
+            }
+            // Draw bitmap and extract pixel data (now happens off main thread!)
+            workerCtx.drawImage(bitmap, 0, 0);
+            const imageData = workerCtx.getImageData(0, 0, width, height);
+            pixelBuffer = imageData.data.buffer;
+            bitmap.close(); // Release the bitmap
+        }
+
         if (mats.src === null) mats.src = new self.cv.Mat(height, width, self.cv.CV_8UC4);
         else if (mats.src.rows !== height || mats.src.cols !== width) {
             mats.src.delete();
             mats.src = new self.cv.Mat(height, width, self.cv.CV_8UC4);
         }
-        mats.src.data.set(new Uint8Array(buffer));
+        mats.src.data.set(new Uint8Array(pixelBuffer));
 
         let isMenuOpen = false;
         let menuDebugData = null;
 
+        // --- OPTIMIZATION A: Skip menu detection while menu is open ---
+        // Menu closing requires user action (pressing key/clicking), so we can
+        // tolerate ~166ms detection delay (10 frames at 60fps)
         if (menuChecker && menuChecker.ready) {
-            const result = menuChecker.check(self.cv, mats.src);
-            isMenuOpen = result.isOpen;
-            menuDebugData = result.debug;
+            if (lastMenuState && menuCheckSkipCounter < MENU_CHECK_SKIP_INTERVAL) {
+                // Menu was open last frame - skip expensive template matching
+                menuCheckSkipCounter++;
+                isMenuOpen = true;
+                menuDebugData = null; // No debug data when skipping
+            } else {
+                // Either menu was closed, or we've reached the re-check interval
+                const result = menuChecker.check(self.cv, mats.src);
+                isMenuOpen = result.isOpen;
+                menuDebugData = result.debug;
+
+                // Update state tracking
+                if (isMenuOpen !== lastMenuState) {
+                    menuCheckSkipCounter = 0; // Reset on state change
+                } else if (isMenuOpen) {
+                    menuCheckSkipCounter = 0; // Reset counter after re-check
+                }
+                lastMenuState = isMenuOpen;
+            }
         }
 
         // Skip processing if menu is not open AND override is not active
         if (!isMenuOpen && !inventoryOverride) {
             // Clear stable state when menu closes so we don't show old items later
             stableState = { analysis: null, buffer: null, width: 0, height: 0 };
+            // Reset adaptive skip counters when menu closes
+            consecutiveIdenticalFrames = 0;
+            frameSkipCounter = 0;
 
             const transfers = [];
             if (menuDebugData && menuDebugData.buffer) transfers.push(menuDebugData.buffer);
@@ -201,9 +254,41 @@ async function processFrame({ width, height, buffer }) {
                 self.cv.cvtColor(headerRoi, checkMat, self.cv.COLOR_RGBA2GRAY);
                 const isSame = areImagesIdentical(self.cv, checkMat, lastHeaderMat);
 
+                // --- OPTIMIZATION B: Adaptive frame skip for stable tooltips ---
+                // When tooltip hasn't changed, progressively increase skip interval
+                // This reduces CPU load when user isn't moving mouse over items
                 if (isSame) {
+                    consecutiveIdenticalFrames++;
                     checkMat.delete();
+
+                    // Adaptive backoff: skip more frames when tooltip is very stable
+                    // After 5 identical frames: skip every 2nd frame
+                    // After 10 identical frames: skip every 3rd frame
+                    // After 20 identical frames: skip every 4th frame
+                    let skipThreshold = 1;
+                    if (consecutiveIdenticalFrames >= 20) {
+                        skipThreshold = 4;
+                    } else if (consecutiveIdenticalFrames >= 10) {
+                        skipThreshold = 3;
+                    } else if (consecutiveIdenticalFrames >= 5) {
+                        skipThreshold = 2;
+                    }
+
+                    frameSkipCounter++;
+                    if (frameSkipCounter < skipThreshold) {
+                        // Skip this frame entirely - early exit
+                        headerRoi.delete();
+                        crop.delete();
+                        const transfers = [];
+                        if (menuDebugData && menuDebugData.buffer) transfers.push(menuDebugData.buffer);
+                        postMessage({ type: 'RESULT', payload: { isMenuOpen: effectiveMenuOpen, analytics: null, debug: null, menuDebug: menuDebugData } }, transfers);
+                        return;
+                    }
+                    frameSkipCounter = 0;
                 } else {
+                    // Tooltip changed - reset adaptive skip counters
+                    consecutiveIdenticalFrames = 0;
+                    frameSkipCounter = 0;
                     isOcrBusy = true;
                     if (lastHeaderMat) lastHeaderMat.delete();
                     lastHeaderMat = checkMat.clone();
@@ -257,6 +342,9 @@ async function processFrame({ width, height, buffer }) {
             
             crop.delete();
         } else {
+            // Tooltip not found - reset adaptive skip counters
+            consecutiveIdenticalFrames = 0;
+            frameSkipCounter = 0;
             if (lastHeaderMat) { lastHeaderMat.delete(); lastHeaderMat = null; }
         }
 
