@@ -233,7 +233,7 @@ export function useVisionSystem(stationLevels, activeQuests, prioritySettings = 
   const startCapture = async () => {
     try {
       const stream = await navigator.mediaDevices.getDisplayMedia({
-        video: { cursor: "always" }, audio: false
+        video: { cursor: "always", frameRate: { max: 20 } }, audio: false
       });
 
       // --- NEW: DETECT STOP SHARING ---
