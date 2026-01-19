@@ -55,8 +55,7 @@ function InfoModal({ onClose, currentVersion, isNewVersion, onVersionSeen }) {
                 What's New in v{currentVersion}
               </span>
               <ul style={{ ...styles.modalList, marginBottom: 0 }}>
-                <li style={styles.modalListItem}>Added version tracking and update notifications</li>
-                <li style={styles.modalListItem}>Info button now pulses when new updates are available</li>
+                <li style={styles.modalListItem}>19.1.2025 Fixed mobile crashes caused by vision system loading on touch devices</li>
               </ul>
             </div>
           )}
