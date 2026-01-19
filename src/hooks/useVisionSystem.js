@@ -96,7 +96,9 @@ export function useVisionSystem(stationLevels, activeQuests, prioritySettings = 
   };
 
   // --- INTERNAL: CAPTURE SINGLE FRAME ---
-  const captureSingleFrame = () => {
+  // OPTIMIZED: Uses createImageBitmap instead of getImageData on main thread
+  // This avoids CPU-GPU-CPU roundtrip and keeps canvas GPU-accelerated
+  const captureSingleFrame = async () => {
     if (!videoRef.current || !workerRef.current || !isLooping.current) return;
     const video = videoRef.current;
 
@@ -114,30 +116,46 @@ export function useVisionSystem(stationLevels, activeQuests, prioritySettings = 
         miniCtx.drawImage(video, 0, 0);
       }
 
-      // Prepare Offscreen Canvas
-      if (!offscreenRef.current) {
-        offscreenRef.current = new OffscreenCanvas(width, height);
-      }
-      const offscreen = offscreenRef.current;
-      if (offscreen.width !== width || offscreen.height !== height) {
-        offscreen.width = width;
-        offscreen.height = height;
-      }
-
-      const ctx = offscreen.getContext('2d', { willReadFrequently: true });
-      ctx.drawImage(video, 0, 0);
-      const imageData = ctx.getImageData(0, 0, width, height);
+      // OPTIMIZED: Create ImageBitmap directly from video element
+      // This is faster than drawing to canvas + getImageData
+      // ImageBitmap is transferable, so zero-copy to worker
+      const bitmap = await createImageBitmap(video);
 
       workerRef.current.postMessage({
         type: 'PROCESS_FRAME',
         payload: {
-          width: imageData.width,
-          height: imageData.height,
-          buffer: imageData.data.buffer
+          width: width,
+          height: height,
+          bitmap: bitmap
         }
-      }, [imageData.data.buffer]);
+      }, [bitmap]); // Transfer ownership to worker
 
     } else {
+      requestAnimationFrame(captureSingleFrame);
+    }
+  };
+
+  // --- INTERNAL: Schedule next frame capture ---
+  // OPTIMIZED: Uses requestVideoFrameCallback when available
+  // This syncs with actual video frames instead of display refresh rate
+  const scheduleNextFrame = () => {
+    if (!isLooping.current) return;
+
+    const video = videoRef.current;
+    const delay = scanDelayRef.current;
+
+    if (delay > 0) {
+      // Slow scanning mode - use timeout
+      setTimeout(() => {
+        requestAnimationFrame(captureSingleFrame);
+      }, delay);
+    } else if (video && 'requestVideoFrameCallback' in video) {
+      // Fast mode with requestVideoFrameCallback - sync with actual video frames
+      video.requestVideoFrameCallback(() => {
+        captureSingleFrame();
+      });
+    } else {
+      // Fallback to requestAnimationFrame
       requestAnimationFrame(captureSingleFrame);
     }
   };
@@ -192,15 +210,7 @@ export function useVisionSystem(stationLevels, activeQuests, prioritySettings = 
           handleWorkerResult(payload);
 
           // --- LOOP TRIGGER ---
-          if (isLooping.current) {
-            if (scanDelayRef.current > 0) {
-              setTimeout(() => {
-                requestAnimationFrame(captureSingleFrame);
-              }, scanDelayRef.current);
-            } else {
-              requestAnimationFrame(captureSingleFrame);
-            }
-          }
+          scheduleNextFrame();
         }
       };
     }).catch((err) => {

@@ -19,6 +19,11 @@ let lastHeaderMat = null;
 let inventoryOverride = false; // Debug override for menu detection
 const mats = { src: null };
 
+// OPTIMIZED: OffscreenCanvas for ImageBitmap processing
+// This moves getImageData from main thread to worker thread
+let workerCanvas = null;
+let workerCtx = null;
+
 // --- PERFORMANCE: Menu Detection Skip (Optimization A) ---
 // When menu is confirmed open, skip expensive template matching for N frames
 let menuCheckSkipCounter = 0;
@@ -143,19 +148,34 @@ self.onmessage = (e) => {
 };
 
 // --- 3. MAIN LOOP ---
-async function processFrame({ width, height, buffer }) {
+async function processFrame({ width, height, buffer, bitmap }) {
     let analyticsData = null;
     let debugData = null;
 
     try {
         if (!self.cv || !self.cv.Mat) return;
 
+        // OPTIMIZED: Handle ImageBitmap input (moves getImageData to worker thread)
+        let pixelBuffer = buffer;
+        if (bitmap) {
+            // Initialize or resize worker canvas
+            if (!workerCanvas || workerCanvas.width !== width || workerCanvas.height !== height) {
+                workerCanvas = new OffscreenCanvas(width, height);
+                workerCtx = workerCanvas.getContext('2d', { willReadFrequently: true });
+            }
+            // Draw bitmap and extract pixel data (now happens off main thread!)
+            workerCtx.drawImage(bitmap, 0, 0);
+            const imageData = workerCtx.getImageData(0, 0, width, height);
+            pixelBuffer = imageData.data.buffer;
+            bitmap.close(); // Release the bitmap
+        }
+
         if (mats.src === null) mats.src = new self.cv.Mat(height, width, self.cv.CV_8UC4);
         else if (mats.src.rows !== height || mats.src.cols !== width) {
             mats.src.delete();
             mats.src = new self.cv.Mat(height, width, self.cv.CV_8UC4);
         }
-        mats.src.data.set(new Uint8Array(buffer));
+        mats.src.data.set(new Uint8Array(pixelBuffer));
 
         let isMenuOpen = false;
         let menuDebugData = null;
