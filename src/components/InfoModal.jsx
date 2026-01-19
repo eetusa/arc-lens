@@ -9,6 +9,7 @@ const CHANGELOG = [
     changes: [
       'Fixed mobile crashes caused by vision system loading on touch devices',
       'Removed unused OpenCV.js script that was loading on all devices',
+      'Added Changelog tab to Info modal',
     ]
   },
   {
