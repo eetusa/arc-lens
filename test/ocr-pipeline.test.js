@@ -39,29 +39,37 @@ function pngToMat(cv, pngData) {
     return mat;
 }
 
-// Preprocess image for PaddleOCR (from vision.worker.js)
-function preprocessForPaddle(cv, srcMat) {
-    const targetH = 48;
-    const minW = 320;
+// Preprocess image for PaddleOCR
+// Improved settings: 72px height and no erosion for better Roman numeral recognition across resolutions
+function preprocessForPaddle(cv, srcMat, options = {}) {
+    const targetH = options.targetH || 72;  // 72px works best for both 1080p and 1440p
+    const minW = options.minW || 320;
+    const stretchFactor = options.stretchFactor || 1.2;
+    const useErosion = options.useErosion === true; // default false (was true)
+    const erosionSize = options.erosionSize || 2;
 
     // 1. GRAYSCALE
     let gray = new cv.Mat();
     cv.cvtColor(srcMat, gray, cv.COLOR_RGBA2GRAY);
 
-    // THINNING (EROSION)
-    let eroded = new cv.Mat();
-    let M = cv.Mat.ones(2, 2, cv.CV_8U);
-    cv.erode(gray, eroded, M, new cv.Point(-1, -1), 1);
+    let processed = gray;
 
-    M.delete();
-    gray.delete();
+    // THINNING (EROSION) - optional
+    if (useErosion && erosionSize > 0) {
+        let eroded = new cv.Mat();
+        let M = cv.Mat.ones(erosionSize, erosionSize, cv.CV_8U);
+        cv.erode(gray, eroded, M, new cv.Point(-1, -1), 1);
+        M.delete();
+        gray.delete();
+        processed = eroded;
+    }
 
     // 2. INVERT
     let inverted = new cv.Mat();
-    cv.bitwise_not(eroded, inverted);
+    cv.bitwise_not(processed, inverted);
+    processed.delete();
 
     // 3. STRETCH
-    const stretchFactor = 1.2;
     const ratio = inverted.cols / inverted.rows;
     let newW = Math.floor(targetH * ratio * stretchFactor);
 
@@ -76,7 +84,6 @@ function preprocessForPaddle(cv, srcMat) {
     resized.copyTo(roi);
 
     // Cleanup
-    eroded.delete();
     inverted.delete();
     roi.delete();
     resized.delete();
@@ -155,25 +162,47 @@ function extractHeaderROI(cv, crop) {
 }
 
 // Test case definitions - filename maps to expected item name
-// Format: { file: 'filename.png', expectedItem: 'Item Name' }
+// Files are organized in resolution subfolders: 1080p/ and 1440p/
+// Format: { file: 'resolution/filename.png', expectedItem: 'Item Name' }
 const TEST_CASES = [
+    // === 1440p Resolution ===
     // Anvil variants
-    { file: 'anvil_I.png', expectedItem: 'Anvil I' },
-    { file: 'anvil_II.png', expectedItem: 'Anvil II' },
-    { file: 'anvil_III.png', expectedItem: 'Anvil III' },
+    { file: '1440p/anvil_I.png', expectedItem: 'Anvil I' },
+    { file: '1440p/anvil_II.png', expectedItem: 'Anvil II' },
+    { file: '1440p/anvil_III.png', expectedItem: 'Anvil III' },
     // Stitcher variants (note typos in some filenames)
-    { file: 'stitcher_I.png', expectedItem: 'Stitcher I' },
-    { file: 'sticher_II.png', expectedItem: 'Stitcher II' },  // typo in filename
-    { file: 'sticher_III.png', expectedItem: 'Stitcher III' }, // typo in filename
-    { file: 'stitcher_IV.png', expectedItem: 'Stitcher IV' },
-    // Muzzle Brake
-    { file: 'muzzle_brake_II.png', expectedItem: 'Muzzle Brake II' },
-    // Compensator variants
-    { file: 'compensator_I.png', expectedItem: 'Compensator I' },
-    { file: 'compensator_II.png', expectedItem: 'Compensator II' },
-    // Grip variants
-    { file: 'vertical_grip_II.png', expectedItem: 'Vertical Grip II' },
-    { file: 'angled_grip_II.png', expectedItem: 'Angled Grip II' },
+    { file: '1440p/stitcher_I.png', expectedItem: 'Stitcher I' },
+    { file: '1440p/sticher_II.png', expectedItem: 'Stitcher II' },  // typo in filename
+    { file: '1440p/sticher_III.png', expectedItem: 'Stitcher III' }, // typo in filename
+    { file: '1440p/stitcher_IV.png', expectedItem: 'Stitcher IV' },
+    // Attachments
+    { file: '1440p/muzzle_brake_II.png', expectedItem: 'Muzzle Brake II' },
+    { file: '1440p/compensator_I.png', expectedItem: 'Compensator I' },
+    { file: '1440p/compensator_II.png', expectedItem: 'Compensator II' },
+    { file: '1440p/vertical_grip_II.png', expectedItem: 'Vertical Grip II' },
+    { file: '1440p/angled_grip_II.png', expectedItem: 'Angled Grip II' },
+    // Backpacks
+    { file: '1440p/looting_mk_1.png', expectedItem: 'Looting Mk. 1' },
+    { file: '1440p/looting_mk_2.png', expectedItem: 'Looting Mk. 2' },
+
+    // === 1080p Resolution ===
+    // Anvil variants
+    { file: '1080p/anvil_I.png', expectedItem: 'Anvil I' },
+    { file: '1080p/anvil_II.png', expectedItem: 'Anvil II' },
+    { file: '1080p/anvil_III.png', expectedItem: 'Anvil III' },
+    // Stitcher variants (note typos in some filenames)
+    { file: '1080p/sticher_I.png', expectedItem: 'Stitcher I' },  // typo in filename
+    { file: '1080p/stitcher_II.png', expectedItem: 'Stitcher II' },
+    { file: '1080p/stitcher_III.png', expectedItem: 'Stitcher III' },
+    // Attachments
+    { file: '1080p/muzzle_brake_II.png', expectedItem: 'Muzzle Brake II' },
+    { file: '1080p/compensator_I.png', expectedItem: 'Compensator I' },
+    { file: '1080p/vertical_grip_II.png', expectedItem: 'Vertical Grip II' },
+    { file: '1080p/extended_light_mag_II.png', expectedItem: 'Extended Light Mag II' },
+    { file: '1080p/stable_stock_I.png', expectedItem: 'Stable Stock I' },
+    // Backpacks
+    { file: '1080p/looting_mk_1.png', expectedItem: 'Looting Mk. 1' },
+    { file: '1080p/looting_mk_2.png', expectedItem: 'Looting Mk. 2' },
 ];
 
 describe('OCR Pipeline End-to-End', () => {
@@ -394,6 +423,190 @@ describe('OCR Pipeline End-to-End', () => {
             console.log(`Total: ${results.length} | Pass: ${passed} | Fail: ${failed} | Missing: ${missing} | Errors: ${errors}`);
 
             // This test always passes - it's for reporting
+            expect(true).toBe(true);
+        });
+    });
+
+    // Experimental: Test different preprocessing options on failing case
+    describe('Preprocessing Experiments', () => {
+        const PREPROCESS_OPTIONS = [
+            { name: '56px', targetH: 56, useErosion: false },
+            { name: '60px', targetH: 60, useErosion: false },
+            { name: '64px', targetH: 64, useErosion: false },
+            { name: '68px', targetH: 68, useErosion: false },
+            { name: '72px', targetH: 72, useErosion: false },
+        ];
+
+        it('should find best preprocessing for Stitcher III', async () => {
+            const testFile = '1440p/sticher_III.png';
+            const expectedItem = 'Stitcher III';
+            const testFilePath = path.join(FIXTURES_DIR, testFile);
+
+            if (!fs.existsSync(testFilePath)) {
+                console.log(`Skipping: ${testFile} not found`);
+                return;
+            }
+
+            console.log('\n=== Preprocessing Experiments for Stitcher III ===');
+            console.log('Option                          | OCR Raw             | Matched             | Result');
+            console.log('-'.repeat(95));
+
+            for (const opts of PREPROCESS_OPTIONS) {
+                const png = loadPNG(testFilePath);
+                const frameMat = pngToMat(cv, png);
+                const tooltipResult = TooltipFinder.findTooltip(cv, frameMat);
+
+                if (!tooltipResult.found) {
+                    frameMat.delete();
+                    console.log(`${opts.name.padEnd(31)} | ${'NO_TOOLTIP'.padEnd(19)} | ${'N/A'.padEnd(19)} | ERROR`);
+                    continue;
+                }
+
+                const crop = tooltipResult.crop;
+                const headerRoi = extractHeaderROI(cv, crop);
+
+                if (!headerRoi) {
+                    crop.delete();
+                    frameMat.delete();
+                    console.log(`${opts.name.padEnd(31)} | ${'NO_HEADER'.padEnd(19)} | ${'N/A'.padEnd(19)} | ERROR`);
+                    continue;
+                }
+
+                const inputTensor = preprocessForPaddle(cv, headerRoi, opts);
+                const feeds = { x: inputTensor };
+                const ocrResults = await ocrSession.run(feeds);
+                const outputKey = ocrSession.outputNames[0];
+                const outputTensor = ocrResults[outputKey];
+                const rawText = decodeTensorOutput(outputTensor.data, outputTensor.dims, vocab).trim();
+                const matchedItem = findBestMatch(rawText, allItemNames);
+
+                headerRoi.delete();
+                crop.delete();
+                frameMat.delete();
+
+                const passed = matchedItem === expectedItem;
+                console.log(`${opts.name.padEnd(31)} | ${rawText.substring(0, 19).padEnd(19)} | ${(matchedItem || 'null').padEnd(19)} | ${passed ? 'PASS' : 'FAIL'}`);
+            }
+
+            console.log('-'.repeat(95));
+            expect(true).toBe(true);
+        });
+
+        it('should find best preprocessing for 1080p Anvil III', async () => {
+            const testFile = '1080p/anvil_III.png';
+            const expectedItem = 'Anvil III';
+            const testFilePath = path.join(FIXTURES_DIR, testFile);
+
+            if (!fs.existsSync(testFilePath)) {
+                console.log(`Skipping: ${testFile} not found`);
+                return;
+            }
+
+            console.log('\n=== Preprocessing Experiments for 1080p Anvil III ===');
+            console.log('Option                          | OCR Raw             | Matched             | Result');
+            console.log('-'.repeat(95));
+
+            for (const opts of PREPROCESS_OPTIONS) {
+                const png = loadPNG(testFilePath);
+                const frameMat = pngToMat(cv, png);
+                const tooltipResult = TooltipFinder.findTooltip(cv, frameMat);
+
+                if (!tooltipResult.found) {
+                    frameMat.delete();
+                    console.log(`${opts.name.padEnd(31)} | ${'NO_TOOLTIP'.padEnd(19)} | ${'N/A'.padEnd(19)} | ERROR`);
+                    continue;
+                }
+
+                const crop = tooltipResult.crop;
+                const headerRoi = extractHeaderROI(cv, crop);
+
+                if (!headerRoi) {
+                    crop.delete();
+                    frameMat.delete();
+                    console.log(`${opts.name.padEnd(31)} | ${'NO_HEADER'.padEnd(19)} | ${'N/A'.padEnd(19)} | ERROR`);
+                    continue;
+                }
+
+                const inputTensor = preprocessForPaddle(cv, headerRoi, opts);
+                const feeds = { x: inputTensor };
+                const ocrResults = await ocrSession.run(feeds);
+                const outputKey = ocrSession.outputNames[0];
+                const outputTensor = ocrResults[outputKey];
+                const rawText = decodeTensorOutput(outputTensor.data, outputTensor.dims, vocab).trim();
+                const matchedItem = findBestMatch(rawText, allItemNames);
+
+                headerRoi.delete();
+                crop.delete();
+                frameMat.delete();
+
+                const passed = matchedItem === expectedItem;
+                console.log(`${opts.name.padEnd(31)} | ${rawText.substring(0, 19).padEnd(19)} | ${(matchedItem || 'null').padEnd(19)} | ${passed ? 'PASS' : 'FAIL'}`);
+            }
+
+            console.log('-'.repeat(95));
+            expect(true).toBe(true);
+        });
+
+        it('should test all items with experimental preprocessing', async () => {
+            // Testing 72px with improved homoglyphs
+            const bestOption = { targetH: 72, useErosion: false };
+
+            console.log('\n=== All Items with 72px + No Erosion ===');
+            console.log('File                      | Expected            | OCR Raw             | Matched             | Status');
+            console.log('-'.repeat(100));
+
+            let passCount = 0;
+            let failCount = 0;
+
+            for (const testCase of TEST_CASES) {
+                const testFilePath = path.join(FIXTURES_DIR, testCase.file);
+
+                if (!fs.existsSync(testFilePath)) {
+                    console.log(`${testCase.file.padEnd(25)} | ${testCase.expectedItem.padEnd(19)} | ${'MISSING'.padEnd(19)} | ${'N/A'.padEnd(19)} | SKIP`);
+                    continue;
+                }
+
+                const png = loadPNG(testFilePath);
+                const frameMat = pngToMat(cv, png);
+                const tooltipResult = TooltipFinder.findTooltip(cv, frameMat);
+
+                if (!tooltipResult.found) {
+                    frameMat.delete();
+                    console.log(`${testCase.file.padEnd(25)} | ${testCase.expectedItem.padEnd(19)} | ${'NO_TOOLTIP'.padEnd(19)} | ${'N/A'.padEnd(19)} | ERROR`);
+                    continue;
+                }
+
+                const crop = tooltipResult.crop;
+                const headerRoi = extractHeaderROI(cv, crop);
+
+                if (!headerRoi) {
+                    crop.delete();
+                    frameMat.delete();
+                    console.log(`${testCase.file.padEnd(25)} | ${testCase.expectedItem.padEnd(19)} | ${'NO_HEADER'.padEnd(19)} | ${'N/A'.padEnd(19)} | ERROR`);
+                    continue;
+                }
+
+                const inputTensor = preprocessForPaddle(cv, headerRoi, bestOption);
+                const feeds = { x: inputTensor };
+                const ocrResults = await ocrSession.run(feeds);
+                const outputKey = ocrSession.outputNames[0];
+                const outputTensor = ocrResults[outputKey];
+                const rawText = decodeTensorOutput(outputTensor.data, outputTensor.dims, vocab).trim();
+                const matchedItem = findBestMatch(rawText, allItemNames);
+
+                headerRoi.delete();
+                crop.delete();
+                frameMat.delete();
+
+                const passed = matchedItem === testCase.expectedItem;
+                if (passed) passCount++;
+                else failCount++;
+
+                console.log(`${testCase.file.padEnd(25)} | ${testCase.expectedItem.padEnd(19)} | ${rawText.substring(0, 19).padEnd(19)} | ${(matchedItem || 'null').padEnd(19)} | ${passed ? 'PASS' : 'FAIL'}`);
+            }
+
+            console.log('-'.repeat(100));
+            console.log(`Total: ${TEST_CASES.length} | Pass: ${passCount} | Fail: ${failCount}`);
             expect(true).toBe(true);
         });
     });

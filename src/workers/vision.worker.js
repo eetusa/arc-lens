@@ -287,42 +287,39 @@ function areImagesIdentical(cv, newMat, oldMat) {
 }
 
 function preprocessForPaddle(cv, srcMat) {
-    const targetH = 48; 
+    // 72px works best across both 1080p and 1440p resolutions
+    // Combined with i/l/1 homoglyphs in string matching for Roman numerals
+    const targetH = 72;
     const minW = 320;
-    
+
     // 1. GRAYSCALE
     let gray = new cv.Mat();
     cv.cvtColor(srcMat, gray, cv.COLOR_RGBA2GRAY);
 
-    // --- THINNING (EROSION) ---
-    let eroded = new cv.Mat();
-    let M = cv.Mat.ones(2, 2, cv.CV_8U); 
-    cv.erode(gray, eroded, M, new cv.Point(-1, -1), 1);
-    
-    M.delete();
+    // NOTE: Erosion removed - it was causing thin characters like "I" in Roman numerals
+    // to merge together, making "III" indistinguishable from "II"
+
+    // 2. INVERT
+    let inverted = new cv.Mat();
+    cv.bitwise_not(gray, inverted);
     gray.delete();
 
-    // 2. INVERT 
-    let inverted = new cv.Mat();
-    cv.bitwise_not(eroded, inverted);
-
-    // 3. STRETCH 
-    const stretchFactor = 1.2; 
+    // 3. STRETCH
+    const stretchFactor = 1.2;
     const ratio = inverted.cols / inverted.rows;
     let newW = Math.floor(targetH * ratio * stretchFactor);
-    
+
     // 4. RESIZE
     let resized = new cv.Mat();
     cv.resize(inverted, resized, new cv.Size(newW, targetH), 0, 0, cv.INTER_LINEAR);
 
-    // 5. PAD 
+    // 5. PAD
     const padW = Math.max(minW, newW);
     let padded = new cv.Mat(targetH, padW, cv.CV_8UC1, new cv.Scalar(255));
     let roi = padded.roi(new cv.Rect(0, 0, newW, targetH));
     resized.copyTo(roi);
-    
+
     // Cleanup
-    eroded.delete();
     inverted.delete();
     roi.delete();
     resized.delete();
@@ -330,14 +327,14 @@ function preprocessForPaddle(cv, srcMat) {
     // 6. TENSOR
     const count = padW * targetH;
     const floatArr = new Float32Array(3 * count);
-    const data = padded.data; 
+    const data = padded.data;
 
     for (let i = 0; i < count; i++) {
-        let val = data[i]; 
+        let val = data[i];
         const norm = (val / 127.5) - 1.0;
-        floatArr[i] = norm;              
-        floatArr[count + i] = norm;      
-        floatArr[2 * count + i] = norm;  
+        floatArr[i] = norm;
+        floatArr[count + i] = norm;
+        floatArr[2 * count + i] = norm;
     }
 
     padded.delete();

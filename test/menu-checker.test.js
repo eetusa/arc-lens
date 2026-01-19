@@ -35,20 +35,21 @@ function pngToMat(cv, pngData) {
 }
 
 // Test case definitions - add your test images here
+// Files are now organized in resolution subfolders: 1080p/ and 1440p/
 const TEST_CASES = [
-    // Format: { file: 'filename.png', resolution: '1080p', expectedOpen: true/false, description: 'what this tests' }
+    // Format: { file: 'resolution/filename.png', resolution: '1080p', expectedOpen: true/false, description: 'what this tests' }
     // Base menu scenarios
-    { file: '1080p-menu-open.png', resolution: '1080p', expectedOpen: true, description: '1080p with menu open' },
-    { file: '1080p-menu-closed.png', resolution: '1080p', expectedOpen: false, description: '1080p with menu closed' },
-    { file: '1440p-menu-open.png', resolution: '1440p', expectedOpen: true, description: '1440p with menu open' },
-    { file: '1440p-menu-closed.png', resolution: '1440p', expectedOpen: false, description: '1440p with menu closed' },
+    { file: '1080p/menu-open.png', resolution: '1080p', expectedOpen: true, description: '1080p with menu open' },
+    { file: '1080p/menu-closed.png', resolution: '1080p', expectedOpen: false, description: '1080p with menu closed' },
+    { file: '1440p/menu-open.png', resolution: '1440p', expectedOpen: true, description: '1440p with menu open' },
+    { file: '1440p/menu-closed.png', resolution: '1440p', expectedOpen: false, description: '1440p with menu closed' },
     // In-raid scenarios
-    { file: '1080p-in-raid-menu-open.png', resolution: '1080p', expectedOpen: true, description: '1080p in-raid with menu open' },
-    { file: '1080p-in-raid-menu-closed.png', resolution: '1080p', expectedOpen: false, description: '1080p in-raid with menu closed' },
-    { file: '1080p-in-raid-2-menu-closed.png', resolution: '1080p', expectedOpen: false, description: '1080p in-raid-2 with menu closed' },
-    { file: '1440p-in-raid-menu-open.png', resolution: '1440p', expectedOpen: true, description: '1440p in-raid with menu open' },
-    { file: '1440p-in-raid-menu-closed.png', resolution: '1440p', expectedOpen: false, description: '1440p in-raid with menu closed' },
-    { file: '1440p-in-raid-2-menu-closed.png', resolution: '1440p', expectedOpen: false, description: '1440p in-raid-2 with menu closed' },
+    { file: '1080p/in-raid-menu-open.png', resolution: '1080p', expectedOpen: true, description: '1080p in-raid with menu open' },
+    { file: '1080p/in-raid-menu-closed.png', resolution: '1080p', expectedOpen: false, description: '1080p in-raid with menu closed' },
+    { file: '1080p/in-raid-2-menu-closed.png', resolution: '1080p', expectedOpen: false, description: '1080p in-raid-2 with menu closed' },
+    { file: '1440p/in-raid-menu-open.png', resolution: '1440p', expectedOpen: true, description: '1440p in-raid with menu open' },
+    { file: '1440p/in-raid-menu-closed.png', resolution: '1440p', expectedOpen: false, description: '1440p in-raid with menu closed' },
+    { file: '1440p/in-raid-2-menu-closed.png', resolution: '1440p', expectedOpen: false, description: '1440p in-raid-2 with menu closed' },
 ];
 
 describe('MenuChecker', () => {
