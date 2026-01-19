@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { styles, theme } from '../styles';
 
 // Changelog data - add new entries at the top
@@ -48,6 +48,7 @@ const CHANGELOG = [
 
 function InfoModal({ onClose, currentVersion, isNewVersion, onVersionSeen }) {
   const [activeTab, setActiveTab] = useState('info');
+  const contentRef = useRef(null);
 
   // Mark version as seen when modal opens
   useEffect(() => {
@@ -55,6 +56,15 @@ function InfoModal({ onClose, currentVersion, isNewVersion, onVersionSeen }) {
       onVersionSeen();
     }
   }, [isNewVersion, onVersionSeen]);
+
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId);
+    // Reset scroll position when switching tabs
+    if (contentRef.current) {
+      contentRef.current.scrollTop = 0;
+    }
+  };
+
   const handleBackdropClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
@@ -93,7 +103,7 @@ function InfoModal({ onClose, currentVersion, isNewVersion, onVersionSeen }) {
           ].map(tab => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabChange(tab.id)}
               style={{
                 padding: '8px 0',
                 fontSize: '13px',
@@ -112,7 +122,7 @@ function InfoModal({ onClose, currentVersion, isNewVersion, onVersionSeen }) {
           ))}
         </div>
 
-        <div style={styles.modalContent}>
+        <div ref={contentRef} style={styles.modalContent}>
           {/* INFO TAB */}
           {activeTab === 'info' && (
             <>
