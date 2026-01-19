@@ -11,7 +11,10 @@ const HOMOGLYPHS = {
     '6': ['g'],
     'o': ['0', 'q', 'd'],
     '0': ['o', 'q', 'd'],
-    // Add others if needed (e.g., 'i'/'l'/'1' if not handled by normalization)
+    // i/l/1 confusion is common in OCR, especially for Roman numerals
+    'i': ['l', '1'],
+    'l': ['i', '1'],
+    '1': ['i', 'l'],
 };
 
 /**

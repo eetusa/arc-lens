@@ -4,6 +4,14 @@ import { styles, theme } from '../styles';
 // Changelog data - add new entries at the top
 const CHANGELOG = [
   {
+    version: '0.9.3',
+    date: '19.1.2026',
+    changes: [
+      'Improved item recognition accuracy for Roman numerals (II vs III)',
+      'Better OCR results across both 1080p and 1440p resolutions',
+    ]
+  },
+  {
     version: '0.9.2',
     date: '19.1.2025',
     changes: [
@@ -147,7 +155,7 @@ function InfoModal({ onClose, currentVersion, isNewVersion, onVersionSeen }) {
                 What's New in v{currentVersion}
               </span>
               <ul style={{ ...styles.modalList, marginBottom: 0 }}>
-                <li style={styles.modalListItem}>19.1.2025 Fixed mobile crashes caused by vision system loading on touch devices</li>
+                <li style={styles.modalListItem}>Improved item recognition accuracy for Roman numerals (II vs III)</li>
               </ul>
             </div>
           )}
