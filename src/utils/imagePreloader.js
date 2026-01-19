@@ -2,7 +2,19 @@
  * Global image preloader - loads item images on app startup
  * Uses manifest to only load images that actually exist (no 404 spam)
  * Images are cached by the browser after first load
+ *
+ * NOTE: Skipped on mobile devices to reduce memory pressure
  */
+
+/**
+ * Simple mobile detection for preloader
+ * Checks touch capability and screen size
+ */
+function isMobileDevice() {
+  const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  const smallScreen = window.innerWidth <= 768;
+  return hasTouch && smallScreen;
+}
 
 let preloadStarted = false;
 let preloadedCount = 0;
@@ -28,6 +40,12 @@ export async function preloadAllItemImages() {
   // Only run once
   if (preloadStarted) return;
   preloadStarted = true;
+
+  // Skip preloading on mobile to reduce memory pressure
+  if (isMobileDevice()) {
+    console.log('[ImagePreloader] Skipped on mobile device');
+    return;
+  }
 
   try {
     // Fetch manifest of existing images (generated at build time)
