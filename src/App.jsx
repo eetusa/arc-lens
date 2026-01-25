@@ -841,7 +841,12 @@ function App() {
             minHeight: '280px',
             maxHeight: 'calc(100dvh - 180px)',
             flex: '1 1 auto'
-          })
+          }),
+          // Purple glow effect when item is prioritized
+          ...((manualAnalysis || currentAnalysis)?.prioritization?.isPrioritized ? {
+            boxShadow: '0 10px 40px rgba(0,0,0,0.5), 0 0 30px rgba(180, 80, 220, 0.5), 0 0 60px rgba(180, 80, 220, 0.3), 0 0 90px rgba(180, 80, 220, 0.15)',
+            border: '1px solid rgba(180, 80, 220, 0.6)'
+          } : {})
         }}>
           {/* Hide image column on mobile */}
           {!isMobile && (

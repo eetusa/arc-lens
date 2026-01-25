@@ -802,6 +802,8 @@ export const styles = {
   },
   // --- RECYCLE TABS STYLES ---
   recycleTabsContainer: {
+    position: 'relative',
+    zIndex: 15, // Above resultCard (z-index 10) so glow appears behind
     display: 'flex',
     flexDirection: 'column',
     gap: '4px',
