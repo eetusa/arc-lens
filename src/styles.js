@@ -802,6 +802,8 @@ export const styles = {
   },
   // --- RECYCLE TABS STYLES ---
   recycleTabsContainer: {
+    position: 'relative',
+    zIndex: 15, // Above resultCard (z-index 10) so glow appears behind
     display: 'flex',
     flexDirection: 'column',
     gap: '4px',
@@ -811,7 +813,7 @@ export const styles = {
   recycleTab: (index) => ({
     position: 'relative',
     width: '60px',
-    minHeight: '60px',
+    minHeight: '82px', // Taller to fit name below image
     backgroundColor: theme.cardBg,
     border: `1px solid ${theme.border}`,
     borderLeft: 'none',
@@ -878,5 +880,19 @@ export const styles = {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap'
+  },
+  // Desktop-only name display (allows 2 lines)
+  recycleTabNameDesktop: {
+    fontSize: '8px',
+    lineHeight: '1.2',
+    color: theme.textMuted,
+    textAlign: 'center',
+    marginTop: '4px',
+    width: '56px',
+    overflow: 'hidden',
+    display: '-webkit-box',
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: 'vertical',
+    wordBreak: 'break-word'
   }
 };

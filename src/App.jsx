@@ -811,6 +811,22 @@ function App() {
         </div>
       )}
 
+      {/* MOBILE PRIORITY GLOW - Outside scroll container so it's not clipped */}
+      {isMobile && (manualAnalysis || currentAnalysis)?.prioritization?.isPrioritized && (
+        <div style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 'min(85%, 480px)',
+          height: '300px',
+          borderRadius: '16px',
+          boxShadow: '0 0 40px rgba(180, 80, 220, 0.5), 0 0 80px rgba(180, 80, 220, 0.3), 0 0 120px rgba(180, 80, 220, 0.15)',
+          pointerEvents: 'none',
+          zIndex: 5
+        }} />
+      )}
+
       {/* MAIN CONTENT */}
       <div style={{
         ...styles.mainContentWrapper,
@@ -841,7 +857,16 @@ function App() {
             minHeight: '280px',
             maxHeight: 'calc(100dvh - 180px)',
             flex: '1 1 auto'
-          })
+          }),
+          // Purple glow effect when item is prioritized (desktop only - mobile uses separate overlay)
+          ...(!isMobile && (manualAnalysis || currentAnalysis)?.prioritization?.isPrioritized ? {
+            boxShadow: '0 10px 40px rgba(0,0,0,0.5), 0 0 30px rgba(180, 80, 220, 0.5), 0 0 60px rgba(180, 80, 220, 0.3), 0 0 90px rgba(180, 80, 220, 0.15)',
+            border: '1px solid rgba(180, 80, 220, 0.6)'
+          } : {}),
+          // Mobile: just the purple border when prioritized (glow handled by overlay)
+          ...(isMobile && (manualAnalysis || currentAnalysis)?.prioritization?.isPrioritized ? {
+            border: '1px solid rgba(180, 80, 220, 0.6)'
+          } : {})
         }}>
           {/* Hide image column on mobile */}
           {!isMobile && (
