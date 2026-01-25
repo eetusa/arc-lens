@@ -4,6 +4,15 @@ import { styles, theme } from '../styles';
 // Changelog data - add new entries at the top
 const CHANGELOG = [
   {
+    version: '0.9.5',
+    date: '25.1.2026',
+    changes: [
+      'Added support for touchscreen laptops - can now toggle between Game and Companion modes',
+      'App now reacts to monitor changes (e.g., dragging window to external display)',
+      'Improved device detection for better multi-monitor setups',
+    ]
+  },
+  {
     version: '0.9.4',
     date: '20.1.2026',
     changes: [
@@ -20,7 +29,7 @@ const CHANGELOG = [
   },
   {
     version: '0.9.2',
-    date: '19.1.2025',
+    date: '19.1.2026',
     changes: [
       'Fixed mobile crashes caused by vision system loading on touch devices',
       'Removed unused OpenCV.js script that was loading on all devices',
@@ -29,7 +38,7 @@ const CHANGELOG = [
   },
   {
     version: '0.9.1',
-    date: '14.1.2025',
+    date: '14.1.2026',
     changes: [
       'Added Game/Companion mode toggle for desktop users',
       'Added session disconnect functionality',
@@ -40,7 +49,7 @@ const CHANGELOG = [
   },
   {
     version: '0.9.0',
-    date: '10.1.2025',
+    date: '10.1.2026',
     changes: [
       'Added Mobile Companion feature - use your phone as a second screen',
       'Added session system with QR code connection',
@@ -49,7 +58,7 @@ const CHANGELOG = [
   },
   {
     version: '0.1 - 0.8',
-    date: 'Jan 2025',
+    date: 'Jan 2026',
     changes: [
       'Real-time inventory analysis via screen capture',
       'Keep/Sell/Recycle recommendations based on item value',
@@ -162,7 +171,8 @@ function InfoModal({ onClose, currentVersion, isNewVersion, onVersionSeen }) {
                 What's New in v{currentVersion}
               </span>
               <ul style={{ ...styles.modalList, marginBottom: 0 }}>
-                <li style={styles.modalListItem}>Optimized screen capture and OCR processing performance</li>
+                <li style={styles.modalListItem}>Added support for touchscreen laptops</li>
+                <li style={styles.modalListItem}>App now reacts to monitor changes</li>
               </ul>
             </div>
           )}

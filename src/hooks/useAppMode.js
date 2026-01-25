@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 /**
  * App mode types
@@ -11,6 +11,10 @@ export const AppMode = {
 };
 
 const STORAGE_KEY = 'arcLens_appMode';
+
+// Screen width threshold for "phone-sized" devices
+// Devices with screens smaller than this are locked to Companion mode
+const PHONE_MAX_WIDTH = 768;
 
 /**
  * Detects if the device has touch capability
@@ -41,33 +45,63 @@ function detectTouchDevice() {
 }
 
 /**
+ * Detects if the device has a phone-sized screen
+ * Uses screen.width for the actual device screen size (not viewport)
+ */
+function isPhoneSizedScreen() {
+  // Use screen.width to get actual device screen width
+  // This is more reliable than window.innerWidth for detecting device type
+  // as it doesn't change when browser is resized
+  const screenWidth = window.screen?.width || window.innerWidth;
+  return screenWidth < PHONE_MAX_WIDTH;
+}
+
+/**
  * Hook to manage app mode (Game vs Companion)
  *
- * - Touch devices: Always Companion mode (can't run the game)
+ * Mode switching logic:
+ * - Phone-sized touch devices: Locked to Companion mode (can't run the game)
+ * - Large touch devices (tablets, touchscreen laptops): Default to Companion, CAN toggle
  * - Non-touch devices: Default to Game mode, can toggle to Companion
  *
  * @returns {Object} { mode, isTouchDevice, canToggle, toggleMode, isCompanionMode, isGameMode }
  */
 export function useAppMode() {
   const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [isPhoneSize, setIsPhoneSize] = useState(false);
   const [mode, setMode] = useState(AppMode.GAME);
   const [isInitialized, setIsInitialized] = useState(false);
+
+  // Track previous phone size to detect changes
+  const prevPhoneSizeRef = useRef(null);
 
   // Initial detection
   useEffect(() => {
     const touchDetected = detectTouchDevice();
-    setIsTouchDevice(touchDetected);
+    const phoneSized = isPhoneSizedScreen();
 
-    if (touchDetected) {
-      // Touch devices are always Companion mode
+    setIsTouchDevice(touchDetected);
+    setIsPhoneSize(phoneSized);
+    prevPhoneSizeRef.current = phoneSized;
+
+    // Set initial mode based on device type
+    if (touchDetected && phoneSized) {
+      // Phone-sized touch devices: locked to Companion mode
       setMode(AppMode.COMPANION);
-    } else {
-      // Non-touch: Check localStorage for saved preference
+    } else if (touchDetected) {
+      // Large touch devices: check saved preference, default to Companion
       const savedMode = localStorage.getItem(STORAGE_KEY);
       if (savedMode === AppMode.COMPANION || savedMode === AppMode.GAME) {
         setMode(savedMode);
       } else {
-        // Default to Game mode for desktops
+        setMode(AppMode.COMPANION);
+      }
+    } else {
+      // Non-touch: check saved preference, default to Game
+      const savedMode = localStorage.getItem(STORAGE_KEY);
+      if (savedMode === AppMode.COMPANION || savedMode === AppMode.GAME) {
+        setMode(savedMode);
+      } else {
         setMode(AppMode.GAME);
       }
     }
@@ -75,10 +109,38 @@ export function useAppMode() {
     setIsInitialized(true);
   }, []);
 
-  // Toggle mode (only works for non-touch devices)
+  // Listen for screen size changes (e.g., moving window to different monitor)
+  useEffect(() => {
+    const touchDetected = detectTouchDevice();
+
+    const handleResize = () => {
+      const phoneSized = isPhoneSizedScreen();
+      const wasPhoneSize = prevPhoneSizeRef.current;
+
+      // Only react if phone size status actually changed
+      if (wasPhoneSize !== phoneSized) {
+        prevPhoneSizeRef.current = phoneSized;
+        setIsPhoneSize(phoneSized);
+
+        if (!phoneSized) {
+          // Moved to large screen: switch to Game mode (can game now)
+          setMode(AppMode.GAME);
+          localStorage.setItem(STORAGE_KEY, AppMode.GAME);
+        } else if (touchDetected) {
+          // Moved to phone-sized screen on touch device: lock to Companion
+          setMode(AppMode.COMPANION);
+        }
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Toggle mode (only blocked for phone-sized touch devices)
   const toggleMode = useCallback(() => {
-    if (isTouchDevice) {
-      // Touch devices can't toggle
+    if (isTouchDevice && isPhoneSize) {
+      // Phone-sized touch devices can't toggle
       return;
     }
 
@@ -87,11 +149,11 @@ export function useAppMode() {
       localStorage.setItem(STORAGE_KEY, newMode);
       return newMode;
     });
-  }, [isTouchDevice]);
+  }, [isTouchDevice, isPhoneSize]);
 
-  // Set specific mode (only works for non-touch devices)
+  // Set specific mode (only blocked for phone-sized touch devices)
   const setAppMode = useCallback((newMode) => {
-    if (isTouchDevice) {
+    if (isTouchDevice && isPhoneSize) {
       return;
     }
 
@@ -99,12 +161,16 @@ export function useAppMode() {
       setMode(newMode);
       localStorage.setItem(STORAGE_KEY, newMode);
     }
-  }, [isTouchDevice]);
+  }, [isTouchDevice, isPhoneSize]);
+
+  // Can toggle if not a phone-sized touch device
+  // Large touchscreen devices (tablets, touchscreen laptops) CAN toggle
+  const canToggle = !(isTouchDevice && isPhoneSize);
 
   return {
     mode,
     isTouchDevice,
-    canToggle: !isTouchDevice,
+    canToggle,
     toggleMode,
     setAppMode,
     isCompanionMode: mode === AppMode.COMPANION,
