@@ -4,7 +4,7 @@ import { trackSessionStart, trackSessionEnd, trackItemRecognition } from '../uti
 // NOTE: VisionWorker is dynamically imported only on desktop to prevent
 // mobile browsers from loading WASM/SharedArrayBuffer code that can cause crashes
 
-export function useVisionSystem(stationLevels, activeQuests, prioritySettings = {}, inventoryOverride = false, isMobile = false) {
+export function useVisionSystem(stationLevels, activeQuests, prioritySettings = {}, inventoryOverride = false, isMobile = false, projectPhase = 0) {
   // --- REFS (Single Source of Truth for Loop) ---
   const videoRef = useRef(null);
   const miniFeedCanvasRef = useRef(null);
@@ -238,11 +238,13 @@ export function useVisionSystem(stationLevels, activeQuests, prioritySettings = 
           userPrioritiesEnabled: prioritySettings.userPrioritiesEnabled ?? true,
           userPriorities: prioritySettings.userPriorities || [],
           // Inventory override for debug mode
-          inventoryOverride: inventoryOverride
+          inventoryOverride: inventoryOverride,
+          // Project phase
+          projectPhase: projectPhase || 0
         }
       });
     }
-  }, [stationLevels, activeQuests, prioritySettings, inventoryOverride]);
+  }, [stationLevels, activeQuests, prioritySettings, inventoryOverride, projectPhase]);
 
   // --- START CAPTURE ACTION ---
   const startCapture = async () => {

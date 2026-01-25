@@ -1,0 +1,60 @@
+{
+  "currentProject": {
+    "name": "Expedition 2",
+    "wikiUrl": "https://arcraiders.wiki/wiki/Expedition",
+    "startDate": "2025-12-02",
+    "endDate": "2026-02-18",
+    "phases": [
+      {
+        "id": 1,
+        "name": "Foundation",
+        "requirements": [
+          { "item": "Metal Parts", "amount": 150 },
+          { "item": "Wood", "amount": 100 },
+          { "item": "Carbon Fiber", "amount": 50 }
+        ]
+      },
+      {
+        "id": 2,
+        "name": "Core Systems",
+        "requirements": [
+          { "item": "Carbon Fiber", "amount": 100 },
+          { "item": "Wire", "amount": 75 },
+          { "item": "Electronics", "amount": 50 }
+        ]
+      },
+      {
+        "id": 3,
+        "name": "Framework",
+        "requirements": [
+          { "item": "Resin", "amount": 100 },
+          { "item": "Metal Parts", "amount": 200 },
+          { "item": "Ceramic", "amount": 75 }
+        ]
+      },
+      {
+        "id": 4,
+        "name": "Outfitting",
+        "requirements": [
+          { "item": "Mechanical Parts", "amount": 100 },
+          { "item": "Electronics", "amount": 100 },
+          { "item": "Ceramic", "amount": 100 }
+        ]
+      },
+      {
+        "id": 5,
+        "name": "Load Stage",
+        "coinRequirements": [
+          { "category": "Combat Items", "coinValue": 250000 },
+          { "category": "Survival Items", "coinValue": 100000 }
+        ]
+      },
+      {
+        "id": 6,
+        "name": "Departure",
+        "requirements": []
+      }
+    ]
+  },
+  "lastUpdated": "2026-01-25T12:00:00Z"
+}

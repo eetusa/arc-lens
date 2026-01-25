@@ -3,6 +3,7 @@ import { styles, theme } from './styles';
 
 // --- IMPORTS ---
 import StationPanel from './components/StationPanel';
+import ProjectPanel from './components/ProjectPanel';
 import AdvisorCard from './components/AdvisorCard';
 import InfoModal from './components/InfoModal';
 import RecycleTabs from './components/RecycleTabs';
@@ -28,6 +29,7 @@ function App() {
   const [allQuestNames, setAllQuestNames] = useState([]);
   const [allItems, setAllItems] = useState([]);
   const [devPriorities, setDevPriorities] = useState([]);
+  const [projectData, setProjectData] = useState(null);
   const [manualAnalysis, setManualAnalysis] = useState(null);
 
   // --- SESSION STATE ---
@@ -59,7 +61,9 @@ function App() {
     devPrioritiesEnabled,
     setDevPrioritiesEnabled,
     userPrioritiesEnabled,
-    setUserPrioritiesEnabled
+    setUserPrioritiesEnabled,
+    projectPhase,
+    setProjectPhase
   } = usePersistentState();
 
   const {
@@ -94,7 +98,7 @@ function App() {
     debugRawText,
     isInventoryOpen,
     startCapture
-  } = useVisionSystem(stationLevels, activeQuests, prioritySettings, inventoryOverride, isMobile);
+  } = useVisionSystem(stationLevels, activeQuests, prioritySettings, inventoryOverride, isMobile, projectPhase);
 
   // --- SESSION CALLBACKS ---
   const handleSessionEnded = useCallback((reason) => {
@@ -331,6 +335,12 @@ function App() {
       .then(data => setDevPriorities(data.priorities || []))
       .catch(e => console.error("Priorities load error", e));
 
+    // Load project data
+    fetch('/projects.json')
+      .then(res => res.json())
+      .then(data => setProjectData(data))
+      .catch(e => console.error("Projects load error", e));
+
     // Preload all item images in background
     preloadAllItemImages();
   }, []);
@@ -356,6 +366,15 @@ function App() {
   // --- HANDLERS ---
   const handleClearManualAnalysis = () => {
     setManualAnalysis(null);
+  };
+
+  const handleProjectPhaseUpdate = (phase) => {
+    setProjectPhase(phase);
+
+    // Sync to connected devices
+    if (sessionEnabled && isConnected) {
+      syncSettings({ projectPhase: phase });
+    }
   };
 
   const handleStationUpdate = (name, level) => {
@@ -725,6 +744,10 @@ function App() {
             userPrioritiesEnabled={userPrioritiesEnabled}
             onDevPrioritiesToggle={setDevPrioritiesEnabled}
             onUserPrioritiesToggle={setUserPrioritiesEnabled}
+            // Project props
+            projectPhase={projectPhase}
+            projectData={projectData}
+            onProjectPhaseUpdate={handleProjectPhaseUpdate}
             // Item search props
             onItemSelect={handleItemSelect}
             isMobile={isMobile}

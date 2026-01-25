@@ -162,6 +162,34 @@ Copies ONNX Runtime WASM files from `node_modules` to `public/`:
 cp node_modules/onnxruntime-web/dist/*.wasm public/
 ```
 
+### Data Maintenance Scripts
+
+#### Wiki Scraper (`scripts/wiki-scraper.js`)
+Scrapes item data from the ARC Raiders wiki for database maintenance:
+```bash
+node scripts/wiki-scraper.js --help           # Show all commands
+node scripts/wiki-scraper.js --list           # List all wiki items
+node scripts/wiki-scraper.js --compare        # Compare wiki vs local DB
+node scripts/wiki-scraper.js --scrape <name>  # Scrape single item
+node scripts/wiki-scraper.js --verify         # Verify item data against wiki
+node scripts/wiki-scraper.js --add-missing    # Add missing items from wiki
+```
+
+#### Project Scraper (`scripts/project-scraper.js`)
+Scrapes expedition/project data from the wiki for tracking project phases:
+```bash
+node scripts/project-scraper.js --help        # Show all commands
+node scripts/project-scraper.js --scrape      # Scrape current project, update projects.json
+node scripts/project-scraper.js --list        # Show current project phases
+node scripts/project-scraper.js --verify      # Check if items exist in items_db
+```
+
+The project scraper outputs to `public/projects.json` which contains:
+- Current project name and wiki URL
+- Phase definitions (Foundation, Core Systems, Framework, etc.)
+- Item requirements per phase
+- Coin requirements for special phases (Load Stage)
+
 ## Testing
 
 ```bash
@@ -315,10 +343,12 @@ ALWAYS start from master and create a new branch. Don't work on existing feature
 - **Advisor analysis**: `src/logic/advisor-analysis.js`
 - **Priority tracker**: `src/logic/priority-tracker.js`
 - **Quest tracker**: `src/logic/quest-tracker.js`
+- **Project tracker**: `src/logic/project-tracker.js`
 - **Vision worker**: `src/workers/visionWorker.js`
 - **Analytics**: `src/utils/analytics.js`
 - **Build config**: `vite.config.js`
 - **Package config**: `package.json`
+- **Project data**: `public/projects.json`
 
 ## External Services
 
