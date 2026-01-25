@@ -66,6 +66,8 @@ const RecycleTabs = ({ outputs = [], isMobile = false }) => {
   };
 
   const containerStyle = isMobile ? {
+    position: 'relative',
+    zIndex: 15, // Above resultCard glow (z-index 10)
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -213,8 +215,14 @@ const RecycleTabs = ({ outputs = [], isMobile = false }) => {
                 ★
               </div>
             )}
-            {/* Show name below for items without images */}
-            {!hasImage && (
+            {/* Desktop: Always show name below image */}
+            {!isMobile && (
+              <div style={{...styles.recycleTabNameDesktop, pointerEvents: 'none'}}>
+                {output.name}
+              </div>
+            )}
+            {/* Mobile fallback: Show name only for items without images */}
+            {isMobile && !hasImage && (
               <div style={{...styles.recycleTabName, pointerEvents: 'none'}}>
                 {output.name}
               </div>
