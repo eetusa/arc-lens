@@ -4,31 +4,46 @@ import { trackSessionStart, trackSessionEnd, trackItemRecognition } from '../uti
 // NOTE: VisionWorker is dynamically imported only on desktop to prevent
 // mobile browsers from loading WASM/SharedArrayBuffer code that can cause crashes
 
-export function useVisionSystem(stationLevels, activeQuests, prioritySettings = {}, inventoryOverride = false, isMobile = false, projectPhase = 0) {
+export function useVisionSystem(
+  stationLevels,
+  activeQuests,
+  prioritySettings = {},
+  inventoryOverride = false,
+  isMobile = false,
+  projectPhase = 0,
+  questDetectionEnabled = false,
+  onQuestsDetected = null
+) {
   // --- REFS (Single Source of Truth for Loop) ---
   const videoRef = useRef(null);
   const miniFeedCanvasRef = useRef(null);
   const analyticsCanvasRef = useRef(null);
   const ocrDebugRef = useRef(null);
   const menuDebugRef = useRef(null);
+  const mainMenuDebugRef = useRef(null);
+  const playTabDebugRef = useRef(null);
   const workerRef = useRef(null);
   const isLooping = useRef(false);
   const offscreenRef = useRef(null);
   const scanDelayRef = useRef(1000);
   const inventoryOverrideRef = useRef(inventoryOverride);
+  const questDetectionEnabledRef = useRef(questDetectionEnabled);
+  const onQuestsDetectedRef = useRef(onQuestsDetected);
   const sessionStartTimeRef = useRef(null);
 
   // --- STATE ---
   const [isStreaming, setIsStreaming] = useState(false);
   const [workerStatus, setWorkerStatus] = useState("Initializing...");
-  
+
   // CHANGED: Stores the AdvisorAnalysis object instead of HTML string
   const [currentAnalysis, setCurrentAnalysis] = useState(null);
-  
+
   const [hasData, setHasData] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [debugRawText, setDebugRawText] = useState("");
   const [isInventoryOpen, setIsInventoryOpen] = useState(false);
+  const [isInMainMenu, setIsInMainMenu] = useState(false);
+  const [isInPlayTab, setIsInPlayTab] = useState(false);
 
   // Keep override ref in sync with prop
   useEffect(() => {
@@ -38,6 +53,15 @@ export function useVisionSystem(stationLevels, activeQuests, prioritySettings = 
       scanDelayRef.current = 0;
     }
   }, [inventoryOverride]);
+
+  // Keep quest detection refs in sync with props
+  useEffect(() => {
+    questDetectionEnabledRef.current = questDetectionEnabled;
+  }, [questDetectionEnabled]);
+
+  useEffect(() => {
+    onQuestsDetectedRef.current = onQuestsDetected;
+  }, [onQuestsDetected]);
 
   // --- INTERNAL: HANDLE RESULTS ---
   const handleWorkerResult = (payload) => {
@@ -89,6 +113,40 @@ export function useVisionSystem(stationLevels, activeQuests, prioritySettings = 
         if (menuCanvas.width !== width) menuCanvas.width = width;
         if (menuCanvas.height !== height) menuCanvas.height = height;
         menuCanvas.getContext('2d').putImageData(
+          new ImageData(new Uint8ClampedArray(buffer), width, height), 0, 0
+        );
+      }
+    }
+
+    // E. Main Menu State
+    if (typeof payload.isInMainMenu === 'boolean') {
+      setIsInMainMenu(payload.isInMainMenu);
+    }
+    if (typeof payload.isInPlayTab === 'boolean') {
+      setIsInPlayTab(payload.isInPlayTab);
+    }
+
+    // F. Main Menu Debug
+    if (payload.mainMenuDebug && mainMenuDebugRef.current) {
+      const mainMenuCanvas = mainMenuDebugRef.current;
+      const { width, height, buffer } = payload.mainMenuDebug;
+      if (width > 0 && buffer) {
+        if (mainMenuCanvas.width !== width) mainMenuCanvas.width = width;
+        if (mainMenuCanvas.height !== height) mainMenuCanvas.height = height;
+        mainMenuCanvas.getContext('2d').putImageData(
+          new ImageData(new Uint8ClampedArray(buffer), width, height), 0, 0
+        );
+      }
+    }
+
+    // G. Play Tab Debug
+    if (payload.playTabDebug && playTabDebugRef.current) {
+      const playTabCanvas = playTabDebugRef.current;
+      const { width, height, buffer } = payload.playTabDebug;
+      if (width > 0 && buffer) {
+        if (playTabCanvas.width !== width) playTabCanvas.width = width;
+        if (playTabCanvas.height !== height) playTabCanvas.height = height;
+        playTabCanvas.getContext('2d').putImageData(
           new ImageData(new Uint8ClampedArray(buffer), width, height), 0, 0
         );
       }
@@ -211,6 +269,23 @@ export function useVisionSystem(stationLevels, activeQuests, prioritySettings = 
           }
         }
 
+        // Handle detected quests from PLAY tab
+        if (type === 'QUESTS_DETECTED') {
+          if (onQuestsDetectedRef.current && payload.quests) {
+            onQuestsDetectedRef.current(payload.quests);
+          }
+        }
+
+        // Handle main menu state updates
+        if (type === 'MAIN_MENU_STATE') {
+          if (typeof payload.isInMainMenu === 'boolean') {
+            setIsInMainMenu(payload.isInMainMenu);
+          }
+          if (typeof payload.isInPlayTab === 'boolean') {
+            setIsInPlayTab(payload.isInPlayTab);
+          }
+        }
+
         if (type === 'RESULT') {
           handleWorkerResult(payload);
 
@@ -240,11 +315,13 @@ export function useVisionSystem(stationLevels, activeQuests, prioritySettings = 
           // Inventory override for debug mode
           inventoryOverride: inventoryOverride,
           // Project phase
-          projectPhase: projectPhase || 0
+          projectPhase: projectPhase || 0,
+          // Quest auto-detection
+          questDetectionEnabled: questDetectionEnabled
         }
       });
     }
-  }, [stationLevels, activeQuests, prioritySettings, inventoryOverride, projectPhase]);
+  }, [stationLevels, activeQuests, prioritySettings, inventoryOverride, projectPhase, questDetectionEnabled]);
 
   // --- START CAPTURE ACTION ---
   const startCapture = async () => {
@@ -303,7 +380,9 @@ export function useVisionSystem(stationLevels, activeQuests, prioritySettings = 
     setCurrentAnalysis(null);
     setDebugRawText("");
     setIsInventoryOpen(false);
-    
+    setIsInMainMenu(false);
+    setIsInPlayTab(false);
+
     // Optional: Clear canvases visually if you want a complete wipe
     if (analyticsCanvasRef.current) {
       const ctx = analyticsCanvasRef.current.getContext('2d');
@@ -318,7 +397,9 @@ export function useVisionSystem(stationLevels, activeQuests, prioritySettings = 
     analyticsCanvasRef,
     ocrDebugRef,
     menuDebugRef,
-    
+    mainMenuDebugRef,
+    playTabDebugRef,
+
     // State
     isStreaming,
     workerStatus,
@@ -327,6 +408,8 @@ export function useVisionSystem(stationLevels, activeQuests, prioritySettings = 
     isAnalyzing,
     debugRawText,
     isInventoryOpen: isInventoryOpen || inventoryOverride, // Effective state (actual OR override)
+    isInMainMenu,
+    isInPlayTab,
 
     // Actions
     startCapture

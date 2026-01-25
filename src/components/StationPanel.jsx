@@ -13,6 +13,11 @@ const StationPanel = ({
   allQuests,
   onQuestAdd,
   onQuestRemove,
+  // Quest auto-detect props
+  questAutoDetect,
+  onQuestAutoDetectToggle,
+  isInMainMenu,
+  isInPlayTab,
   // Priority props
   userPriorities,
   devPriorities,
@@ -85,6 +90,10 @@ const StationPanel = ({
           allQuests={allQuests}
           onAdd={onQuestAdd}
           onRemove={onQuestRemove}
+          questAutoDetect={questAutoDetect}
+          onQuestAutoDetectToggle={onQuestAutoDetectToggle}
+          isInMainMenu={isInMainMenu}
+          isInPlayTab={isInPlayTab}
         />
 
         {/* Hide Item Search on mobile - it's on the main screen instead */}

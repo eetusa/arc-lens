@@ -63,7 +63,9 @@ function App() {
     userPrioritiesEnabled,
     setUserPrioritiesEnabled,
     projectPhase,
-    setProjectPhase
+    setProjectPhase,
+    questAutoDetect,
+    setQuestAutoDetect
   } = usePersistentState();
 
   const {
@@ -83,6 +85,29 @@ function App() {
     userPriorities
   };
 
+  // Handler for auto-detected quests from PLAY tab
+  // Use a ref-based comparison to avoid stale closure issues when toggling
+  const lastAutoDetectedQuestsRef = useRef([]);
+
+  const handleQuestsDetected = useCallback((quests) => {
+    // Compare with last detected (using ref to avoid closure issues)
+    const lastQuests = lastAutoDetectedQuestsRef.current;
+    const isDifferent = quests.length !== lastQuests.length ||
+      quests.some((q, i) => q !== lastQuests[i]);
+
+    if (isDifferent) {
+      lastAutoDetectedQuestsRef.current = quests;
+      setActiveQuests(quests);
+    }
+  }, [setActiveQuests]);
+
+  // Reset the auto-detect ref when toggling off so fresh detection happens on re-enable
+  useEffect(() => {
+    if (!questAutoDetect) {
+      lastAutoDetectedQuestsRef.current = [];
+    }
+  }, [questAutoDetect]);
+
   // --- VISION SYSTEM HOOK ---
   const {
     videoRef,
@@ -90,6 +115,8 @@ function App() {
     analyticsCanvasRef,
     ocrDebugRef,
     menuDebugRef,
+    mainMenuDebugRef,
+    playTabDebugRef,
     isStreaming,
     workerStatus,
     currentAnalysis,
@@ -97,8 +124,19 @@ function App() {
     isAnalyzing,
     debugRawText,
     isInventoryOpen,
+    isInMainMenu,
+    isInPlayTab,
     startCapture
-  } = useVisionSystem(stationLevels, activeQuests, prioritySettings, inventoryOverride, isMobile, projectPhase);
+  } = useVisionSystem(
+    stationLevels,
+    activeQuests,
+    prioritySettings,
+    inventoryOverride,
+    isMobile,
+    projectPhase,
+    questAutoDetect,
+    questAutoDetect ? handleQuestsDetected : null
+  );
 
   // --- SESSION CALLBACKS ---
   const handleSessionEnded = useCallback((reason) => {
@@ -733,6 +771,11 @@ function App() {
             allQuests={allQuestNames}
             onQuestAdd={handleQuestAdd}
             onQuestRemove={handleQuestRemove}
+            // Quest auto-detect props
+            questAutoDetect={questAutoDetect}
+            onQuestAutoDetectToggle={setQuestAutoDetect}
+            isInMainMenu={isInMainMenu}
+            isInPlayTab={isInPlayTab}
             // Priority props
             userPriorities={userPriorities}
             devPriorities={devPriorities}
@@ -1004,6 +1047,43 @@ function App() {
               </div>
           </div>
       </div>
+
+      {/* MAIN MENU DEBUG FEEDS - Only show when quest auto-detect is enabled */}
+      {questAutoDetect && (
+        <>
+          <div style={{
+            position: 'absolute', bottom: '240px', left: '20px',
+            width: '80px', height: '100px',
+            backgroundColor: '#000', border: `1px solid ${isInMainMenu ? '#4caf50' : '#ff5722'}`,
+            borderRadius: '8px', overflow: 'hidden', zIndex: 5,
+            display: (isStreaming && showDebug) ? 'flex' : 'none', flexDirection: 'column'
+          }}>
+            <div style={{
+              fontSize: '8px', padding: '2px 4px', color: '#fff',
+              backgroundColor: isInMainMenu ? '#4caf50' : '#ff5722'
+            }}>RAINBOW</div>
+            <div style={{flex:1, display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden'}}>
+              <canvas ref={mainMenuDebugRef} style={{maxWidth:'100%', maxHeight:'100%', objectFit:'contain'}} />
+            </div>
+          </div>
+
+          <div style={{
+            position: 'absolute', bottom: '240px', left: '110px',
+            width: '120px', height: '60px',
+            backgroundColor: '#000', border: `1px solid ${isInPlayTab ? '#4caf50' : '#ff9800'}`,
+            borderRadius: '8px', overflow: 'hidden', zIndex: 5,
+            display: (isStreaming && showDebug) ? 'flex' : 'none', flexDirection: 'column'
+          }}>
+            <div style={{
+              fontSize: '8px', padding: '2px 4px', color: '#fff',
+              backgroundColor: isInPlayTab ? '#4caf50' : '#ff9800'
+            }}>PLAY TAB</div>
+            <div style={{flex:1, display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden'}}>
+              <canvas ref={playTabDebugRef} style={{maxWidth:'100%', maxHeight:'100%', objectFit:'contain'}} />
+            </div>
+          </div>
+        </>
+      )}
 
       {/* INFO BUTTON */}
       <button

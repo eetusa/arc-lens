@@ -3,6 +3,9 @@
 import * as ort from 'onnxruntime-web';
 import { TooltipFinder } from './tooltip-finder.js';
 import { MenuChecker } from './menu-checker.js';
+import { MainMenuChecker } from './main-menu-checker.js';
+import { PlayTabChecker } from './play-tab-checker.js';
+import { QuestOCR } from './quest-ocr.js';
 import { AdvisorEngine } from '../logic/advisor-engine.js';
 import { findBestMatch } from '../logic/string-utils.js';
 
@@ -18,6 +21,23 @@ let isOcrBusy = false;
 let lastHeaderMat = null;
 let inventoryOverride = false; // Debug override for menu detection
 const mats = { src: null };
+
+// --- MAIN MENU DETECTION STATE ---
+let mainMenuChecker = null;
+let playTabChecker = null;
+let questOCR = null;
+
+// Adaptive polling for main menu
+let lastMainMenuCheckTime = 0;
+let isInMainMenu = false;
+let isInPlayTab = false;
+const MAIN_MENU_CHECK_INTERVAL_SLOW = 5000; // 5s when not in menu
+const MAIN_MENU_CHECK_INTERVAL_FAST = 1000; // 1s when in menu
+
+// Quest detection state
+let lastDetectedQuests = [];
+let questDetectionEnabled = false;
+let allQuestNames = [];
 
 // OPTIMIZED: OffscreenCanvas for ImageBitmap processing
 // This moves getImageData from main thread to worker thread
@@ -94,6 +114,26 @@ async function initSystems() {
             templateMat.delete();
         } catch (err) { console.error("Menu Template Error", err); }
 
+        // 1b. Initialize Main Menu Checkers
+        mainMenuChecker = new MainMenuChecker();
+        mainMenuChecker.init(self.cv);
+
+        playTabChecker = new PlayTabChecker();
+        playTabChecker.init(self.cv);
+
+        // Load quest names for QuestOCR
+        try {
+            const questResp = await fetch('/quests.json');
+            const questData = await questResp.json();
+            allQuestNames = Object.keys(questData);
+        } catch (err) {
+            console.error("Quest names load error", err);
+            allQuestNames = [];
+        }
+
+        questOCR = new QuestOCR();
+        await questOCR.init(self.cv, allQuestNames);
+
         // 2. Initialize ONNX (Standard Config)
         const root = self.location.origin;
 
@@ -146,6 +186,12 @@ self.onmessage = (e) => {
         });
         // Update inventory override state
         inventoryOverride = payload.inventoryOverride || false;
+        // Update quest detection state - reset lastDetectedQuests when toggling
+        const newQuestDetectionEnabled = payload.questDetectionEnabled || false;
+        if (newQuestDetectionEnabled !== questDetectionEnabled) {
+            lastDetectedQuests = []; // Reset so next detection sends message
+        }
+        questDetectionEnabled = newQuestDetectionEnabled;
         return;
     }
     if (!cvReady) return;
@@ -184,6 +230,74 @@ async function processFrame({ width, height, buffer, bitmap }) {
             mats.src = new self.cv.Mat(height, width, self.cv.CV_8UC4);
         }
         mats.src.data.set(new Uint8Array(pixelBuffer));
+
+        // --- MAIN MENU DETECTION (Quest Auto-Detection) ---
+        // Only check when quest detection is enabled
+        let mainMenuDebugData = null;
+        let playTabDebugData = null;
+
+        if (questDetectionEnabled && mainMenuChecker && mainMenuChecker.ready) {
+            const currentTime = Date.now();
+            const checkInterval = isInMainMenu
+                ? MAIN_MENU_CHECK_INTERVAL_FAST
+                : MAIN_MENU_CHECK_INTERVAL_SLOW;
+
+            if (currentTime - lastMainMenuCheckTime >= checkInterval) {
+                lastMainMenuCheckTime = currentTime;
+
+                // Check for main menu (rainbow stripes)
+                const mainMenuResult = mainMenuChecker.check(self.cv, mats.src);
+                isInMainMenu = mainMenuResult.isMainMenu;
+                mainMenuDebugData = mainMenuResult.debug;
+
+                if (isInMainMenu && playTabChecker && playTabChecker.ready) {
+                    // Check if PLAY tab is active
+                    const playTabResult = playTabChecker.check(self.cv, mats.src);
+                    isInPlayTab = playTabResult.isPlayTab;
+                    playTabDebugData = playTabResult.debug;
+
+                    if (isInPlayTab && questOCR && questOCR.ready) {
+                        // Detect quests from the quest box with incremental updates
+                        const questResult = await questOCR.detect(
+                            self.cv, mats.src, ocrSession, vocab,
+                            // Incremental callback - send update as each quest is found
+                            (quest, allQuestsSoFar) => {
+                                // Check if this is genuinely new
+                                if (!lastDetectedQuests.includes(quest)) {
+                                    postMessage({
+                                        type: 'QUESTS_DETECTED',
+                                        payload: { quests: allQuestsSoFar }
+                                    });
+                                }
+                            }
+                        );
+
+                        // Final update with complete results
+                        if (questResult.detectedQuests.length > 0 &&
+                            !questResult.fromCache) {
+                            const questsChanged =
+                                questResult.detectedQuests.length !== lastDetectedQuests.length ||
+                                questResult.detectedQuests.some((q, i) => q !== lastDetectedQuests[i]);
+
+                            if (questsChanged) {
+                                lastDetectedQuests = questResult.detectedQuests;
+                            }
+                        }
+                    }
+                } else {
+                    isInPlayTab = false;
+                }
+
+                // Send main menu state update AFTER all checks complete
+                postMessage({
+                    type: 'MAIN_MENU_STATE',
+                    payload: {
+                        isInMainMenu: isInMainMenu,
+                        isInPlayTab: isInPlayTab
+                    }
+                });
+            }
+        }
 
         let isMenuOpen = false;
         let menuDebugData = null;
@@ -224,7 +338,21 @@ async function processFrame({ width, height, buffer, bitmap }) {
 
             const transfers = [];
             if (menuDebugData && menuDebugData.buffer) transfers.push(menuDebugData.buffer);
-            postMessage({ type: 'RESULT', payload: { isMenuOpen: false, analytics: null, debug: null, menuDebug: menuDebugData } }, transfers);
+            if (mainMenuDebugData && mainMenuDebugData.buffer) transfers.push(mainMenuDebugData.buffer);
+            if (playTabDebugData && playTabDebugData.buffer) transfers.push(playTabDebugData.buffer);
+            postMessage({
+                type: 'RESULT',
+                payload: {
+                    isMenuOpen: false,
+                    analytics: null,
+                    debug: null,
+                    menuDebug: menuDebugData,
+                    mainMenuDebug: mainMenuDebugData,
+                    playTabDebug: playTabDebugData,
+                    isInMainMenu: isInMainMenu,
+                    isInPlayTab: isInPlayTab
+                }
+            }, transfers);
             return;
         }
 
@@ -361,10 +489,21 @@ async function processFrame({ width, height, buffer, bitmap }) {
         if (analyticsData) transferList.push(analyticsData.buffer); // Transferring the copy
         if (debugData) transferList.push(debugData.buffer);
         if (menuDebugData) transferList.push(menuDebugData.buffer);
+        if (mainMenuDebugData && mainMenuDebugData.buffer) transferList.push(mainMenuDebugData.buffer);
+        if (playTabDebugData && playTabDebugData.buffer) transferList.push(playTabDebugData.buffer);
 
         postMessage({
             type: 'RESULT',
-            payload: { isMenuOpen: effectiveMenuOpen, analytics: analyticsData, debug: debugData, menuDebug: menuDebugData }
+            payload: {
+                isMenuOpen: effectiveMenuOpen,
+                analytics: analyticsData,
+                debug: debugData,
+                menuDebug: menuDebugData,
+                mainMenuDebug: mainMenuDebugData,
+                playTabDebug: playTabDebugData,
+                isInMainMenu: isInMainMenu,
+                isInPlayTab: isInPlayTab
+            }
         }, transferList);
 
     } catch (err) {
