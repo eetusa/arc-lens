@@ -4,6 +4,13 @@ import { styles, theme } from '../styles';
 // Changelog data - add new entries at the top
 const CHANGELOG = [
   {
+    version: '0.9.5a',
+    date: '25.1.2026',
+    changes: [
+      'Fixed vision system not initializing on touchscreen laptops in Game mode',
+    ]
+  },
+  {
     version: '0.9.5',
     date: '25.1.2026',
     changes: [
