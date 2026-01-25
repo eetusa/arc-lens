@@ -267,7 +267,7 @@
         "stackSize": 5,
         "type": "refined material",
         "value": 1750,
-        "weight": 3,
+        "weight": 1,
         "description": "Used to craft utility items and shield mods. Can be recycled into crafting materials.",
         "breaksInto": [
             {
@@ -2244,7 +2244,20 @@
         ],
         "image": "/items/images/angled_grip_t1.webp",
         "icon": "/items/icons/angled_grip_t1.webp",
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "plastic_parts",
+                    "name": "Plastic Parts",
+                    "rarity": "common",
+                    "type": "basic material",
+                    "value": 60,
+                    "icon": "/items/icons/plastic_parts.webp"
+                },
+                "amount": 6
+            }
+        ]
     },
     "angled_grip_t2": {
         "updatedAt": "2025-11-10T15:24:46.658Z",
@@ -2955,7 +2968,7 @@
         "stackSize": 5,
         "type": "refined material",
         "value": 1000,
-        "weight": 0.8,
+        "weight": 1,
         "description": "Used to craft medical supplies. Can be recycled into chemicals.",
         "image": "/items/images/antiseptic.webp",
         "icon": "/items/icons/antiseptic.webp",
@@ -3046,7 +3059,20 @@
                 }
             }
         ],
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "chemicals",
+                    "name": "Chemicals",
+                    "rarity": "common",
+                    "type": "basic material",
+                    "value": 50,
+                    "icon": "/items/icons/chemicals.webp"
+                },
+                "amount": 10
+            }
+        ]
     },
     "anvil": {
         "updatedAt": "2025-10-28T15:02:45.057Z",
@@ -6212,7 +6238,7 @@
         ],
         "name": "ARC Thermo Lining",
         "rarity": "rare",
-        "stackSize": 1,
+        "stackSize": 3,
         "type": "recyclable",
         "value": 1000,
         "weight": 1,
@@ -6284,7 +6310,7 @@
         "stackSize": 1,
         "type": "assault rifle",
         "value": 5500,
-        "weight": 6,
+        "weight": 7,
         "weaponSpecs": {
             "ammoType": "medium",
             "bonuses": {},
@@ -6720,7 +6746,7 @@
         "stackSize": 1,
         "type": "assault rifle",
         "value": 8000,
-        "weight": 6,
+        "weight": 7,
         "weaponSpecs": {
             "ammoType": "medium",
             "bonuses": {
@@ -7129,7 +7155,7 @@
         "stackSize": 1,
         "type": "assault rifle",
         "value": 11500,
-        "weight": 6,
+        "weight": 7,
         "weaponSpecs": {
             "ammoType": "medium",
             "bonuses": {
@@ -7556,7 +7582,7 @@
         "stackSize": 1,
         "type": "assault rifle",
         "value": 15000,
-        "weight": 6,
+        "weight": 7,
         "weaponSpecs": {
             "ammoType": "medium",
             "bonuses": {
@@ -8323,7 +8349,7 @@
         "stackSize": 3,
         "type": "recyclable",
         "value": 5000,
-        "weight": 2,
+        "weight": 1,
         "breaksInto": [
             {
                 "item": {
@@ -9835,7 +9861,7 @@
         "id": "blue_gate_cellar_key",
         "name": "Blue Gate Cellar Key",
         "foundIn": [],
-        "rarity": "uncommon",
+        "rarity": "rare",
         "stackSize": 1,
         "type": "key",
         "value": 100,
@@ -10784,7 +10810,7 @@
         "rarity": "epic",
         "stackSize": 1,
         "type": "SMG",
-        "value": 0,
+        "value": 27000,
         "weight": 7,
         "weaponSpecs": {
             "ammoType": "light",
@@ -10962,7 +10988,31 @@
                 "updatedAt": "2025-11-03T18:24:37.786Z"
             }
         ],
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "advanced_mechanical_components",
+                    "name": "Advanced Mechanical Components",
+                    "rarity": "rare",
+                    "type": "refined material",
+                    "value": 1750,
+                    "icon": "/items/icons/advanced_mechanical_components.webp"
+                },
+                "amount": 5
+            },
+            {
+                "item": {
+                    "id": "light_gun_parts",
+                    "name": "Light Gun Parts",
+                    "rarity": "rare",
+                    "type": "topside material",
+                    "value": 700,
+                    "icon": "/items/icons/light_gun_parts.webp"
+                },
+                "amount": 4
+            }
+        ]
     },
     "bombardier_cell": {
         "updatedAt": "2025-10-20T11:29:16.330Z",
@@ -11156,7 +11206,7 @@
         ],
         "name": "Broken Handheld Radio",
         "rarity": "rare",
-        "stackSize": 1,
+        "stackSize": 3,
         "type": "recyclable",
         "value": 2000,
         "weight": 3,
@@ -11588,7 +11638,7 @@
         "rarity": "uncommon",
         "stackSize": 1,
         "type": "pistol",
-        "value": 0,
+        "value": 5000,
         "weight": 4,
         "description": "Has decent damage output and accuracy.",
         "weaponSpecs": {
@@ -11614,7 +11664,31 @@
         "sources": [
             "sources/items/burletta_t2/inspect.webp"
         ],
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "mechanical_components",
+                    "name": "Mechanical Components",
+                    "rarity": "uncommon",
+                    "type": "refined material",
+                    "value": 640,
+                    "icon": "/items/icons/mechanical_components.webp"
+                },
+                "amount": 2
+            },
+            {
+                "item": {
+                    "id": "simple_gun_parts",
+                    "name": "Simple Gun Parts",
+                    "rarity": "uncommon",
+                    "type": "topside material",
+                    "value": 330,
+                    "icon": "/items/icons/simple_gun_parts.webp"
+                },
+                "amount": 2
+            }
+        ]
     },
     "burletta_t3": {
         "updatedAt": "2025-10-31T07:10:25.404Z",
@@ -11812,7 +11886,7 @@
         "rarity": "uncommon",
         "stackSize": 1,
         "type": "pistol",
-        "value": 0,
+        "value": 10000,
         "weight": 4,
         "weaponSpecs": {
             "ammoType": "light",
@@ -11991,7 +12065,31 @@
                 "updatedAt": "2025-10-28T15:02:45.057Z"
             }
         ],
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "mechanical_components",
+                    "name": "Mechanical Components",
+                    "rarity": "uncommon",
+                    "type": "refined material",
+                    "value": 640,
+                    "icon": "/items/icons/mechanical_components.webp"
+                },
+                "amount": 4
+            },
+            {
+                "item": {
+                    "id": "simple_gun_parts",
+                    "name": "Simple Gun Parts",
+                    "rarity": "uncommon",
+                    "type": "topside material",
+                    "value": 330,
+                    "icon": "/items/icons/simple_gun_parts.webp"
+                },
+                "amount": 4
+            }
+        ]
     },
     "burned_arc_circuit": {
         "updatedAt": "2025-10-20T11:29:16.330Z",
@@ -12001,7 +12099,7 @@
         ],
         "name": "Burned ARC Circuitry",
         "rarity": "uncommon",
-        "stackSize": 1,
+        "stackSize": 5,
         "type": "recyclable",
         "value": 640,
         "weight": 0.25,
@@ -13378,7 +13476,7 @@
         "stackSize": 50,
         "type": "basic material",
         "value": 50,
-        "weight": 0.15,
+        "weight": 0.1,
         "description": "Used to craft medical supplies, explosives, and utility items.",
         "icon": "/items/icons/chemicals.webp",
         "image": "/items/images/chemicals.webp",
@@ -14180,7 +14278,7 @@
         "stackSize": 1,
         "type": "augment",
         "value": 5000,
-        "weight": 4,
+        "weight": 5,
         "augmentSpecs": {
             "backpackSlots": 18,
             "quickUseSlots": 4,
@@ -14230,7 +14328,31 @@
         "sources": [
             "sources/items/combat_mk3_aggressive/inspect.webp"
         ],
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "advanced_electrical_components",
+                    "name": "Advanced Electrical Components",
+                    "rarity": "rare",
+                    "type": "refined material",
+                    "value": 1750,
+                    "icon": "/items/icons/advanced_electrical_components.webp"
+                },
+                "amount": 1
+            },
+            {
+                "item": {
+                    "id": "processor",
+                    "name": "Processor",
+                    "rarity": "rare",
+                    "type": "topside material",
+                    "value": 500,
+                    "icon": "/items/icons/processor.webp"
+                },
+                "amount": 1
+            }
+        ]
     },
     "combat_mk3_aggressive_blueprint": {
         "updatedAt": "2025-11-16T14:30:39.690Z",
@@ -14344,7 +14466,31 @@
             "sources/items/combat_mk3_flanking/crafting.webp",
             "sources/items/combat_mk3_flanking/tooltip.webp"
         ],
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "advanced_electrical_components",
+                    "name": "Advanced Electrical Components",
+                    "rarity": "rare",
+                    "type": "refined material",
+                    "value": 1750,
+                    "icon": "/items/icons/advanced_electrical_components.webp"
+                },
+                "amount": 1
+            },
+            {
+                "item": {
+                    "id": "processor",
+                    "name": "Processor",
+                    "rarity": "rare",
+                    "type": "topside material",
+                    "value": 500,
+                    "icon": "/items/icons/processor.webp"
+                },
+                "amount": 1
+            }
+        ]
     },
     "combat_mk3_flanking_blueprint": {
         "updatedAt": "2025-11-08T20:38:28.770Z",
@@ -15246,7 +15392,31 @@
             "sources/items/compensator_t3/inspect.webp",
             "sources/items/compensator_t3/tooltip.webp"
         ],
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "mod_components",
+                    "name": "Mod Components",
+                    "rarity": "rare",
+                    "type": "refined material",
+                    "value": 1750,
+                    "icon": "/items/icons/mod_components.webp"
+                },
+                "amount": 1
+            },
+            {
+                "item": {
+                    "id": "wires",
+                    "name": "Wires",
+                    "rarity": "uncommon",
+                    "type": "topside material",
+                    "value": 200,
+                    "icon": "/items/icons/wires.webp"
+                },
+                "amount": 2
+            }
+        ]
     },
     "compensator_t3_blueprint": {
         "updatedAt": "2025-11-16T14:30:39.690Z",
@@ -15273,7 +15443,7 @@
         "rarity": "epic",
         "stackSize": 3,
         "type": "topside material",
-        "value": 2000,
+        "value": 3000,
         "weight": 1,
         "breaksInto": [
             {
@@ -15397,11 +15567,35 @@
         "rarity": "rare",
         "stackSize": 3,
         "type": "recyclable",
-        "value": 0,
+        "value": 1000,
         "weight": 2,
         "description": "Can be recycled into crafting materials.",
         "icon": "/items/icons/coolant.webp",
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "chemicals",
+                    "name": "Chemicals",
+                    "rarity": "common",
+                    "type": "basic material",
+                    "value": 50,
+                    "icon": "/items/icons/chemicals.webp"
+                },
+                "amount": 5
+            },
+            {
+                "item": {
+                    "id": "oil",
+                    "name": "Oil",
+                    "rarity": "uncommon",
+                    "type": "topside material",
+                    "value": 300,
+                    "icon": "/items/icons/oil.webp"
+                },
+                "amount": 2
+            }
+        ]
     },
     "cooling_coil": {
         "updatedAt": "2025-10-20T11:29:16.330Z",
@@ -15904,10 +16098,23 @@
         "rarity": "common",
         "stackSize": 3,
         "type": "recyclable",
-        "value": 0,
+        "value": 270,
         "weight": 1,
         "description": "Can be recycled into ARC Alloy.",
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "arc_alloy",
+                    "name": "ARC Alloy",
+                    "rarity": "uncommon",
+                    "type": "topside material",
+                    "value": 200,
+                    "icon": "/items/icons/arc_alloy.webp"
+                },
+                "amount": 1
+            }
+        ]
     },
     "damaged_heat_sink": {
         "updatedAt": "2025-10-29T11:00:26.524Z",
@@ -16052,13 +16259,26 @@
         ],
         "name": "Damaged Wasp Driver",
         "rarity": "common",
-        "stackSize": 1,
+        "stackSize": 3,
         "type": "recyclable",
-        "value": 0,
+        "value": 270,
         "weight": 0.25,
         "description": "Can be recycled into ARC Alloy.",
         "icon": "/items/icons/damaged_wasp_driver.webp",
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "arc_alloy",
+                    "name": "ARC Alloy",
+                    "rarity": "uncommon",
+                    "type": "topside material",
+                    "value": 200,
+                    "icon": "/items/icons/arc_alloy.webp"
+                },
+                "amount": 1
+            }
+        ]
     },
     "dam_control_tower_key": {
         "updatedAt": "2025-11-01T21:09:23.914Z",
@@ -16329,6 +16549,17 @@
                     "value": 1000,
                     "icon": "/items/icons/explosive_compound.webp",
                     "updatedAt": "2025-10-20T11:29:16.330Z"
+                },
+                "amount": 1
+            },
+            {
+                "item": {
+                    "id": "arc_circuitry",
+                    "name": "ARC Circuitry",
+                    "rarity": "rare",
+                    "type": "topside material",
+                    "value": 1000,
+                    "icon": "/items/icons/arc_circuitry.webp"
                 },
                 "amount": 1
             }
@@ -16710,38 +16941,36 @@
         "maps": []
     },
     "dried_out_arc_resin": {
-        "updatedAt": "2025-12-15T03:34:10.028Z",
         "id": "dried_out_arc_resin",
-        "name": "Dried Out ARC Resin",
-        "foundIn": [
-            "ARC"
-        ],
+        "name": "Dried-Out ARC Resin",
+        "updatedAt": "2026-01-25T18:59:15.430Z",
+        "foundIn": [],
+        "maps": [],
         "rarity": "uncommon",
-        "stackSize": 3,
         "type": "recyclable",
         "value": 640,
         "weight": 1,
-        "description": "Can be recycled into crafting materials.",
+        "stackSize": 3,
+        "description": "an Uncommon item that can be recycled into crafting materials. It was once an intact",
         "breaksInto": [
             {
                 "item": {
-                    "rarity": "common",
-                    "name": "Plastic Parts",
                     "id": "plastic_parts",
+                    "name": "Plastic Parts",
+                    "rarity": "common",
+                    "type": "basic material",
+                    "value": 60,
+                    "icon": "/items/icons/plastic_parts.webp",
                     "foundIn": [
                         "commercial",
                         "residential",
                         "technological"
                     ],
-                    "type": "basic material",
-                    "value": 60,
-                    "icon": "/items/icons/plastic_parts.webp",
                     "updatedAt": "2025-10-20T11:29:16.330Z"
                 },
                 "amount": 9
             }
-        ],
-        "maps": []
+        ]
     },
     "duct_tape": {
         "updatedAt": "2025-10-20T11:29:16.330Z",
@@ -17835,7 +18064,7 @@
         ],
         "name": "Expired Respirator",
         "rarity": "rare",
-        "stackSize": 10,
+        "stackSize": 3,
         "type": "recyclable",
         "value": 640,
         "weight": 2,
@@ -18115,7 +18344,31 @@
         "sources": [
             "sources/items/explosive_mine/tooltip.webp"
         ],
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "oil",
+                    "name": "Oil",
+                    "rarity": "uncommon",
+                    "type": "topside material",
+                    "value": 300,
+                    "icon": "/items/icons/oil.webp"
+                },
+                "amount": 2
+            },
+            {
+                "item": {
+                    "id": "sensors",
+                    "name": "Sensors",
+                    "rarity": "rare",
+                    "type": "topside material",
+                    "value": 500,
+                    "icon": "/items/icons/sensors.webp"
+                },
+                "amount": 1
+            }
+        ]
     },
     "explosive_mine_blueprint": {
         "updatedAt": "2025-11-05T01:43:25.063Z",
@@ -18744,7 +18997,20 @@
         "sources": [
             "sources/items/extended_light_mag_t1/crafting.webp"
         ],
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "plastic_parts",
+                    "name": "Plastic Parts",
+                    "rarity": "common",
+                    "type": "basic material",
+                    "value": 60,
+                    "icon": "/items/icons/plastic_parts.webp"
+                },
+                "amount": 6
+            }
+        ]
     },
     "extended_light_mag_t2": {
         "updatedAt": "2025-11-07T12:46:10.427Z",
@@ -20272,7 +20538,20 @@
         "sources": [
             "sources/items/extended_shotgun_mag_t1/crafting.webp"
         ],
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "plastic_parts",
+                    "name": "Plastic Parts",
+                    "rarity": "common",
+                    "type": "basic material",
+                    "value": 60,
+                    "icon": "/items/icons/plastic_parts.webp"
+                },
+                "amount": 6
+            }
+        ]
     },
     "extended_shotgun_mag_t2": {
         "updatedAt": "2025-10-20T11:29:16.330Z",
@@ -20505,8 +20784,8 @@
         "name": "Fabric",
         "rarity": "common",
         "value": 50,
-        "weight": 0.15,
-        "stackSize": 1,
+        "weight": 0.1,
+        "stackSize": 50,
         "quickUseSpecs": {
             "healthPerSec": 0.4,
             "regenDurationSec": 25,
@@ -20884,6 +21163,17 @@
                     "updatedAt": "2025-10-24T16:14:20.651Z"
                 },
                 "amount": 2
+            },
+            {
+                "item": {
+                    "id": "rubber_parts",
+                    "name": "Rubber Parts",
+                    "rarity": "common",
+                    "type": "basic material",
+                    "value": 50,
+                    "icon": "/items/icons/rubber_parts.webp"
+                },
+                "amount": 1
             }
         ],
         "image": "/items/images/ferro.webp",
@@ -21513,7 +21803,31 @@
                 "updatedAt": "2025-12-15T03:34:10.028Z"
             }
         ],
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "metal_parts",
+                    "name": "Metal Parts",
+                    "rarity": "common",
+                    "type": "basic material",
+                    "value": 75,
+                    "icon": "/items/icons/metal_parts.webp"
+                },
+                "amount": 4
+            },
+            {
+                "item": {
+                    "id": "rubber_parts",
+                    "name": "Rubber Parts",
+                    "rarity": "common",
+                    "type": "basic material",
+                    "value": 50,
+                    "icon": "/items/icons/rubber_parts.webp"
+                },
+                "amount": 3
+            }
+        ]
     },
     "ferro_t3": {
         "updatedAt": "2025-11-03T18:24:37.786Z",
@@ -21875,7 +22189,31 @@
                 "updatedAt": "2025-12-15T03:34:10.028Z"
             }
         ],
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "metal_parts",
+                    "name": "Metal Parts",
+                    "rarity": "common",
+                    "type": "basic material",
+                    "value": 75,
+                    "icon": "/items/icons/metal_parts.webp"
+                },
+                "amount": 6
+            },
+            {
+                "item": {
+                    "id": "simple_gun_parts",
+                    "name": "Simple Gun Parts",
+                    "rarity": "uncommon",
+                    "type": "topside material",
+                    "value": 330,
+                    "icon": "/items/icons/simple_gun_parts.webp"
+                },
+                "amount": 1
+            }
+        ]
     },
     "ferro_t4": {
         "updatedAt": "2025-12-15T03:34:10.028Z",
@@ -22268,7 +22606,7 @@
         ],
         "name": "Fertilizer",
         "rarity": "uncommon",
-        "stackSize": 10,
+        "stackSize": 5,
         "type": "misc",
         "value": 1000,
         "weight": 0.4,
@@ -22467,17 +22805,12 @@
             },
             {
                 "item": {
-                    "rarity": "uncommon",
-                    "name": "Crude Explosives",
-                    "id": "crude_explosives",
-                    "foundIn": [
-                        "industrial",
-                        "security"
-                    ],
-                    "type": "refined material",
-                    "value": 270,
-                    "icon": "/items/icons/crude_explosives.webp",
-                    "updatedAt": "2025-10-20T11:29:16.330Z"
+                    "id": "chemicals",
+                    "name": "Chemicals",
+                    "rarity": "common",
+                    "type": "basic material",
+                    "value": 50,
+                    "icon": "/items/icons/chemicals.webp"
                 },
                 "amount": 1
             }
@@ -22620,7 +22953,20 @@
             }
         },
         "description": "A remote triggered arrangement of dazzling fireworks, sure to put on a show.",
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "explosive_compound",
+                    "name": "Explosive Compound",
+                    "rarity": "rare",
+                    "type": "refined material",
+                    "value": 1000,
+                    "icon": "/items/icons/explosive_compound.webp"
+                },
+                "amount": 1
+            }
+        ]
     },
     "fireworks_box_blueprint": {
         "updatedAt": "2025-12-28T14:24:01.035Z",
@@ -22655,7 +23001,7 @@
         "stackSize": 1,
         "type": "quick use",
         "value": 2000,
-        "weight": 3,
+        "weight": 1,
         "quickUseSpecs": {
             "damagePerSec": 10
         },
@@ -25239,7 +25585,20 @@
         "description": "A throwable chemical light that illuminates the area around it.",
         "icon": "/items/icons/green_light_stick.webp",
         "image": "/items/images/green_light_stick.webp",
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "chemicals",
+                    "name": "Chemicals",
+                    "rarity": "common",
+                    "type": "basic material",
+                    "value": 50,
+                    "icon": "/items/icons/chemicals.webp"
+                },
+                "amount": 1
+            }
+        ]
     },
     "green_light_stick_blueprint": {
         "updatedAt": "2025-11-14T10:46:52.325Z",
@@ -26888,7 +27247,7 @@
         "rarity": "uncommon",
         "stackSize": 5,
         "type": "quick use",
-        "value": 640,
+        "value": 900,
         "weight": 0.15,
         "description": "An improvised medical item that gradually restores health over time.",
         "quickUseSpecs": {
@@ -27346,7 +27705,31 @@
                 "updatedAt": "2025-11-01T23:46:47.978Z"
             }
         ],
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "advanced_mechanical_components",
+                    "name": "Advanced Mechanical Components",
+                    "rarity": "rare",
+                    "type": "refined material",
+                    "value": 1750,
+                    "icon": "/items/icons/advanced_mechanical_components.webp"
+                },
+                "amount": 2
+            },
+            {
+                "item": {
+                    "id": "heavy_gun_parts",
+                    "name": "Heavy Gun Parts",
+                    "rarity": "rare",
+                    "type": "topside material",
+                    "value": 700,
+                    "icon": "/items/icons/heavy_gun_parts.webp"
+                },
+                "amount": 2
+            }
+        ]
     },
     "hullcracker_blueprint": {
         "updatedAt": "2025-11-25T01:35:08.972Z",
@@ -27381,7 +27764,7 @@
         "rarity": "epic",
         "stackSize": 1,
         "type": "special",
-        "value": 0,
+        "value": 13000,
         "weight": 7,
         "weaponSpecs": {
             "ammoType": "launcher",
@@ -27469,7 +27852,31 @@
                 "updatedAt": "2025-11-06T02:02:11.906Z"
             }
         ],
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "advanced_mechanical_components",
+                    "name": "Advanced Mechanical Components",
+                    "rarity": "rare",
+                    "type": "refined material",
+                    "value": 1750,
+                    "icon": "/items/icons/advanced_mechanical_components.webp"
+                },
+                "amount": 2
+            },
+            {
+                "item": {
+                    "id": "heavy_gun_parts",
+                    "name": "Heavy Gun Parts",
+                    "rarity": "rare",
+                    "type": "topside material",
+                    "value": 700,
+                    "icon": "/items/icons/heavy_gun_parts.webp"
+                },
+                "amount": 3
+            }
+        ]
     },
     "hullcracker_t3": {
         "updatedAt": "2025-11-06T02:02:11.906Z",
@@ -27479,7 +27886,7 @@
         "rarity": "epic",
         "stackSize": 1,
         "type": "special",
-        "value": 0,
+        "value": 17000,
         "weight": 7,
         "weaponSpecs": {
             "ammoType": "launcher",
@@ -27554,7 +27961,31 @@
         "sources": [
             "sources/items/hullcracker_t3/crafting.webp"
         ],
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "advanced_mechanical_components",
+                    "name": "Advanced Mechanical Components",
+                    "rarity": "rare",
+                    "type": "refined material",
+                    "value": 1750,
+                    "icon": "/items/icons/advanced_mechanical_components.webp"
+                },
+                "amount": 3
+            },
+            {
+                "item": {
+                    "id": "heavy_gun_parts",
+                    "name": "Heavy Gun Parts",
+                    "rarity": "rare",
+                    "type": "topside material",
+                    "value": 700,
+                    "icon": "/items/icons/heavy_gun_parts.webp"
+                },
+                "amount": 4
+            }
+        ]
     },
     "hullcracker_t4": {
         "updatedAt": "2025-11-03T18:00:27.147Z",
@@ -27725,7 +28156,7 @@
         "rarity": "uncommon",
         "stackSize": 1,
         "type": "shotgun",
-        "value": 2900,
+        "value": 5000,
         "weight": 8,
         "weaponSpecs": {
             "magSize": 5,
@@ -27819,16 +28250,12 @@
             },
             {
                 "item": {
+                    "id": "simple_gun_parts",
+                    "name": "Simple Gun Parts",
                     "rarity": "uncommon",
-                    "name": "Canister",
-                    "id": "canister",
-                    "foundIn": [
-                        "commercial"
-                    ],
                     "type": "topside material",
-                    "value": 300,
-                    "icon": "/items/icons/canister.webp",
-                    "updatedAt": "2025-10-20T11:29:16.330Z"
+                    "value": 330,
+                    "icon": "/items/icons/simple_gun_parts.webp"
                 },
                 "amount": 2
             }
@@ -28429,7 +28856,7 @@
         "rarity": "uncommon",
         "stackSize": 1,
         "type": "shotgun",
-        "value": 0,
+        "value": 10000,
         "weight": 8,
         "weaponSpecs": {
             "ammoType": "shotgun",
@@ -28697,7 +29124,31 @@
                 "updatedAt": "2025-10-28T15:02:45.057Z"
             }
         ],
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "mechanical_components",
+                    "name": "Mechanical Components",
+                    "rarity": "uncommon",
+                    "type": "refined material",
+                    "value": 640,
+                    "icon": "/items/icons/mechanical_components.webp"
+                },
+                "amount": 4
+            },
+            {
+                "item": {
+                    "id": "simple_gun_parts",
+                    "name": "Simple Gun Parts",
+                    "rarity": "uncommon",
+                    "type": "topside material",
+                    "value": 330,
+                    "icon": "/items/icons/simple_gun_parts.webp"
+                },
+                "amount": 4
+            }
+        ]
     },
     "il_toro_t4": {
         "updatedAt": "2025-10-28T15:02:45.057Z",
@@ -28708,7 +29159,7 @@
         "rarity": "uncommon",
         "stackSize": 1,
         "type": "shotgun",
-        "value": 0,
+        "value": 13000,
         "weight": 8,
         "weaponSpecs": {
             "ammoType": "shotgun",
@@ -28967,7 +29418,31 @@
                 "updatedAt": "2025-10-28T15:02:45.057Z"
             }
         ],
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "mechanical_components",
+                    "name": "Mechanical Components",
+                    "rarity": "uncommon",
+                    "type": "refined material",
+                    "value": 640,
+                    "icon": "/items/icons/mechanical_components.webp"
+                },
+                "amount": 5
+            },
+            {
+                "item": {
+                    "id": "simple_gun_parts",
+                    "name": "Simple Gun Parts",
+                    "rarity": "uncommon",
+                    "type": "topside material",
+                    "value": 330,
+                    "icon": "/items/icons/simple_gun_parts.webp"
+                },
+                "amount": 5
+            }
+        ]
     },
     "impure_arc_coolant": {
         "updatedAt": "2025-10-20T11:29:16.330Z",
@@ -31907,6 +32382,19 @@
                 ],
                 "description": "Once a steadfast symbol of defiant connection, the Blue Gate now serves as a daunting entryway into the perilous mountain ranges. The surrounding valley bears scars both new and old."
             }
+        ],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "assorted_seeds",
+                    "name": "Assorted Seeds",
+                    "rarity": null,
+                    "type": "nature",
+                    "value": 100,
+                    "icon": "/items/icons/assorted_seeds.webp"
+                },
+                "amount": 3
+            }
         ]
     },
     "lightweight_stock": {
@@ -32013,7 +32501,31 @@
         "sources": [
             "sources/items/lightweight_stock/inspect.webp"
         ],
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "mod_components",
+                    "name": "Mod Components",
+                    "rarity": "rare",
+                    "type": "refined material",
+                    "value": 1750,
+                    "icon": "/items/icons/mod_components.webp"
+                },
+                "amount": 1
+            },
+            {
+                "item": {
+                    "id": "duct_tape",
+                    "name": "Duct Tape",
+                    "rarity": "uncommon",
+                    "type": "topside material",
+                    "value": 300,
+                    "icon": "/items/icons/duct_tape.webp"
+                },
+                "amount": 1
+            }
+        ]
     },
     "light_ammo": {
         "updatedAt": "2025-10-20T11:29:16.330Z",
@@ -32992,7 +33504,31 @@
         "sources": [
             "sources/items/looting_mk1/crafting.webp"
         ],
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "plastic_parts",
+                    "name": "Plastic Parts",
+                    "rarity": "common",
+                    "type": "basic material",
+                    "value": 60,
+                    "icon": "/items/icons/plastic_parts.webp"
+                },
+                "amount": 3
+            },
+            {
+                "item": {
+                    "id": "rubber_parts",
+                    "name": "Rubber Parts",
+                    "rarity": "common",
+                    "type": "basic material",
+                    "value": 50,
+                    "icon": "/items/icons/rubber_parts.webp"
+                },
+                "amount": 3
+            }
+        ]
     },
     "looting_mk2": {
         "updatedAt": "2025-11-16T00:27:17.206Z",
@@ -33067,7 +33603,31 @@
         "sources": [
             "sources/items/looting_mk2/tooltip.webp"
         ],
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "magnet",
+                    "name": "Magnet",
+                    "rarity": "uncommon",
+                    "type": "topside material",
+                    "value": 300,
+                    "icon": "/items/icons/magnet.webp"
+                },
+                "amount": 1
+            },
+            {
+                "item": {
+                    "id": "electrical_components",
+                    "name": "Electrical Components",
+                    "rarity": "uncommon",
+                    "type": "refined material",
+                    "value": 640,
+                    "icon": "/items/icons/electrical_components.webp"
+                },
+                "amount": 1
+            }
+        ]
     },
     "looting_mk3_cautious": {
         "updatedAt": "2025-12-15T03:34:10.028Z",
@@ -33128,21 +33688,6 @@
         "breaksInto": [
             {
                 "item": {
-                    "rarity": "uncommon",
-                    "name": "Electrical Components",
-                    "id": "electrical_components",
-                    "foundIn": [
-                        "electrical"
-                    ],
-                    "type": "refined material",
-                    "value": 640,
-                    "icon": "/items/icons/electrical_components.webp",
-                    "updatedAt": "2025-10-20T11:29:16.330Z"
-                },
-                "amount": 1
-            },
-            {
-                "item": {
                     "rarity": "rare",
                     "name": "Processor",
                     "id": "processor",
@@ -33153,6 +33698,17 @@
                     "value": 500,
                     "icon": "/items/icons/processor.webp",
                     "updatedAt": "2025-10-20T11:29:16.330Z"
+                },
+                "amount": 1
+            },
+            {
+                "item": {
+                    "id": "advanced_electrical_components",
+                    "name": "Advanced Electrical Components",
+                    "rarity": "rare",
+                    "type": "refined material",
+                    "value": 1750,
+                    "icon": "/items/icons/advanced_electrical_components.webp"
                 },
                 "amount": 1
             }
@@ -33284,21 +33840,6 @@
         "breaksInto": [
             {
                 "item": {
-                    "rarity": "uncommon",
-                    "name": "Electrical Components",
-                    "id": "electrical_components",
-                    "foundIn": [
-                        "electrical"
-                    ],
-                    "type": "refined material",
-                    "value": 640,
-                    "icon": "/items/icons/electrical_components.webp",
-                    "updatedAt": "2025-10-20T11:29:16.330Z"
-                },
-                "amount": 1
-            },
-            {
-                "item": {
                     "rarity": "rare",
                     "name": "Processor",
                     "id": "processor",
@@ -33309,6 +33850,17 @@
                     "value": 500,
                     "icon": "/items/icons/processor.webp",
                     "updatedAt": "2025-10-20T11:29:16.330Z"
+                },
+                "amount": 1
+            },
+            {
+                "item": {
+                    "id": "advanced_electrical_components",
+                    "name": "Advanced Electrical Components",
+                    "rarity": "rare",
+                    "type": "refined material",
+                    "value": 1750,
+                    "icon": "/items/icons/advanced_electrical_components.webp"
                 },
                 "amount": 1
             }
@@ -33455,7 +34007,7 @@
         "id": "lure_grenade_trap",
         "name": "Lure Grenade Trap",
         "foundIn": [],
-        "rarity": "common",
+        "rarity": "uncommon",
         "stackSize": 3,
         "type": "quick use",
         "value": 1000,
@@ -35920,7 +36472,7 @@
         ],
         "name": "Metal Brackets",
         "rarity": "uncommon",
-        "stackSize": 5,
+        "stackSize": 3,
         "type": "recyclable",
         "value": 640,
         "weight": 0.8,
@@ -35962,7 +36514,7 @@
         "stackSize": 50,
         "type": "basic material",
         "value": 75,
-        "weight": 0.15,
+        "weight": 0.1,
         "description": "Used to craft a wide range of items.",
         "icon": "/items/icons/metal_parts.webp",
         "sources": [
@@ -38695,7 +39247,20 @@
         "sources": [
             "sources/items/muzzle_brake_t1/crafting.webp"
         ],
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "metal_parts",
+                    "name": "Metal Parts",
+                    "rarity": "common",
+                    "type": "basic material",
+                    "value": 75,
+                    "icon": "/items/icons/metal_parts.webp"
+                },
+                "amount": 5
+            }
+        ]
     },
     "muzzle_brake_t2": {
         "updatedAt": "2025-11-07T12:46:10.427Z",
@@ -40381,7 +40946,7 @@
         "rarity": "rare",
         "stackSize": 1,
         "type": "sniper rifle",
-        "value": 0,
+        "value": 17000,
         "weight": 7,
         "weaponSpecs": {
             "ammoType": "medium",
@@ -40462,7 +41027,31 @@
                 "updatedAt": "2025-10-28T18:47:05.274Z"
             }
         ],
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "advanced_mechanical_components",
+                    "name": "Advanced Mechanical Components",
+                    "rarity": "rare",
+                    "type": "refined material",
+                    "value": 1750,
+                    "icon": "/items/icons/advanced_mechanical_components.webp"
+                },
+                "amount": 3
+            },
+            {
+                "item": {
+                    "id": "medium_gun_parts",
+                    "name": "Medium Gun Parts",
+                    "rarity": "rare",
+                    "type": "topside material",
+                    "value": 700,
+                    "icon": "/items/icons/medium_gun_parts.webp"
+                },
+                "amount": 3
+            }
+        ]
     },
     "padded_stock": {
         "updatedAt": "2025-11-07T12:46:10.427Z",
@@ -40877,7 +41466,7 @@
         "stackSize": 50,
         "type": "basic material",
         "value": 60,
-        "weight": 0.15,
+        "weight": 0.1,
         "description": "Used to craft a wide range of items.",
         "icon": "/items/icons/plastic_parts.webp",
         "image": "/items/images/plastic_parts.webp",
@@ -41578,7 +42167,7 @@
         "foundIn": [
             "ARC"
         ],
-        "rarity": "common",
+        "rarity": "uncommon",
         "stackSize": 3,
         "type": "recyclable",
         "value": 640,
@@ -41847,8 +42436,8 @@
         "rarity": "epic",
         "stackSize": 3,
         "type": "refined material",
-        "value": 5500,
-        "weight": 2,
+        "value": 5000,
+        "weight": 1,
         "description": "Used to craft shields. Can be recycled into crafting materials.",
         "breaksInto": [
             {
@@ -42688,7 +43277,7 @@
         "id": "pulse_mine",
         "name": "Pulse Mine",
         "foundIn": [],
-        "rarity": "common",
+        "rarity": "uncommon",
         "stackSize": 3,
         "type": "quick use",
         "value": 470,
@@ -44713,7 +45302,20 @@
             "illuminationRadiusMeters": 7,
             "durationSec": 40
         },
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "chemicals",
+                    "name": "Chemicals",
+                    "rarity": "common",
+                    "type": "basic material",
+                    "value": 50,
+                    "icon": "/items/icons/chemicals.webp"
+                },
+                "amount": 1
+            }
+        ]
     },
     "red_light_stick_blueprint": {
         "updatedAt": "2025-11-12T18:41:00.698Z",
@@ -44790,7 +45392,7 @@
         "id": "remote_raider_flare",
         "foundIn": [],
         "name": "Remote Raider Flare",
-        "rarity": "uncommon",
+        "rarity": "common",
         "stackSize": 3,
         "type": "quick use",
         "value": 270,
@@ -44811,7 +45413,7 @@
                     "icon": "/items/icons/chemicals.webp",
                     "updatedAt": "2025-10-20T11:29:16.330Z"
                 },
-                "amount": 3
+                "amount": 1
             },
             {
                 "item": {
@@ -44828,7 +45430,7 @@
                     "icon": "/items/icons/rubber_parts.webp",
                     "updatedAt": "2025-10-20T11:29:16.330Z"
                 },
-                "amount": 3
+                "amount": 1
             }
         ],
         "description": "A deployable device that, when manually triggered, launches a Raider Distress Flare.",
@@ -45974,28 +46576,11 @@
         ],
         "name": "Ripped Safety Vest",
         "rarity": "uncommon",
-        "stackSize": 5,
+        "stackSize": 3,
         "type": "recyclable",
         "value": 1000,
         "weight": 0.8,
         "breaksInto": [
-            {
-                "item": {
-                    "rarity": "common",
-                    "name": "Fabric",
-                    "id": "fabric",
-                    "foundIn": [
-                        "commercial",
-                        "medical",
-                        "residential"
-                    ],
-                    "type": "basic material",
-                    "value": 50,
-                    "icon": "/items/icons/fabric.webp",
-                    "updatedAt": "2025-10-20T11:29:16.330Z"
-                },
-                "amount": 13
-            },
             {
                 "item": {
                     "rarity": "uncommon",
@@ -46009,7 +46594,18 @@
                     "icon": "/items/icons/magnet.webp",
                     "updatedAt": "2025-10-20T11:29:16.330Z"
                 },
-                "amount": 2
+                "amount": 1
+            },
+            {
+                "item": {
+                    "id": "durable_cloth",
+                    "name": "Durable Cloth",
+                    "rarity": "uncommon",
+                    "type": "refined material",
+                    "value": 640,
+                    "icon": "/items/icons/durable_cloth.webp"
+                },
+                "amount": 1
             }
         ],
         "description": "A remnant of a time long lost, when it was fashionable to stand out.",
@@ -46406,11 +47002,24 @@
         "rarity": "rare",
         "stackSize": 3,
         "type": "recyclable",
-        "value": 640,
+        "value": 1000,
         "weight": 2,
         "description": "Can be recycled into rubber parts.",
         "icon": "/items/icons/rubber_pad.webp",
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "rubber_parts",
+                    "name": "Rubber Parts",
+                    "rarity": "common",
+                    "type": "basic material",
+                    "value": 50,
+                    "icon": "/items/icons/rubber_parts.webp"
+                },
+                "amount": 18
+            }
+        ]
     },
     "rubber_parts": {
         "updatedAt": "2025-10-20T11:29:16.330Z",
@@ -46425,7 +47034,7 @@
         "stackSize": 50,
         "type": "basic material",
         "value": 50,
-        "weight": 0.15,
+        "weight": 0.1,
         "description": "Used to craft a wide range of items.",
         "icon": "/items/icons/rubber_parts.webp",
         "image": "/items/images/rubber_parts.webp",
@@ -47362,10 +47971,34 @@
         "rarity": "uncommon",
         "stackSize": 3,
         "type": "recyclable",
-        "value": 0,
+        "value": 640,
         "weight": 0.8,
         "description": "Can be recycled into crafting materials.",
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "fabric",
+                    "name": "Fabric",
+                    "rarity": "common",
+                    "type": "basic material",
+                    "value": 50,
+                    "icon": "/items/icons/fabric.webp"
+                },
+                "amount": 5
+            },
+            {
+                "item": {
+                    "id": "magnet",
+                    "name": "Magnet",
+                    "rarity": "uncommon",
+                    "type": "topside material",
+                    "value": 300,
+                    "icon": "/items/icons/magnet.webp"
+                },
+                "amount": 1
+            }
+        ]
     },
     "rusted_bolts": {
         "updatedAt": "2025-10-20T11:29:16.330Z",
@@ -47685,11 +48318,11 @@
         "id": "seeker_grenade",
         "name": "Seeker Grenade",
         "foundIn": [],
-        "rarity": "common",
+        "rarity": "uncommon",
         "stackSize": 5,
         "type": "quick use",
         "value": 640,
-        "weight": 2,
+        "weight": 0.2,
         "quickUseSpecs": {
             "damage": 50,
             "homingRangeMeters": 20
@@ -48426,7 +49059,20 @@
         "sources": [
             "sources/items/shotgun_choke_t1/crafting.webp"
         ],
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "metal_parts",
+                    "name": "Metal Parts",
+                    "rarity": "common",
+                    "type": "basic material",
+                    "value": 75,
+                    "icon": "/items/icons/metal_parts.webp"
+                },
+                "amount": 5
+            }
+        ]
     },
     "shotgun_choke_t2": {
         "updatedAt": "2025-11-07T20:43:03.418Z",
@@ -50178,7 +50824,7 @@
             "commercial"
         ],
         "name": "Silver Teaspoon Set",
-        "rarity": "common",
+        "rarity": "rare",
         "stackSize": 3,
         "type": "trinket",
         "value": 3000,
@@ -50977,7 +51623,7 @@
         "id": "snap_blast_grenade",
         "foundIn": [],
         "name": "Snap Blast Grenade",
-        "rarity": "common",
+        "rarity": "uncommon",
         "stackSize": 3,
         "type": "quick use",
         "value": 800,
@@ -51270,7 +51916,7 @@
         "id": "spaceport_ground_control_key",
         "foundIn": [],
         "name": "Spaceport Ground Control Key",
-        "rarity": "uncommon",
+        "rarity": "rare",
         "stackSize": 1,
         "type": "key",
         "icon": "/items/icons/key.webp",
@@ -52886,7 +53532,7 @@
                     "icon": "/items/icons/metal_parts.webp",
                     "updatedAt": "2025-10-24T16:14:20.651Z"
                 },
-                "amount": 3
+                "amount": 2
             }
         ],
         "icon": "/items/icons/steel_spring.webp",
@@ -53254,7 +53900,7 @@
         "rarity": "uncommon",
         "stackSize": 1,
         "type": "key",
-        "value": 100,
+        "value": 250,
         "weight": 0.25,
         "description": "Unlocks a door in Assembly in Stella Montis",
         "image": "/items/images/stella_montis_key.webp",
@@ -53797,6 +54443,17 @@
                     "value": 75,
                     "icon": "/items/icons/metal_parts.webp",
                     "updatedAt": "2025-10-24T16:14:20.651Z"
+                },
+                "amount": 6
+            },
+            {
+                "item": {
+                    "id": "rubber_parts",
+                    "name": "Rubber Parts",
+                    "rarity": "common",
+                    "type": "basic material",
+                    "value": 50,
+                    "icon": "/items/icons/rubber_parts.webp"
                 },
                 "amount": 6
             }
@@ -54771,18 +55428,12 @@
             },
             {
                 "item": {
+                    "id": "plastic_parts",
+                    "name": "Plastic Parts",
                     "rarity": "common",
-                    "name": "Chemicals",
-                    "id": "chemicals",
-                    "foundIn": [
-                        "medical",
-                        "residential",
-                        "mechanical"
-                    ],
                     "type": "basic material",
-                    "value": 50,
-                    "icon": "/items/icons/chemicals.webp",
-                    "updatedAt": "2025-10-20T11:29:16.330Z"
+                    "value": 60,
+                    "icon": "/items/icons/plastic_parts.webp"
                 },
                 "amount": 1
             }
@@ -55157,7 +55808,31 @@
         "sources": [
             "sources/items/tactical_mk2/tooltip.webp"
         ],
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "electrical_components",
+                    "name": "Electrical Components",
+                    "rarity": "uncommon",
+                    "type": "refined material",
+                    "value": 640,
+                    "icon": "/items/icons/electrical_components.webp"
+                },
+                "amount": 1
+            },
+            {
+                "item": {
+                    "id": "magnet",
+                    "name": "Magnet",
+                    "rarity": "uncommon",
+                    "type": "topside material",
+                    "value": 300,
+                    "icon": "/items/icons/magnet.webp"
+                },
+                "amount": 1
+            }
+        ]
     },
     "tactical_mk3_defensive": {
         "updatedAt": "2025-11-16T00:27:17.206Z",
@@ -56785,7 +57460,7 @@
         ],
         "name": "Tick Pod",
         "rarity": "uncommon",
-        "stackSize": 5,
+        "stackSize": 3,
         "type": "recyclable",
         "value": 640,
         "weight": 0.5,
@@ -60391,7 +61066,7 @@
         "rarity": "rare",
         "stackSize": 3,
         "type": "quick use",
-        "value": 2000,
+        "value": 2200,
         "weight": 0.4,
         "quickUseSpecs": {
             "healing": 50,
@@ -60462,7 +61137,7 @@
         "rarity": "epic",
         "stackSize": 1,
         "type": "quick use",
-        "value": 9000,
+        "value": 3000,
         "weight": 1,
         "description": "A medical item that continuously restores health during use. Can be used on yourself or your allies.",
         "quickUseSpecs": {
@@ -61501,7 +62176,7 @@
         "rarity": "epic",
         "stackSize": 1,
         "type": "shotgun",
-        "value": 0,
+        "value": 22000,
         "weight": 8,
         "weaponSpecs": {
             "ammoType": "shotgun",
@@ -61586,7 +62261,7 @@
                     "icon": "/items/icons/advanced_mechanical_components.webp",
                     "updatedAt": "2025-10-31T07:10:25.404Z"
                 },
-                "amount": 3
+                "amount": 4
             },
             {
                 "item": {
@@ -61602,7 +62277,7 @@
                     "icon": "/items/icons/heavy_gun_parts.webp",
                     "updatedAt": "2025-10-26T12:34:06.331Z"
                 },
-                "amount": 4
+                "amount": 5
             }
         ],
         "image": "/items/images/vulcano.webp",
@@ -62645,7 +63320,20 @@
             "durationSec": 40
         },
         "description": "A throwable chemical light that illuminates the area around it.",
-        "maps": []
+        "maps": [],
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "chemicals",
+                    "name": "Chemicals",
+                    "rarity": "common",
+                    "type": "basic material",
+                    "value": 50,
+                    "icon": "/items/icons/chemicals.webp"
+                },
+                "amount": 1
+            }
+        ]
     },
     "yellow_light_stick_blueprint": {
         "updatedAt": "2025-11-11T14:45:00.981Z",
@@ -62758,5 +63446,290 @@
         "icon": "/items/icons/zipline.webp",
         "image": "/items/images/zipline.webp",
         "maps": []
+    },
+    "damaged_hornet_driver": {
+        "id": "damaged_hornet_driver",
+        "name": "Damaged Hornet Driver",
+        "updatedAt": "2026-01-25T18:59:13.632Z",
+        "foundIn": [],
+        "maps": [],
+        "rarity": "common",
+        "type": "recyclable",
+        "value": 640,
+        "weight": 0.3,
+        "stackSize": 3,
+        "description": "a Common item that can be recycled into crafting materials. It was once an intact",
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "arc_alloy",
+                    "name": "ARC Alloy",
+                    "rarity": "uncommon",
+                    "type": "topside material",
+                    "value": 200,
+                    "icon": "/items/icons/arc_alloy.webp",
+                    "foundIn": [
+                        "ARC"
+                    ],
+                    "updatedAt": "2025-10-20T11:29:16.330Z"
+                },
+                "amount": 2
+            }
+        ]
+    },
+    "damaged_leaper_pulse_unit": {
+        "id": "damaged_leaper_pulse_unit",
+        "name": "Damaged Leaper Pulse Unit",
+        "updatedAt": "2026-01-25T18:59:14.258Z",
+        "foundIn": [],
+        "maps": [],
+        "rarity": "common",
+        "type": "recyclable",
+        "value": 2000,
+        "weight": 0.3,
+        "stackSize": 3,
+        "description": "a Common item that can be recycled into crafting materials. It was once an intact",
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "arc_alloy",
+                    "name": "ARC Alloy",
+                    "rarity": "uncommon",
+                    "type": "topside material",
+                    "value": 200,
+                    "icon": "/items/icons/arc_alloy.webp",
+                    "foundIn": [
+                        "ARC"
+                    ],
+                    "updatedAt": "2025-10-20T11:29:16.330Z"
+                },
+                "amount": 3
+            }
+        ]
+    },
+    "damaged_snitch_scanner": {
+        "id": "damaged_snitch_scanner",
+        "name": "Damaged Snitch Scanner",
+        "updatedAt": "2026-01-25T18:59:14.843Z",
+        "foundIn": [],
+        "maps": [],
+        "rarity": "common",
+        "type": "recyclable",
+        "value": 659,
+        "weight": 0.25,
+        "stackSize": 3,
+        "description": "a Common item that can be recycled into crafting materials. It was once an intact"
+    },
+    "film_reel": {
+        "id": "film_reel",
+        "name": "Film Reel",
+        "updatedAt": "2026-01-25T18:59:16.058Z",
+        "foundIn": [],
+        "maps": [],
+        "rarity": "rare",
+        "type": "trinket",
+        "value": 2000,
+        "weight": 0.2,
+        "stackSize": 3,
+        "description": "I remember back when you could watch things on"
+    },
+    "flow_controller": {
+        "id": "flow_controller",
+        "name": "Flow Controller",
+        "updatedAt": "2026-01-25T18:59:16.647Z",
+        "foundIn": [],
+        "maps": [],
+        "rarity": "rare",
+        "type": "recyclable",
+        "value": 3000,
+        "weight": 1.5,
+        "stackSize": 3,
+        "description": "a Rare item that can be recycled into crafting materials.",
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "advanced_mechanical_components",
+                    "name": "Advanced Mechanical Components",
+                    "rarity": "rare",
+                    "type": "refined material",
+                    "value": 1750,
+                    "icon": "/items/icons/advanced_mechanical_components.webp",
+                    "foundIn": [
+                        "mechanical"
+                    ],
+                    "updatedAt": "2025-10-31T07:10:25.404Z"
+                },
+                "amount": 1
+            },
+            {
+                "item": {
+                    "id": "sensors",
+                    "name": "Sensors",
+                    "rarity": "rare",
+                    "type": "topside material",
+                    "value": 500,
+                    "icon": "/items/icons/sensors.webp",
+                    "foundIn": [
+                        "security",
+                        "technological"
+                    ],
+                    "updatedAt": "2025-11-06T02:02:11.906Z"
+                },
+                "amount": 1
+            }
+        ]
+    },
+    "fossilized_lightning": {
+        "id": "fossilized_lightning",
+        "name": "Fossilized Lightning",
+        "updatedAt": "2026-01-25T18:59:17.233Z",
+        "foundIn": [],
+        "maps": [],
+        "rarity": "epic",
+        "type": "nature",
+        "value": 4000,
+        "weight": 0.25,
+        "stackSize": 1,
+        "description": "an Epic item that can occasionally be found at the epicenter of lightning strikes when the",
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "explosive_compound",
+                    "name": "Explosive Compound",
+                    "rarity": "rare",
+                    "type": "refined material",
+                    "value": 1000,
+                    "icon": "/items/icons/explosive_compound.webp",
+                    "foundIn": [
+                        "industrial",
+                        "security"
+                    ],
+                    "updatedAt": "2025-10-20T11:29:16.330Z"
+                },
+                "amount": 3
+            }
+        ]
+    },
+    "light_stick": {
+        "id": "light_stick",
+        "name": "Light Stick",
+        "updatedAt": "2026-01-25T18:59:17.820Z",
+        "foundIn": [],
+        "maps": [],
+        "rarity": "common",
+        "type": "quick use",
+        "value": 150,
+        "weight": 0.15,
+        "stackSize": 5,
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "chemicals",
+                    "name": "Chemicals",
+                    "rarity": "common",
+                    "type": "basic material",
+                    "value": 50,
+                    "icon": "/items/icons/chemicals.webp",
+                    "foundIn": [
+                        "medical",
+                        "residential",
+                        "mechanical"
+                    ],
+                    "updatedAt": "2025-10-20T11:29:16.330Z"
+                },
+                "amount": 1
+            }
+        ]
+    },
+    "shaker": {
+        "id": "shaker",
+        "name": "Shaker",
+        "updatedAt": "2026-01-25T18:59:18.451Z",
+        "foundIn": [],
+        "maps": [],
+        "rarity": "uncommon",
+        "type": "quick use",
+        "value": 1000,
+        "weight": 0.2,
+        "stackSize": 1,
+        "description": "When the Fire button is held down, the user will start playing one of two different repeating rhythms. During this time, you will be unable to use other weapons, gadgets, breach, or search containers",
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "plastic_parts",
+                    "name": "Plastic Parts",
+                    "rarity": "common",
+                    "type": "basic material",
+                    "value": 60,
+                    "icon": "/items/icons/plastic_parts.webp",
+                    "foundIn": [
+                        "commercial",
+                        "residential",
+                        "technological"
+                    ],
+                    "updatedAt": "2025-10-20T11:29:16.330Z"
+                },
+                "amount": 10
+            }
+        ]
+    },
+    "snowball": {
+        "id": "snowball",
+        "name": "Snowball",
+        "updatedAt": "2026-01-25T18:59:19.086Z",
+        "foundIn": [],
+        "maps": [],
+        "rarity": "common",
+        "type": "misc",
+        "value": 10,
+        "weight": 0.2,
+        "stackSize": 5,
+        "description": "Careful where you throw this"
+    },
+    "spectrum_analyzer": {
+        "id": "spectrum_analyzer",
+        "name": "Spectrum Analyzer",
+        "updatedAt": "2026-01-25T18:59:19.663Z",
+        "foundIn": [],
+        "maps": [],
+        "rarity": "epic",
+        "type": "recyclable",
+        "value": 3500,
+        "weight": 1.5,
+        "stackSize": 3,
+        "description": "an Epic item that can be recycled into crafting materials.",
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "sensors",
+                    "name": "Sensors",
+                    "rarity": "rare",
+                    "type": "topside material",
+                    "value": 500,
+                    "icon": "/items/icons/sensors.webp",
+                    "foundIn": [
+                        "security",
+                        "technological"
+                    ],
+                    "updatedAt": "2025-11-06T02:02:11.906Z"
+                },
+                "amount": 1
+            },
+            {
+                "item": {
+                    "id": "exodus_modules",
+                    "name": "Exodus Modules",
+                    "rarity": "epic",
+                    "type": "topside material",
+                    "value": 2750,
+                    "icon": "/items/images/exodus_modules.webp",
+                    "foundIn": [
+                        "exodus"
+                    ],
+                    "updatedAt": "2025-11-09T01:49:11.032Z"
+                },
+                "amount": 1
+            }
+        ]
     }
 }
