@@ -162,12 +162,17 @@ export function useVisionSystem(stationLevels, activeQuests, prioritySettings = 
 
   // --- INIT WORKER & LISTENER ---
   useEffect(() => {
-    // Synchronous touch detection - don't rely on isMobile prop which may have race condition
-    // This runs before any async work to prevent worker loading on mobile
+    // Device detection matching useAppMode.js logic:
+    // - Phone-sized touch devices (<768px): Skip initialization (can't run game)
+    // - Large touch devices (tablets, touchscreen laptops): Allow initialization
+    // - Non-touch devices: Allow initialization
     const isTouchDevice = navigator.maxTouchPoints > 0 || 'ontouchstart' in window;
+    const screenWidth = window.screen?.width || window.innerWidth;
+    const isPhoneSized = screenWidth < 768;
 
-    // Skip worker initialization entirely on mobile/touch devices
-    if (isMobile || isTouchDevice) {
+    // Only skip for phone-sized touch devices
+    // Touchscreen laptops and tablets CAN use the vision system in Game mode
+    if (isMobile || (isTouchDevice && isPhoneSized)) {
       setWorkerStatus("Mobile (Vision System Disabled)");
       return;
     }
