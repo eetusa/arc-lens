@@ -34,6 +34,11 @@ tmpclaude-*
 # Generated files
 public/image-manifest.json
 
+# Wiki scraper
+.wiki-cache.json
+wiki-reports/
+backups/
+
 # Server
 server/node_modules
 server/.env
