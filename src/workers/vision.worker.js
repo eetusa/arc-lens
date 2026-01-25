@@ -35,6 +35,11 @@ let lastMenuState = false;
 let consecutiveIdenticalFrames = 0;
 let frameSkipCounter = 0;
 
+// --- FIX: Track if menu was verified this cycle ---
+// When we skip menu detection (optimization A), we need to re-verify
+// if we detect a NEW item match to prevent garbage matches from HUD/sky
+let menuCheckedThisCycle = false;
+
 // NEW: Holds the last confirmed valid item (Image + Text)
 // This serves as the "Latch" to prevent bad data from flickering in the UI.
 let stableState = {
@@ -152,6 +157,9 @@ async function processFrame({ width, height, buffer, bitmap }) {
     let analyticsData = null;
     let debugData = null;
 
+    // Reset menu verification flag for this cycle
+    menuCheckedThisCycle = false;
+
     try {
         if (!self.cv || !self.cv.Mat) return;
 
@@ -194,6 +202,7 @@ async function processFrame({ width, height, buffer, bitmap }) {
                 const result = menuChecker.check(self.cv, mats.src);
                 isMenuOpen = result.isOpen;
                 menuDebugData = result.debug;
+                menuCheckedThisCycle = true; // Mark that we verified menu this cycle
 
                 // Update state tracking
                 if (isMenuOpen !== lastMenuState) {
@@ -473,13 +482,35 @@ async function runOcr(cvMat, candidateImage) {
         // --- UPDATED LOGIC: Update State ONLY on Match ---
         if (matchName) {
             const analysis = advisor.analyzeItem(matchName, advisor.userProgress);
-            
+
+            // --- FIX: Redundant menu check for NEW matches ---
+            // If this is a DIFFERENT item than what we had before, and we haven't
+            // verified the menu this cycle, do a redundant check to prevent
+            // garbage matches from HUD/sky when menu was actually closed
+            const previousItemName = stableState.analysis?.meta?.name;
+            const isNewMatch = matchName !== previousItemName;
+
+            if (isNewMatch && !menuCheckedThisCycle) {
+                // Do redundant menu verification
+                if (menuChecker && menuChecker.ready && mats.src) {
+                    const verifyResult = menuChecker.check(self.cv, mats.src);
+                    menuCheckedThisCycle = true; // Mark as checked now
+
+                    if (!verifyResult.isOpen) {
+                        // Menu is NOT open - this is likely a garbage match
+                        // Don't update stableState, don't notify UI
+                        console.log(`Redundant menu check failed for "${matchName}" - ignoring garbage match`);
+                        return { analysis, rawText: cleanText, didUpdate: false };
+                    }
+                }
+            }
+
             // Latch the stable state
             stableState.analysis = analysis;
             stableState.width = candidateImage.width;
             stableState.height = candidateImage.height;
             stableState.buffer = candidateImage.buffer; // Store the master buffer
-            
+
             return { analysis, rawText: cleanText, didUpdate: true };
         }
         
