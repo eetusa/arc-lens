@@ -2,7 +2,18 @@ import { useEffect, useState, useRef } from 'react';
 import { styles, theme } from '../styles';
 
 // Changelog data - add new entries at the top
+// Changes can be strings or objects with { text, bold: true } for emphasis
 const CHANGELOG = [
+  {
+    version: '1.0.0',
+    date: '25.1.2026',
+    changes: [
+      { text: 'Major item database update: corrected values, weights, recycle outputs, and added missing items', bold: true },
+      { text: 'Added Project Tracker for expedition phase requirements', bold: true },
+      'Added purple glow effect when viewing prioritized items',
+      'Desktop recycle tabs now show item names below images',
+    ]
+  },
   {
     version: '0.9.5a',
     date: '25.1.2026',
@@ -443,7 +454,11 @@ function InfoModal({ onClose, currentVersion, isNewVersion, onVersionSeen }) {
                   </div>
                   <ul style={{ ...styles.modalList, marginBottom: 0 }}>
                     {release.changes.map((change, changeIdx) => (
-                      <li key={changeIdx} style={styles.modalListItem}>{change}</li>
+                      <li key={changeIdx} style={styles.modalListItem}>
+                        {typeof change === 'object' && change.bold
+                          ? <strong style={{ color: theme.textMain }}>{change.text}</strong>
+                          : (typeof change === 'object' ? change.text : change)}
+                      </li>
                     ))}
                   </ul>
                 </div>
