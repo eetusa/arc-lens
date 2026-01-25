@@ -63731,5 +63731,88 @@
                 "amount": 1
             }
         ]
+    },
+    "ancient_fort_security_code": {
+        "id": "ancient_fort_security_code",
+        "name": "Ancient Fort Security Code",
+        "updatedAt": "2026-01-25T20:17:13.439Z",
+        "foundIn": [],
+        "maps": [],
+        "rarity": "common",
+        "type": "key",
+        "weight": 0.25,
+        "stackSize": 1
+    },
+    "dam_utility_key": {
+        "id": "dam_utility_key",
+        "name": "Dam Utility Key",
+        "updatedAt": "2026-01-25T20:17:14.026Z",
+        "foundIn": [],
+        "maps": [],
+        "rarity": "uncommon",
+        "type": "key",
+        "value": 100,
+        "weight": 0.25,
+        "stackSize": 1,
+        "description": "Location is currently unknown except that it is on"
+    },
+    "pilgrim_s_peak_security_code": {
+        "id": "pilgrim_s_peak_security_code",
+        "name": "Pilgrim's Peak Security Code",
+        "updatedAt": "2026-01-25T20:17:14.659Z",
+        "foundIn": [],
+        "maps": [],
+        "rarity": "common",
+        "type": "key",
+        "weight": 0.25,
+        "stackSize": 1
+    },
+    "raider_s_refuge_security_code": {
+        "id": "raider_s_refuge_security_code",
+        "name": "Raider's Refuge Security Code",
+        "updatedAt": "2026-01-25T20:17:15.249Z",
+        "foundIn": [],
+        "maps": [],
+        "rarity": "common",
+        "type": "key",
+        "weight": 0.25,
+        "stackSize": 1
+    },
+    "reinforced_reception_security_code": {
+        "id": "reinforced_reception_security_code",
+        "name": "Reinforced Reception Security Code",
+        "updatedAt": "2026-01-25T20:17:15.875Z",
+        "foundIn": [],
+        "maps": [],
+        "rarity": "common",
+        "type": "key",
+        "weight": 0.25,
+        "stackSize": 1
+    },
+    "spaceport_control_tower_key": {
+        "id": "spaceport_control_tower_key",
+        "name": "Spaceport Control Tower Key",
+        "updatedAt": "2026-01-25T20:17:16.513Z",
+        "foundIn": [],
+        "maps": [],
+        "rarity": "rare",
+        "type": "key",
+        "value": 100,
+        "weight": 0.25,
+        "stackSize": 1,
+        "description": "Opens a set of locked doors at ground level inside Control Tower B6 in the"
+    },
+    "stella_montis_security_checkpoint_key": {
+        "id": "stella_montis_security_checkpoint_key",
+        "name": "Stella Montis Security Checkpoint Key",
+        "updatedAt": "2026-01-25T20:17:17.750Z",
+        "foundIn": [],
+        "maps": [],
+        "rarity": "rare",
+        "type": "key",
+        "value": 100,
+        "weight": 0.25,
+        "stackSize": 1,
+        "description": "Opens a door somewhere on"
     }
 }
