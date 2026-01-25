@@ -1,6 +1,7 @@
 import { ItemDatabase } from './item-database';
 import { QuestTracker } from './quest-tracker';
 import { PriorityTracker } from './priority-tracker';
+import { ProjectTracker } from './project-tracker';
 import { Action, QuestStatus } from './constants';
 import { AdvisorAnalysis } from './advisor-analysis';
 
@@ -20,15 +21,17 @@ export class AdvisorEngine {
         this.db = new ItemDatabase();
         this.questTracker = new QuestTracker();
         this.priorityTracker = new PriorityTracker(this.db);
+        this.projectTracker = new ProjectTracker();
         this.ready = false;
-        this.defaultProgress = { activeQuestTitles: [], stationLevels: {} };
+        this.defaultProgress = { activeQuestTitles: [], stationLevels: {}, projectPhase: 0 };
     }
 
     async init() {
         await Promise.all([
             this.db.load(),
             this.questTracker.load(),
-            this.priorityTracker.loadDevPriorities()
+            this.priorityTracker.loadDevPriorities(),
+            this.projectTracker.load()
         ]);
         this.ready = true;
     }
@@ -142,6 +145,13 @@ export class AdvisorEngine {
             }
         }
 
+        // --- Projects ---
+        const projectPhase = userProgress.projectPhase || 0;
+        const projectNeed = this.projectTracker.isItemNeeded(node.name, projectPhase);
+        if (projectNeed.needed) {
+            analysis.addProjectRequirement(projectNeed.phase, projectNeed.phaseId, projectNeed.amount);
+        }
+
         // ---------------------------------------------------------
         // 5. Fill Crafting Utility
         // ---------------------------------------------------------
@@ -177,11 +187,13 @@ export class AdvisorEngine {
             // Force KEEP if we have hard requirements
             const questCount = analysis.demand.quests.length;
             const stationCount = analysis.demand.stations.length;
+            const projectCount = analysis.demand.projects.length;
             let reasonParts = [];
-            
+
             if (questCount > 0) reasonParts.push(`${questCount} Quest${questCount > 1 ? 's' : ''}`);
             if (stationCount > 0) reasonParts.push(`${stationCount} Upgrade${stationCount > 1 ? 's' : ''}`);
-            
+            if (projectCount > 0) reasonParts.push(`${projectCount} Project Phase${projectCount > 1 ? 's' : ''}`);
+
             analysis.setVerdict(Action.KEEP, analysis.demand.totalRequired, reasonParts.join(" & "));
         } else {
             // Fallback to the base economic/preference decision

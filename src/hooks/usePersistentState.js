@@ -58,6 +58,16 @@ export const usePersistentState = () => {
     }
   });
 
+  // --- Project Phase ---
+  const [projectPhase, setProjectPhase] = useState(() => {
+    try {
+      const saved = localStorage.getItem("app_projectPhase");
+      return saved !== null ? JSON.parse(saved) : 0;
+    } catch (e) {
+      return 0;
+    }
+  });
+
   // --- Effects to save on change ---
   useEffect(() => {
     localStorage.setItem("app_stationLevels", JSON.stringify(stationLevels));
@@ -79,6 +89,10 @@ export const usePersistentState = () => {
     localStorage.setItem("app_userPrioritiesEnabled", JSON.stringify(userPrioritiesEnabled));
   }, [userPrioritiesEnabled]);
 
+  useEffect(() => {
+    localStorage.setItem("app_projectPhase", JSON.stringify(projectPhase));
+  }, [projectPhase]);
+
   return {
     stationLevels,
     setStationLevels,
@@ -89,6 +103,8 @@ export const usePersistentState = () => {
     devPrioritiesEnabled,
     setDevPrioritiesEnabled,
     userPrioritiesEnabled,
-    setUserPrioritiesEnabled
+    setUserPrioritiesEnabled,
+    projectPhase,
+    setProjectPhase
   };
 };

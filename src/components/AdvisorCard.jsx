@@ -174,6 +174,13 @@ export default function AdvisorCard({ analysis, isMobile = false }) {
                         {' '}(x{s.amount})
                     </li>
                   ))}
+                  {demand.projects && demand.projects.map((p, i) => (
+                    <li key={`p-${i}`} style={{ marginBottom: '3px' }}>
+                        <span style={{color: '#ab47bc'}}>[P]</span>
+                        {' '}{p.phase}
+                        {' '}(x{p.amount})
+                    </li>
+                  ))}
                 </ul>
               </div>
             )}

@@ -30,11 +30,12 @@ export class AdvisorAnalysis {
             bestAction: Action.SELL
         };
 
-        // 4. Demand (Quests & Stations)
+        // 4. Demand (Quests, Stations & Projects)
         this.demand = {
             totalRequired: 0,
             quests: [],
-            stations: []
+            stations: [],
+            projects: []
         };
 
         // 5. Utility (Crafting)
@@ -96,6 +97,11 @@ export class AdvisorAnalysis {
 
     addStationRequirement(name, tier, amount) {
         this.demand.stations.push({ name, tier, amount });
+        this.demand.totalRequired += amount;
+    }
+
+    addProjectRequirement(phaseName, phaseId, amount) {
+        this.demand.projects.push({ phase: phaseName, phaseId, amount });
         this.demand.totalRequired += amount;
     }
 

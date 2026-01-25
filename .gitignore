@@ -39,6 +39,9 @@ public/image-manifest.json
 wiki-reports/
 backups/
 
+# Project scraper
+project-reports/
+
 # Server
 server/node_modules
 server/.env

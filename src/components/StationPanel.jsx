@@ -4,6 +4,7 @@ import { styles, theme } from '../styles';
 import QuestSelector from './QuestSelector';
 import ItemSearcher from './ItemSearcher';
 import PrioritySelector from './PrioritySelector';
+import ProjectPanel from './ProjectPanel';
 
 const StationPanel = ({
   levels,
@@ -23,6 +24,10 @@ const StationPanel = ({
   userPrioritiesEnabled,
   onDevPrioritiesToggle,
   onUserPrioritiesToggle,
+  // Project props
+  projectPhase,
+  projectData,
+  onProjectPhaseUpdate,
   // Item search props
   onItemSelect,
   isMobile,
@@ -68,6 +73,12 @@ const StationPanel = ({
              </div>
            );
         })}
+
+        <ProjectPanel
+          projectPhase={projectPhase}
+          onPhaseUpdate={onProjectPhaseUpdate}
+          projectData={projectData}
+        />
 
         <QuestSelector
           activeQuests={activeQuests}

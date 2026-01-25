@@ -25,7 +25,17 @@ export const STATIONS_DATA = [
 
 export const GET_DEFAULT_LEVELS = () => {
   return STATIONS_DATA.reduce((acc, station) => {
-    acc[station.id] = station.min; 
+    acc[station.id] = station.min;
     return acc;
   }, {});
 };
+
+export const PROJECT_PHASES = [
+  { id: 0, name: "Not Started" },
+  { id: 1, name: "Foundation" },
+  { id: 2, name: "Core Systems" },
+  { id: 3, name: "Framework" },
+  { id: 4, name: "Outfitting" },
+  { id: 5, name: "Load Stage" },
+  { id: 6, name: "Departure" }
+];
