@@ -5,6 +5,14 @@
  * Scrapes item data from https://arcraiders.wiki and compares/updates
  * the local items_db.json database.
  *
+ * Data Sources:
+ *   - Main item list pages (Items, Weapons, Mods, etc.)
+ *   - Rarity category pages (Category:Common, Category:Rare, etc.)
+ *   - Type category pages (Category:Key, etc.)
+ *
+ * This ensures ALL items are found, including keys which only appear
+ * in category pages and not on the main item list pages.
+ *
  * Usage:
  *   node scripts/wiki-scraper.js --help           # Show all commands
  *   node scripts/wiki-scraper.js --list           # List all wiki items
@@ -12,6 +20,7 @@
  *   node scripts/wiki-scraper.js --scrape <name>  # Scrape single item
  *   node scripts/wiki-scraper.js --diff <name>    # Show diff between wiki and local
  *   node scripts/wiki-scraper.js --missing        # Show items missing from local DB
+ *   node scripts/wiki-scraper.js --add-missing    # Add missing items from wiki to local DB
  *   node scripts/wiki-scraper.js --report         # Generate full comparison report
  */
 
@@ -55,6 +64,20 @@ const WIKI_ITEM_LISTS = {
   grenades: `${WIKI_BASE}/Grenades`,
 };
 
+// Rarity category pages - these ensure we catch ALL items by rarity
+const WIKI_RARITY_CATEGORIES = {
+  common: `${WIKI_BASE}/Category:Common`,
+  uncommon: `${WIKI_BASE}/Category:Uncommon`,
+  rare: `${WIKI_BASE}/Category:Rare`,
+  epic: `${WIKI_BASE}/Category:Epic`,
+  legendary: `${WIKI_BASE}/Category:Legendary`,
+};
+
+// Special category pages for item types not on main list pages
+const WIKI_TYPE_CATEGORIES = {
+  keys: `${WIKI_BASE}/Category:Key`,
+};
+
 // Non-item pages to filter out (categories, NPCs, locations, quests, etc.)
 const NON_ITEM_PAGES = new Set([
   // Categories
@@ -63,6 +86,7 @@ const NON_ITEM_PAGES = new Set([
   'Skills', 'Raiders', 'Raider',
   // Locations
   'Dam Battlegrounds', 'The Spaceport', 'Buried City', 'The Blue Gate', 'Stella Montis',
+  'Speranza', // Main hub location
   // NPCs/Traders
   'Celeste', 'Shani', 'Tian Wen', 'Apollo', 'Lance', 'Scrappy',
   // Stations
@@ -73,11 +97,9 @@ const NON_ITEM_PAGES = new Set([
 ]);
 
 // Quest/non-item name patterns
+// NOTE: Keys are valid items! Don't filter out patterns like "Security Code", "Control Tower Key", etc.
+// These patterns should ONLY match quest names, not item names
 const QUEST_PATTERNS = [
-  /Security Code$/i,
-  /Security Checkpoint Key$/i,
-  /Control Tower Key$/i,
-  /Utility Key$/i,
   /^Into The /i,
   /^Out Of /i,
   /^After /i,
@@ -450,6 +472,18 @@ function isQuestName(title) {
   return QUEST_PATTERNS.some(pattern => pattern.test(title));
 }
 
+// Decode HTML entities in a string
+function decodeHtmlEntities(str) {
+  return str
+    .replace(/&#039;/g, "'")
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#x27;/g, "'")
+    .replace(/&#39;/g, "'");
+}
+
 // Extract item links from a wiki page, filtering non-items
 function extractItemLinks(html) {
   const items = new Set();
@@ -458,7 +492,8 @@ function extractItemLinks(html) {
   const linkMatches = html.matchAll(/href="\/wiki\/([^"#]+)"[^>]*title="([^"]+)"/g);
   for (const match of linkMatches) {
     const urlName = match[1];
-    const title = match[2];
+    // Decode HTML entities in title to normalize apostrophes etc.
+    const title = decodeHtmlEntities(match[2]);
 
     // Filter criteria
     if (urlName.includes(':')) continue; // Namespaced pages
@@ -479,10 +514,12 @@ function extractItemLinks(html) {
 }
 
 // Get all item names from wiki
-async function getAllWikiItems() {
+async function getAllWikiItems(options = {}) {
+  const { includeCategories = true } = options;
   console.log('Fetching item lists from wiki...');
   const allItems = new Set();
 
+  // Fetch from main item list pages
   for (const [category, url] of Object.entries(WIKI_ITEM_LISTS)) {
     console.log(`  Fetching ${category}...`);
     const html = await fetchPage(url);
@@ -492,6 +529,36 @@ async function getAllWikiItems() {
       console.log(`    Found ${items.length} items`);
     }
     await delay(DELAY_MS);
+  }
+
+  // Also fetch from rarity category pages to ensure we catch ALL items
+  if (includeCategories) {
+    console.log('\n  Fetching rarity category pages...');
+    for (const [rarity, url] of Object.entries(WIKI_RARITY_CATEGORIES)) {
+      console.log(`  Fetching Category:${rarity}...`);
+      const html = await fetchPage(url);
+      if (html) {
+        const items = extractItemLinks(html);
+        const newItems = items.filter(item => !allItems.has(item));
+        items.forEach(item => allItems.add(item));
+        console.log(`    Found ${items.length} items (${newItems.length} new)`);
+      }
+      await delay(DELAY_MS);
+    }
+
+    // Fetch from special type categories (like keys)
+    console.log('\n  Fetching type category pages...');
+    for (const [type, url] of Object.entries(WIKI_TYPE_CATEGORIES)) {
+      console.log(`  Fetching Category:${type}...`);
+      const html = await fetchPage(url);
+      if (html) {
+        const items = extractItemLinks(html);
+        const newItems = items.filter(item => !allItems.has(item));
+        items.forEach(item => allItems.add(item));
+        console.log(`    Found ${items.length} items (${newItems.length} new)`);
+      }
+      await delay(DELAY_MS);
+    }
   }
 
   return Array.from(allItems).sort();
