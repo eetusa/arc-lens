@@ -42,6 +42,9 @@ backups/
 # Project scraper
 project-reports/
 
+# Test output
+test/output/
+
 # Server
 server/node_modules
 server/.env
