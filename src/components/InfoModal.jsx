@@ -5,6 +5,14 @@ import { styles, theme } from '../styles';
 // Changes can be strings or objects with { text, bold: true } for emphasis
 const CHANGELOG = [
   {
+    version: '1.1.0',
+    date: '26.1.2026',
+    changes: [
+      'Added automatic quest detection - quests sync from game when viewing PLAY tab',
+      'Added toggle in Active Quests section to enable/disable auto-detection',
+    ]
+  },
+  {
     version: '1.0.0',
     date: '25.1.2026',
     changes: [

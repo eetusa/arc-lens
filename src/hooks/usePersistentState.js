@@ -68,6 +68,16 @@ export const usePersistentState = () => {
     }
   });
 
+  // --- Quest Auto-Detect ---
+  const [questAutoDetect, setQuestAutoDetect] = useState(() => {
+    try {
+      const saved = localStorage.getItem("app_questAutoDetect");
+      return saved !== null ? JSON.parse(saved) : false;
+    } catch (e) {
+      return false;
+    }
+  });
+
   // --- Effects to save on change ---
   useEffect(() => {
     localStorage.setItem("app_stationLevels", JSON.stringify(stationLevels));
@@ -93,6 +103,10 @@ export const usePersistentState = () => {
     localStorage.setItem("app_projectPhase", JSON.stringify(projectPhase));
   }, [projectPhase]);
 
+  useEffect(() => {
+    localStorage.setItem("app_questAutoDetect", JSON.stringify(questAutoDetect));
+  }, [questAutoDetect]);
+
   return {
     stationLevels,
     setStationLevels,
@@ -105,6 +119,8 @@ export const usePersistentState = () => {
     userPrioritiesEnabled,
     setUserPrioritiesEnabled,
     projectPhase,
-    setProjectPhase
+    setProjectPhase,
+    questAutoDetect,
+    setQuestAutoDetect
   };
 };
