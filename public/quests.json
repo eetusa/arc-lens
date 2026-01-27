@@ -1,5 +1,5 @@
 {
-  "Picking Up The Pieces": ["DAM BATTLEGROUNDS UNLOCKED"],
+  "Picking Up The Pieces": [],
   "Clearer Skies": ["Picking Up The Pieces"],
   "Trash Into Treasure": ["Picking Up The Pieces"],
   "Off The Radar": ["Clearer Skies", "Trash Into Treasure"],
@@ -20,7 +20,6 @@
   "In My Image": ["A Bad Feeling"],
   "Cold Storage": ["In My Image"],
   "Snap And Salvage": ["Cold Storage"],
-  "STELLA MONTIS UNLOCKED": ["Snap And Salvage"],
   
   "Doctor's Orders": ["A Bad Feeling"],
   "Medical Merchandise": ["Doctor's Orders"],
@@ -73,8 +72,7 @@
   "Deciphering The Data": ["Paving The Way"],
   "Groundbreaking": ["Deciphering The Data"],
 
-  "BLUE GATE UNLOCKED": ["Life Of A Pharmacist"],
-  "Tribute To Toledo": ["BLUE GATE UNLOCKED"],
+  "Tribute To Toledo": ["Life Of A Pharmacist"],
   
   "A Toxic Trail": ["Life Of A Pharmacist"],
   "The Stench Of Corruption": ["A Toxic Trail"],
@@ -84,9 +82,9 @@
   "Turnabout": ["Building A Library"],
   "A New Type Of Plant": ["Building A Library"],
   
-  "A First Foothold": ["BLUE GATE UNLOCKED"],
+  "A First Foothold": [],
   "Reduced To Rubble": ["A First Foothold"],
   "With A Trace": ["Reduced To Rubble"],
   "The Clean Dream": ["With A Trace"],
-  "Armored Transports": ["With A Trace"]
+  "Armored Transports": ["With A Trace", "A New Type Of Plant"]
 }
