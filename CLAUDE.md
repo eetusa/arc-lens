@@ -10,6 +10,7 @@ This document provides context for AI assistants (Claude, Copilot, etc.) working
 - Provide Keep/Sell/Recycle recommendations
 - Track item priority and quest requirements
 - Analyze items in real-time during gameplay
+- Auto-detect active quests from the game's PLAY tab
 
 **Live URL**: https://arclens.app
 **Tech Stack**: React 19, Vite, OpenCV.js, ONNX Runtime Web, Tesseract.js
@@ -22,31 +23,93 @@ This document provides context for AI assistants (Claude, Copilot, etc.) working
 ```
 src/
 ├── App.jsx                      # Main app component, UI orchestration
-├── hooks/
-│   ├── useVisionSystem.js       # Web Worker manager for vision processing
-│   ├── useIsMobile.js           # Mobile detection hook
-│   └── useTooltipAnalysis.js    # Tooltip data processing
+├── main.jsx                     # React entry point
+├── index.css                    # Global CSS styles
+├── styles.js                    # Theme and style definitions
 ├── components/
-│   ├── InfoModal.jsx            # Help and info modal
-│   ├── PriorityModal.jsx        # Item priority configuration
-│   └── StationModal.jsx         # Station level configuration
+│   ├── AdvisorCard.jsx          # Item analysis result card display
+│   ├── InfoModal.jsx            # Help, info modal, and changelog
+│   ├── ItemSearcher.jsx         # Manual item search interface
+│   ├── PriorityModal.jsx        # Item priority configuration modal
+│   ├── PrioritySelector.jsx     # Priority selection UI component
+│   ├── ProjectPanel.jsx         # Expedition project phase tracker
+│   ├── QuestSelector.jsx        # Quest selection and tracking UI
+│   ├── RecycleTabs.jsx          # Recycle output display tabs
+│   ├── SessionConnector.jsx     # Mobile companion session connector
+│   ├── SessionModal.jsx         # QR code session modal
+│   ├── SessionStatus.jsx        # Session connection status display
+│   └── StationPanel.jsx         # Station level configuration panel
+├── hooks/
+│   ├── useAppMode.js            # Game/Companion mode toggle
+│   ├── useIsMobile.js           # Mobile device detection
+│   ├── usePersistentState.js    # localStorage-backed state
+│   ├── useSessionSync.js        # WebSocket session synchronization
+│   ├── useVersionTracking.js    # Version tracking and update detection
+│   └── useVisionSystem.js       # Web Worker manager for vision processing
 ├── utils/
 │   ├── analytics.js             # Umami analytics wrapper
-│   └── imagePreloader.js        # Preload item images
+│   ├── imagePreloader.js        # Preload item images
+│   └── sessionClient.js         # PartyKit WebSocket client
 ├── workers/
-│   └── visionWorker.js          # Web Worker for CV/OCR processing
-├── logic/
-│   ├── advisor-engine.js        # Main advisor engine orchestrating analysis
-│   ├── advisor-analysis.js      # AdvisorAnalysis class (result structure)
-│   ├── item-database.js         # ItemDatabase class
-│   ├── quest-tracker.js         # QuestTracker class
-│   ├── priority-tracker.js      # PriorityTracker class (dev + user)
-│   ├── constants.js             # Action, QuestStatus enums
-│   └── string-utils.js          # String utility functions
-└── public/
-    ├── *.wasm                   # ONNX Runtime WASM files
-    ├── priorities.json          # Developer-managed item priorities
-    └── item-images/             # Preloaded item images
+│   ├── vision.worker.js         # Main Web Worker orchestrating all CV/OCR
+│   ├── menu-checker.js          # Inventory menu detection (template matching)
+│   ├── main-menu-checker.js     # Main menu detection (rainbow stripes)
+│   ├── play-tab-checker.js      # PLAY tab detection
+│   ├── quest-ocr.js             # Quest name OCR from PLAY tab
+│   └── tooltip-finder.js        # Tooltip region detection
+└── logic/
+    ├── advisor-engine.js        # Main advisor engine orchestrating analysis
+    ├── advisor-analysis.js      # AdvisorAnalysis class (result structure)
+    ├── item-database.js         # ItemDatabase class
+    ├── quest-tracker.js         # QuestTracker class
+    ├── project-tracker.js       # ProjectTracker class for expeditions
+    ├── priority-tracker.js      # PriorityTracker class (dev + user)
+    ├── constants.js             # Action, QuestStatus enums, station data
+    └── string-utils.js          # String matching utilities (fuzzy match)
+```
+
+### Public Data Files
+
+```
+public/
+├── items_db.json                # Complete item database (scraped from wiki)
+├── quests.json                  # Quest dependency tree
+├── projects.json                # Expedition project phases and requirements
+├── priorities.json              # Developer-managed item priorities
+├── image-manifest.json          # Generated manifest for item image preloading
+├── opencv.js                    # OpenCV.js library
+├── en_PP-OCRv4_rec_infer.onnx   # PaddleOCR ONNX model
+├── en_dict.txt                  # OCR vocabulary dictionary
+├── menu_header.png              # Template for inventory menu detection
+├── *.wasm                       # ONNX Runtime WASM files
+└── item-images/                 # Item images for display
+```
+
+### Test Structure
+
+```
+test/
+├── fixtures/
+│   └── screenshots/             # Test images organized by resolution
+│       ├── 1080p/
+│       └── 1440p/
+├── output/                      # Test output directory
+├── menu-checker.test.js         # Inventory menu detection tests
+├── main-menu-checker.test.js    # Main menu detection tests
+├── ocr-pipeline.test.js         # OCR pipeline tests
+├── quest-ocr.test.js            # Quest OCR tests
+└── quest-tracker.test.js        # Quest tracker logic tests (107 tests)
+```
+
+### Configuration Files
+
+```
+├── vite.config.js               # Vite build configuration
+├── vitest.config.js             # Vitest test configuration
+├── eslint.config.js             # ESLint configuration
+├── netlify.toml                 # Netlify deployment config and headers
+├── package.json                 # Dependencies and scripts
+└── index.html                   # HTML entry point with analytics
 ```
 
 ### Web Worker Architecture
@@ -54,15 +117,26 @@ src/
 **CRITICAL**: Vision processing runs in a Web Worker to avoid blocking the main thread.
 
 - **Main Thread** (`App.jsx` + `useVisionSystem.js`): UI, user input, React state
-- **Web Worker** (`visionWorker.js`): OpenCV.js, ONNX Runtime, Tesseract.js OCR
+- **Web Worker** (`vision.worker.js`): Orchestrates all CV/OCR processing
 - **Communication**: `postMessage` API with typed message payloads
+
+**Worker Module Structure**:
+- `vision.worker.js` - Main orchestrator, imports and coordinates all modules
+- `menu-checker.js` - Detects inventory menu via template matching
+- `main-menu-checker.js` - Detects main menu via rainbow stripe colors (HSV)
+- `play-tab-checker.js` - Detects if PLAY tab is active
+- `quest-ocr.js` - Extracts quest names from the QUESTS box
+- `tooltip-finder.js` - Finds tooltip regions in the frame
 
 **Message Types**:
 - `INIT` → Initialize worker with models
-- `START_CAPTURE` → Begin processing video frames
-- `STOP_CAPTURE` → Stop processing
-- `RESULT_TEXT_UPDATE` → Worker sends OCR results to main thread
-- `ITEM_DETECTED` → Worker sends detected item data
+- `PROCESS_FRAME` → Process a video frame
+- `UPDATE_USER_STATE` → Update user preferences (stations, quests, priorities)
+- `RESULT` → Worker sends processed frame results
+- `RESULT_TEXT_UPDATE` → Worker sends OCR results with item analysis
+- `QUESTS_DETECTED` → Worker sends detected quest names
+- `MAIN_MENU_STATE` → Worker sends main menu/play tab state
+- `STATUS` → Worker sends status messages
 - `ERROR` → Worker sends error details
 
 ### CORS/COEP Requirements
@@ -83,7 +157,7 @@ headers: {
 - More permissive than `require-corp` but still secure
 
 **Netlify Configuration**:
-These headers are also set in `netlify.toml` (if it exists) or via Netlify dashboard.
+These headers are also set in `netlify.toml`.
 
 ## Key Files Explained
 
@@ -91,19 +165,35 @@ These headers are also set in `netlify.toml` (if it exists) or via Netlify dashb
 - Manages Web Worker lifecycle
 - Sends video frames to worker for processing
 - Receives OCR results and updates React state
+- Handles quest auto-detection results
 - Tracks analytics events (session start/end, item recognition)
-- **Mobile Detection**: Vision system is DISABLED on mobile (too resource-intensive)
+- **Mobile Detection**: Vision system is DISABLED on mobile (crashes the browser)
 
-### `src/workers/visionWorker.js`
-- Loads OpenCV.js, ONNX Runtime, Tesseract.js
-- Processes video frames for menu detection
-- Performs OCR on detected tooltips
-- Matches OCR text against item database
-- Sends results back to main thread
+### `src/workers/vision.worker.js`
+- Main orchestrator for all vision processing
+- Loads OpenCV.js, ONNX Runtime for OCR
+- Coordinates multiple detection modules:
+  - Menu detection (inventory open/closed)
+  - Main menu detection (rainbow stripes)
+  - PLAY tab detection
+  - Quest OCR (reads quest names)
+  - Tooltip detection and item OCR
+- Implements performance optimizations:
+  - Adaptive frame skipping for stable tooltips
+  - Menu detection skip when menu confirmed open
+  - Redundant menu verification for new matches
+- Maintains "stable state" to prevent UI flickering
+
+### `src/workers/quest-ocr.js`
+- Extracts quest names from the QUESTS box in PLAY tab
+- Uses same ONNX OCR model as tooltip detection
+- Fuzzy matches OCR results against known quest names
+- Supports incremental updates (sends quests as detected)
+- Has debounce/cooldown to prevent excessive OCR calls
 
 ### `src/logic/advisor-engine.js`
 - Main orchestrator for item analysis
-- Coordinates ItemDatabase, QuestTracker, and PriorityTracker
+- Coordinates ItemDatabase, QuestTracker, ProjectTracker, and PriorityTracker
 - Contains Keep/Sell/Recycle decision logic
 - Considers item rarity, type, station level, quest requirements
 - Returns AdvisorAnalysis objects with verdict and reasoning
@@ -117,8 +207,15 @@ These headers are also set in `netlify.toml` (if it exists) or via Netlify dashb
 - Supports priority matching: direct, craftTo, recycleTo
 - Loads from `public/priorities.json` and localStorage
 
+### `src/logic/quest-tracker.js`
+- Tracks quest completion status based on active quests
+- Determines if a quest is DONE, IN_PROGRESS, TBD, or UNKNOWN
+- Traverses quest dependency tree to infer completion
+- Used by advisor engine to determine item demand
+
 ### `src/logic/item-database.js`
 - ItemDatabase class managing game item data
+- Loads from `public/items_db.json`
 - Provides item lookup by ID or name
 - Used by advisor engine and priority tracker
 
@@ -127,6 +224,11 @@ These headers are also set in `netlify.toml` (if it exists) or via Netlify dashb
 - Tracks: DAU, session duration, item recognition, manual searches
 - **Production only**: Domain filter prevents localhost tracking
 - Graceful degradation if analytics blocked
+
+### `src/utils/sessionClient.js`
+- PartyKit WebSocket client for Mobile Companion feature
+- Handles connection, reconnection, and message passing
+- Syncs item analysis results to mobile devices
 
 ## Environment Variables
 
@@ -198,17 +300,25 @@ npm run test:run    # Single run
 ```
 
 Tests cover:
-- Item database validation
-- Advisor logic rules
-- Utility functions
+- Menu detection (inventory and main menu)
+- OCR pipeline accuracy
+- Quest OCR extraction
+- Quest tracker logic (107 comprehensive tests)
 - Component behavior
+
+Test fixtures (screenshots) are organized by resolution in `test/fixtures/screenshots/`.
 
 ## Mobile Considerations
 
 **Vision System**: DISABLED on mobile devices
 - Check: `src/hooks/useIsMobile.js`
-- Reason: Mobile devices lack processing power for real-time CV/OCR
-- Mobile users see message: "Vision system not available on mobile"
+- Reason: Loading the vision system on mobile browsers causes the site to crash
+- Mobile users can use "Companion Mode" to receive results from a PC
+
+**Mobile Companion Feature**:
+- Uses PartyKit WebSocket for real-time sync
+- PC runs vision system, mobile displays results
+- QR code or session ID for easy connection
 
 **UI**: Responsive design with mobile-specific layouts
 - Breakpoint: 768px
@@ -243,11 +353,13 @@ Tests cover:
 
 ### State Management
 - React hooks for local state
+- `usePersistentState` for localStorage-backed state
 - No Redux/Zustand (project is simple enough)
 - User preferences stored in localStorage
 
 ### Styling
-- CSS Modules or inline styles (check existing patterns)
+- Centralized theme in `src/styles.js`
+- Inline styles using theme constants
 - Responsive design with media queries
 - Dark theme optimized for gaming
 
@@ -292,7 +404,7 @@ Key changes:
 - Bullet point 1
 - Bullet point 2
 
-Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+Co-Authored-By: Claude <model>-<version> <noreply@anthropic.com>
 ```
 
 ### Creating Pull Requests
@@ -322,13 +434,13 @@ We use `credentialless` instead of `require-corp` to allow external scripts.
 Domain filter (`data-domains="arclens.app"`) prevents localhost tracking. This is intentional.
 
 ### 4. Mobile Vision System is Disabled
-Don't try to enable it - mobile devices can't handle the processing load.
+Don't try to enable it - it crashes mobile browsers.
 
 ### 5. Line Endings (Windows)
 Git may warn about CRLF/LF conversion. This is normal for Windows development.
 
 ### 6. Item Database Updates
-When adding new items to `src/logic/item-database.js`, update images in `public/item-images/` and run:
+When adding new items to `public/items_db.json`, update images in `public/item-images/` and run:
 ```bash
 npm run generate-manifest
 ```
@@ -336,19 +448,42 @@ npm run generate-manifest
 ### 7. Branch Workflow
 ALWAYS start from master and create a new branch. Don't work on existing feature branches unless continuing previous work.
 
+### 8. Worker Module Dependencies
+The vision worker imports multiple modules. When modifying worker code, ensure imports are correct and modules don't have circular dependencies.
+
 ## File Locations Reference
 
-- **Item database**: `src/logic/item-database.js`
+### Data Files
+- **Item database**: `public/items_db.json`
+- **Quest tree**: `public/quests.json`
+- **Project data**: `public/projects.json`
+- **Priorities**: `public/priorities.json`
+- **Image manifest**: `public/image-manifest.json`
+
+### Logic Files
 - **Advisor engine**: `src/logic/advisor-engine.js`
 - **Advisor analysis**: `src/logic/advisor-analysis.js`
 - **Priority tracker**: `src/logic/priority-tracker.js`
 - **Quest tracker**: `src/logic/quest-tracker.js`
 - **Project tracker**: `src/logic/project-tracker.js`
-- **Vision worker**: `src/workers/visionWorker.js`
-- **Analytics**: `src/utils/analytics.js`
+- **Item database class**: `src/logic/item-database.js`
+- **Constants**: `src/logic/constants.js`
+- **String utilities**: `src/logic/string-utils.js`
+
+### Worker Files
+- **Main worker**: `src/workers/vision.worker.js`
+- **Menu checker**: `src/workers/menu-checker.js`
+- **Main menu checker**: `src/workers/main-menu-checker.js`
+- **Play tab checker**: `src/workers/play-tab-checker.js`
+- **Quest OCR**: `src/workers/quest-ocr.js`
+- **Tooltip finder**: `src/workers/tooltip-finder.js`
+
+### Config Files
 - **Build config**: `vite.config.js`
+- **Test config**: `vitest.config.js`
+- **Lint config**: `eslint.config.js`
 - **Package config**: `package.json`
-- **Project data**: `public/projects.json`
+- **Netlify config**: `netlify.toml`
 
 ## External Services
 
@@ -363,6 +498,10 @@ ALWAYS start from master and create a new branch. Don't work on existing feature
 - **Proxy**: Rewrites `/stats/*` to Umami instance (bypasses ad blockers)
 - **Free tier**: 100GB bandwidth/month
 
+### PartyKit
+- **Purpose**: WebSocket server for Mobile Companion feature
+- **Usage**: Real-time sync between PC and mobile devices
+
 ## Need Help?
 
 - Check existing patterns in similar files
@@ -376,7 +515,8 @@ ALWAYS start from master and create a new branch. Don't work on existing feature
 ### Dependencies to Watch
 - `onnxruntime-web` - WASM runtime for OCR
 - `@techstark/opencv-js` - Computer vision
-- `tesseract.js` - OCR engine
+- `tesseract.js` - OCR engine (currently unused, kept for fallback)
+- `partykit` / `partysocket` - WebSocket for mobile companion
 - React 19 is latest - watch for breaking changes
 
 ### Performance Considerations
@@ -384,8 +524,9 @@ ALWAYS start from master and create a new branch. Don't work on existing feature
 - Keep Web Worker isolated
 - Avoid blocking main thread
 - Monitor bundle size (currently ~2MB)
+- Adaptive frame skipping reduces CPU when tooltip is stable
 
 ---
 
-**Last Updated**: 2026-01-14
-**Maintained By**: eetusa + Claude Sonnet 4.5
+**Last Updated**: 2026-01-28
+**Maintained By**: eetusa + Claude
