@@ -5,6 +5,13 @@ import { styles, theme } from '../styles';
 // Changes can be strings or objects with { text, bold: true } for emphasis
 const CHANGELOG = [
   {
+    version: '1.1.2',
+    date: '28.1.2026',
+    changes: [
+      'Added new quests from Headwinds update',
+    ]
+  },
+  {
     version: '1.1.1',
     date: '27.1.2026',
     changes: [
