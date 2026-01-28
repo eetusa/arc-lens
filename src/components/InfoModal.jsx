@@ -121,6 +121,17 @@ function InfoModal({ onClose, currentVersion, isNewVersion, onVersionSeen }) {
     }
   }, [isNewVersion, onVersionSeen]);
 
+  // Close modal on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   const handleTabChange = (tabId) => {
     setActiveTab(tabId);
     // Reset scroll position when switching tabs
