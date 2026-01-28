@@ -8,6 +8,7 @@
   "Safe Passage": ["A Bad Feeling"],
   "What Goes Around": ["Safe Passage"],
   "Sparks Fly": ["What Goes Around"],
+  "The League": ["Sparks Fly"],
   
   "The Right Tool": ["A Bad Feeling"],
   "A Better Use": ["The Right Tool"],
@@ -20,6 +21,8 @@
   "In My Image": ["A Bad Feeling"],
   "Cold Storage": ["In My Image"],
   "Snap And Salvage": ["Cold Storage"],
+  "With A View": ["Snap And Salvage"],
+  "Movie Night": ["With A View"],
   
   "Doctor's Orders": ["A Bad Feeling"],
   "Medical Merchandise": ["Doctor's Orders"],
@@ -68,6 +71,8 @@
   "Lost In Transmission": ["Our Presence Up There"],
   "Communication Hideout": ["Lost In Transmission"],
   "Into The Fray": ["Communication Hideout"],
+  "Combat Recon": ["Into The Fray"],
+  "Bombing Run": ["Combat Recon"],
   "Paving The Way": ["Into The Fray"],
   "Deciphering The Data": ["Paving The Way"],
   "Groundbreaking": ["Deciphering The Data"],
@@ -86,5 +91,8 @@
   "Reduced To Rubble": ["A First Foothold"],
   "With A Trace": ["Reduced To Rubble"],
   "The Clean Dream": ["With A Trace"],
-  "Armored Transports": ["With A Trace", "A New Type Of Plant"]
+  "A Prime Specimen": ["The Clean Dream"],
+  "Armored Transports": ["With A Trace", "A New Type Of Plant"],
+
+  "On Deaf Ears": []
 }

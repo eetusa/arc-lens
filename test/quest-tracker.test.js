@@ -80,6 +80,11 @@ describe('QuestTracker', () => {
             expect(result).toBe(QuestStatus.IN_PROGRESS);
         });
 
+        it('should return IN_PROGRESS for On Deaf Ears root quest when active', () => {
+            const result = tracker.getStatus(['On Deaf Ears'], 'On Deaf Ears');
+            expect(result).toBe(QuestStatus.IN_PROGRESS);
+        });
+
         it('should return IN_PROGRESS for end-game quest when active', () => {
             const result = tracker.getStatus(['Groundbreaking'], 'Groundbreaking');
             expect(result).toBe(QuestStatus.IN_PROGRESS);
@@ -110,7 +115,7 @@ describe('QuestTracker', () => {
             expect(result).toBe(QuestStatus.DONE);
         });
 
-        // Safe Passage chain
+        // Safe Passage chain (extended with The League)
         it('should mark Safe Passage as DONE when on What Goes Around', () => {
             const result = tracker.getStatus(['What Goes Around'], 'Safe Passage');
             expect(result).toBe(QuestStatus.DONE);
@@ -118,6 +123,16 @@ describe('QuestTracker', () => {
 
         it('should mark Safe Passage as DONE when on Sparks Fly', () => {
             const result = tracker.getStatus(['Sparks Fly'], 'Safe Passage');
+            expect(result).toBe(QuestStatus.DONE);
+        });
+
+        it('should mark Sparks Fly as DONE when on The League', () => {
+            const result = tracker.getStatus(['The League'], 'Sparks Fly');
+            expect(result).toBe(QuestStatus.DONE);
+        });
+
+        it('should mark Safe Passage as DONE when on The League', () => {
+            const result = tracker.getStatus(['The League'], 'Safe Passage');
             expect(result).toBe(QuestStatus.DONE);
         });
 
@@ -143,7 +158,7 @@ describe('QuestTracker', () => {
             expect(result).toBe(QuestStatus.DONE);
         });
 
-        // In My Image chain
+        // In My Image chain (extended with With A View → Movie Night)
         it('should mark In My Image as DONE when on Cold Storage', () => {
             const result = tracker.getStatus(['Cold Storage'], 'In My Image');
             expect(result).toBe(QuestStatus.DONE);
@@ -151,6 +166,21 @@ describe('QuestTracker', () => {
 
         it('should mark In My Image as DONE when on Snap And Salvage', () => {
             const result = tracker.getStatus(['Snap And Salvage'], 'In My Image');
+            expect(result).toBe(QuestStatus.DONE);
+        });
+
+        it('should mark Snap And Salvage as DONE when on With A View', () => {
+            const result = tracker.getStatus(['With A View'], 'Snap And Salvage');
+            expect(result).toBe(QuestStatus.DONE);
+        });
+
+        it('should mark With A View as DONE when on Movie Night', () => {
+            const result = tracker.getStatus(['Movie Night'], 'With A View');
+            expect(result).toBe(QuestStatus.DONE);
+        });
+
+        it('should mark In My Image as DONE when on Movie Night', () => {
+            const result = tracker.getStatus(['Movie Night'], 'In My Image');
             expect(result).toBe(QuestStatus.DONE);
         });
 
@@ -167,6 +197,17 @@ describe('QuestTracker', () => {
 
         it('should mark A First Foothold as DONE when on The Clean Dream', () => {
             const result = tracker.getStatus(['The Clean Dream'], 'A First Foothold');
+            expect(result).toBe(QuestStatus.DONE);
+        });
+
+        // A Prime Specimen extends The Clean Dream
+        it('should mark The Clean Dream as DONE when on A Prime Specimen', () => {
+            const result = tracker.getStatus(['A Prime Specimen'], 'The Clean Dream');
+            expect(result).toBe(QuestStatus.DONE);
+        });
+
+        it('should mark A First Foothold as DONE when on A Prime Specimen', () => {
+            const result = tracker.getStatus(['A Prime Specimen'], 'A First Foothold');
             expect(result).toBe(QuestStatus.DONE);
         });
     });
@@ -242,6 +283,22 @@ describe('QuestTracker', () => {
 
         it('should mark Paving The Way as DONE when on Groundbreaking', () => {
             const result = tracker.getStatus(['Groundbreaking'], 'Paving The Way');
+            expect(result).toBe(QuestStatus.DONE);
+        });
+
+        // Combat Recon → Bombing Run branch (parallel to Paving The Way)
+        it('should mark Into The Fray as DONE when on Combat Recon', () => {
+            const result = tracker.getStatus(['Combat Recon'], 'Into The Fray');
+            expect(result).toBe(QuestStatus.DONE);
+        });
+
+        it('should mark Combat Recon as DONE when on Bombing Run', () => {
+            const result = tracker.getStatus(['Bombing Run'], 'Combat Recon');
+            expect(result).toBe(QuestStatus.DONE);
+        });
+
+        it('should mark Into The Fray as DONE when on Bombing Run', () => {
+            const result = tracker.getStatus(['Bombing Run'], 'Into The Fray');
             expect(result).toBe(QuestStatus.DONE);
         });
     });
@@ -520,6 +577,30 @@ describe('QuestTracker', () => {
             const result = tracker.getStatus(['The Clean Dream'], 'Armored Transports');
             expect(result).toBe(QuestStatus.TBD);
         });
+
+        // Combat Recon branch vs Paving The Way branch (both from Into The Fray)
+
+        it('should return TBD for Paving The Way when on Combat Recon branch', () => {
+            const result = tracker.getStatus(['Bombing Run'], 'Paving The Way');
+            expect(result).toBe(QuestStatus.TBD);
+        });
+
+        it('should return TBD for Combat Recon when on Paving The Way branch', () => {
+            const result = tracker.getStatus(['Groundbreaking'], 'Combat Recon');
+            expect(result).toBe(QuestStatus.TBD);
+        });
+
+        // On Deaf Ears is standalone - should be TBD when on other chains
+
+        it('should return TBD for On Deaf Ears when on main quest chain', () => {
+            const result = tracker.getStatus(['A Bad Feeling'], 'On Deaf Ears');
+            expect(result).toBe(QuestStatus.TBD);
+        });
+
+        it('should return TBD for main quests when on On Deaf Ears', () => {
+            expect(tracker.getStatus(['On Deaf Ears'], 'A Bad Feeling')).toBe(QuestStatus.TBD);
+            expect(tracker.getStatus(['On Deaf Ears'], 'A First Foothold')).toBe(QuestStatus.TBD);
+        });
     });
 
     // ============================================================
@@ -716,7 +797,8 @@ describe('QuestTracker', () => {
             'A First Foothold',
             'Reduced To Rubble',
             'With A Trace',
-            'The Clean Dream'
+            'The Clean Dream',
+            'A Prime Specimen'
         ];
 
         it('should correctly trace Blue Gate chain', () => {
@@ -732,6 +814,11 @@ describe('QuestTracker', () => {
             // Being on Blue Gate chain doesn't mean Dam quests are done
             expect(tracker.getStatus(['The Clean Dream'], 'A Bad Feeling')).toBe(QuestStatus.TBD);
             expect(tracker.getStatus(['The Clean Dream'], 'Picking Up The Pieces')).toBe(QuestStatus.TBD);
+        });
+
+        it('should not confuse Blue Gate chain with main Dam chain (A Prime Specimen)', () => {
+            expect(tracker.getStatus(['A Prime Specimen'], 'A Bad Feeling')).toBe(QuestStatus.TBD);
+            expect(tracker.getStatus(['A Prime Specimen'], 'Picking Up The Pieces')).toBe(QuestStatus.TBD);
         });
     });
 
@@ -772,7 +859,8 @@ describe('QuestTracker', () => {
 
             expect(rootQuests).toContain('Picking Up The Pieces');
             expect(rootQuests).toContain('A First Foothold');
-            expect(rootQuests.length).toBe(2); // In My Image has A Bad Feeling as prereq
+            expect(rootQuests).toContain('On Deaf Ears');
+            expect(rootQuests.length).toBe(3);
         });
 
         it('should have exactly 3 quests with multiple prerequisites', () => {
