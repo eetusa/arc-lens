@@ -1,0 +1,120 @@
+{
+  "maps": {
+    "dam": {
+      "id": "dam",
+      "metaforgeId": "dam",
+      "name": "Dam Battlegrounds",
+      "image": "/maps/dam.avif",
+      "dimensions": {
+        "width": 4260,
+        "height": 3890
+      },
+      "transform": {
+        "scaleX": 0.847089,
+        "scaleY": 0.823502,
+        "offsetX": -1075.362194,
+        "offsetY": -266.565103
+      },
+      "calibratedAt": "2026-01-30T20:32:36.182Z",
+      "calibrationImages": 2,
+      "calibrationPoints": 3
+    },
+    "spaceport": {
+      "id": "spaceport",
+      "metaforgeId": "spaceport",
+      "name": "The Spaceport",
+      "image": "/maps/spaceport.avif",
+      "lowerImage": "/maps/spaceport-lower.avif",
+      "dimensions": {
+        "width": 4096,
+        "height": 4096
+      },
+      "transform": {
+        "scaleX": 1.016709,
+        "scaleY": 1.016199,
+        "offsetX": -1893.731871,
+        "offsetY": -572.283707
+      },
+      "calibratedAt": "2026-01-30T20:32:47.608Z",
+      "calibrationImages": 2,
+      "calibrationPoints": 4,
+      "lowerTransform": {
+        "scaleX": 1.016709,
+        "scaleY": 1.016199,
+        "offsetX": -2196.731871,
+        "offsetY": -1304.283707
+      }
+    },
+    "buried-city": {
+      "id": "buried-city",
+      "metaforgeId": "buried-city",
+      "name": "Buried City",
+      "image": "/maps/buried-city.avif",
+      "dimensions": {
+        "width": 6144,
+        "height": 6144
+      },
+      "transform": {
+        "scaleX": 0.929374,
+        "scaleY": 0.928045,
+        "offsetX": -3543.243859,
+        "offsetY": -1395.619365
+      },
+      "calibratedAt": "2026-01-30T20:32:52.234Z",
+      "calibrationImages": 2,
+      "calibrationPoints": 3
+    },
+    "blue-gate": {
+      "id": "blue-gate",
+      "metaforgeId": "blue-gate",
+      "name": "Blue Gate",
+      "image": "/maps/blue-gate.avif",
+      "lowerImage": "/maps/blue-gate-lower.avif",
+      "dimensions": {
+        "width": 4096,
+        "height": 3072
+      },
+      "transform": {
+        "scaleX": 0.491427,
+        "scaleY": 0.487756,
+        "offsetX": -1505.745261,
+        "offsetY": -954.922813
+      },
+      "calibratedAt": "2026-01-30T20:32:55.090Z",
+      "calibrationImages": 2,
+      "calibrationPoints": 4,
+      "lowerTransform": {
+        "scaleX": 0.4916656726566294,
+        "scaleY": 0.48775599999999997,
+        "offsetX": -2150.042854618747,
+        "offsetY": -1278.9228130000001
+      }
+    },
+    "stella-montis": {
+      "id": "stella-montis",
+      "metaforgeId": "stella-montis",
+      "name": "Stella Montis",
+      "image": "/maps/stella-montis.avif",
+      "lowerImage": "/maps/stella-montis-lower.avif",
+      "dimensions": {
+        "width": 5120,
+        "height": 3072
+      },
+      "transform": {
+        "scaleX": 1.071103,
+        "scaleY": 1.065548,
+        "offsetX": -1891.639092,
+        "offsetY": -1095.987901
+      },
+      "calibratedAt": "2026-01-30T20:32:57.086Z",
+      "calibrationImages": 1,
+      "calibrationPoints": 6,
+      "lowerTransform": {
+        "scaleX": 1.0804821856392297,
+        "scaleY": 1.0500254492481202,
+        "offsetX": -2804.837332735553,
+        "offsetY": -1367.7174005624997
+      }
+    }
+  }
+}
