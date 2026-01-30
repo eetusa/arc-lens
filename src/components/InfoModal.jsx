@@ -5,6 +5,16 @@ import { styles, theme } from '../styles';
 // Changes can be strings or objects with { text, bold: true } for emphasis
 const CHANGELOG = [
   {
+    version: '1.2.0',
+    date: '31.1.2026',
+    changes: [
+      { text: 'Quest Helper now shows objectives, rewards, and interactive map', bold: true },
+      'Added pan/zoom map viewer with quest location markers',
+      'Maps support upper/lower level toggle for multi-floor areas',
+      'Added two new augments from Headwinds update',
+    ]
+  },
+  {
     version: '1.1.3',
     date: '30.1.2026',
     changes: [
