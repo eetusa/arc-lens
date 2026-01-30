@@ -1,60 +1,127 @@
 {
-  "currentProject": {
-    "name": "Expedition 2",
-    "wikiUrl": "https://arcraiders.wiki/wiki/Expedition",
-    "startDate": "2025-12-02",
-    "endDate": "2026-02-18",
-    "phases": [
-      {
-        "id": 1,
-        "name": "Foundation",
-        "requirements": [
-          { "item": "Metal Parts", "amount": 150 },
-          { "item": "Wood", "amount": 100 },
-          { "item": "Carbon Fiber", "amount": 50 }
-        ]
-      },
-      {
-        "id": 2,
-        "name": "Core Systems",
-        "requirements": [
-          { "item": "Carbon Fiber", "amount": 100 },
-          { "item": "Wire", "amount": 75 },
-          { "item": "Electronics", "amount": 50 }
-        ]
-      },
-      {
-        "id": 3,
-        "name": "Framework",
-        "requirements": [
-          { "item": "Resin", "amount": 100 },
-          { "item": "Metal Parts", "amount": 200 },
-          { "item": "Ceramic", "amount": 75 }
-        ]
-      },
-      {
-        "id": 4,
-        "name": "Outfitting",
-        "requirements": [
-          { "item": "Mechanical Parts", "amount": 100 },
-          { "item": "Electronics", "amount": 100 },
-          { "item": "Ceramic", "amount": 100 }
-        ]
-      },
-      {
-        "id": 5,
-        "name": "Load Stage",
-        "coinRequirements": [
-          { "category": "Combat Items", "coinValue": 250000 },
-          { "category": "Survival Items", "coinValue": 100000 }
-        ]
-      },
-      {
-        "id": 6,
-        "name": "Departure",
-        "requirements": []
-      }
-    ]
-  },
-  "lastUpdated": "2026-01-25T12:00:00Z"
+  "projects": [
+    {
+      "id": "expedition-2",
+      "name": "Expedition 2",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Expedition",
+      "startDate": "2025-12-22",
+      "endDate": "2026-03-01",
+      "phases": [
+        {
+          "id": 1,
+          "name": "Foundation",
+          "requirements": [
+            { "item": "Metal Parts", "amount": 150 },
+            { "item": "Plastic Parts", "amount": 200 },
+            { "item": "ARC Alloy", "amount": 80 },
+            { "item": "Steel Spring", "amount": 15 }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Core Systems",
+          "requirements": [
+            { "item": "Durable Cloth", "amount": 35 },
+            { "item": "Wires", "amount": 25 },
+            { "item": "Electrical Components", "amount": 20 },
+            { "item": "Cooling Coil", "amount": 4 }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Framework",
+          "requirements": [
+            { "item": "Light Bulb", "amount": 4 },
+            { "item": "Battery", "amount": 30 },
+            { "item": "Shredder Gyro", "amount": 10 },
+            { "item": "Exodus Modules", "amount": 1 }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Outfitting",
+          "requirements": [
+            { "item": "Frequency Modulation Box", "amount": 5 },
+            { "item": "Advanced Electrical Components", "amount": 5 },
+            { "item": "Ion Sputter", "amount": 3 },
+            { "item": "Leaper Pulse Unit", "amount": 3 }
+          ]
+        },
+        {
+          "id": 5,
+          "name": "Load Stage",
+          "coinRequirements": [
+            { "category": "Combat Items", "coinValue": 250000 },
+            { "category": "Survival Items", "coinValue": 100000 },
+            { "category": "Provisions", "coinValue": 180000 },
+            { "category": "Materials", "coinValue": 300000 }
+          ]
+        },
+        {
+          "id": 6,
+          "name": "Departure",
+          "requirements": []
+        }
+      ]
+    },
+    {
+      "id": "trophy-display",
+      "name": "Trophy Display",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Trophy_Display",
+      "startDate": "2026-01-27",
+      "phases": [
+        {
+          "id": 1,
+          "name": "Roaming Threats",
+          "requirements": [
+            { "item": "Rusted Bolts", "amount": 3 },
+            { "item": "Pop Trigger", "amount": 15 },
+            { "item": "Tick Pod", "amount": 15 },
+            { "item": "Surveyor Vault", "amount": 5 }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Soaring Menaces",
+          "requirements": [
+            { "item": "Spotter Relay", "amount": 10 },
+            { "item": "Expired Respirator", "amount": 3 },
+            { "item": "Wasp Driver", "amount": 20 },
+            { "item": "Hornet Driver", "amount": 15 }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Ferocious Foes",
+          "requirements": [
+            { "item": "ARC Performance Steel", "amount": 10 },
+            { "item": "Shredder Gyro", "amount": 5 },
+            { "item": "Leaper Pulse Unit", "amount": 10 },
+            { "item": "Bastion Cell", "amount": 5 }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Dominant Dangers",
+          "requirements": [
+            { "item": "ARC Synthetic Resin", "amount": 10 },
+            { "item": "Magnetic Accelerator", "amount": 10 },
+            { "item": "Rocketeer Driver", "amount": 8 },
+            { "item": "Queen Reactor", "amount": 3 }
+          ]
+        },
+        {
+          "id": 5,
+          "name": "Imposing Behemoths",
+          "requirements": [
+            { "item": "Exodus Modules", "amount": 5 },
+            { "item": "Geiger Counter", "amount": 3 },
+            { "item": "Bombardier Cell", "amount": 8 },
+            { "item": "Matriarch Reactor", "amount": 3 }
+          ]
+        }
+      ]
+    }
+  ],
+  "lastUpdated": "2026-01-29T20:30:00.000Z"
 }

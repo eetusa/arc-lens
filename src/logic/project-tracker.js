@@ -1,8 +1,8 @@
 /**
- * ProjectTracker - Tracks expedition/project phases and item requirements
+ * ProjectTracker - Tracks project phases and item requirements
  *
  * Loads project data from projects.json and provides methods to check
- * if items are needed for upcoming phases.
+ * if items are needed for upcoming phases. Supports multiple projects dynamically.
  */
 export class ProjectTracker {
     constructor() {
@@ -15,101 +15,113 @@ export class ProjectTracker {
             const response = await fetch('/projects.json');
             this.projectData = await response.json();
             this.isLoaded = true;
-            console.log("ProjectTracker: Loaded");
+            console.log("ProjectTracker: Loaded", this.projectData.projects?.length || 0, "projects");
         } catch (e) {
             console.error("ProjectTracker: Failed to load projects.json", e);
         }
     }
 
     /**
-     * Get current project info
-     * @returns {Object|null} Current project data
+     * Get all projects
+     * @returns {Array} Array of project objects
      */
-    getCurrentProject() {
-        return this.projectData?.currentProject || null;
+    getProjects() {
+        return this.projectData?.projects || [];
     }
 
     /**
-     * Get all phases for the current project
+     * Get a specific project by ID
+     * @param {string} projectId - Project ID
+     * @returns {Object|null} Project data
+     */
+    getProject(projectId) {
+        return this.getProjects().find(p => p.id === projectId) || null;
+    }
+
+    /**
+     * Get phases for a specific project
+     * @param {string} projectId - Project ID
      * @returns {Array} Array of phase objects
      */
-    getPhases() {
-        return this.projectData?.currentProject?.phases || [];
+    getPhases(projectId) {
+        const project = this.getProject(projectId);
+        return project?.phases || [];
     }
 
     /**
-     * Get requirements for a specific phase
-     * @param {number} phaseId - Phase ID (1-6)
-     * @returns {Array} Array of requirement objects
-     */
-    getRequirementsForPhase(phaseId) {
-        const phase = this.getPhases().find(p => p.id === phaseId);
-        return phase?.requirements || [];
-    }
-
-    /**
-     * Check if an item is needed in any phase after the user's current phase
+     * Check if an item is needed in any project's current or future phases
+     * Returns ALL matches across all projects (not just the first)
      * @param {string} itemName - Item name to check
-     * @param {number} currentPhase - User's current completed phase (0 = not started)
-     * @returns {Object} { needed: boolean, phase?: string, phaseId?: number, amount?: number }
+     * @param {Object} projectPhases - Map of projectId -> phase currently working on (1 = first phase, >maxPhase = done)
+     * @returns {Object} { needed: boolean, matches: Array<{project, projectId, phase, phaseId, amount}> }
      */
-    isItemNeeded(itemName, currentPhase) {
+    isItemNeeded(itemName, projectPhases = {}) {
         if (!this.isLoaded) {
-            return { needed: false };
+            return { needed: false, matches: [] };
         }
 
-        const phases = this.getPhases();
         const normalizedItemName = itemName.toLowerCase().trim();
+        const matches = [];
 
-        for (const phase of phases) {
-            // Skip completed phases (phases at or below current phase)
-            if (phase.id <= currentPhase) continue;
+        for (const project of this.getProjects()) {
+            // Default to phase 1 (working on first phase) if not set
+            const workingOnPhase = projectPhases[project.id] || 1;
 
-            // Skip phases with only coin requirements (no item requirements)
-            if (!phase.requirements || phase.requirements.length === 0) continue;
+            for (const phase of project.phases || []) {
+                // Skip phases before the one we're working on
+                if (phase.id < workingOnPhase) continue;
 
-            // Check if this item is required for this phase
-            const req = phase.requirements.find(r =>
-                r.item.toLowerCase().trim() === normalizedItemName
-            );
+                // Skip phases without item requirements
+                if (!phase.requirements || phase.requirements.length === 0) continue;
 
-            if (req) {
-                return {
-                    needed: true,
-                    phase: phase.name,
-                    phaseId: phase.id,
-                    amount: req.amount
-                };
+                const req = phase.requirements.find(r =>
+                    r.item.toLowerCase().trim() === normalizedItemName
+                );
+
+                if (req) {
+                    matches.push({
+                        project: project.name,
+                        projectId: project.id,
+                        phase: phase.name,
+                        phaseId: phase.id,
+                        amount: req.amount
+                    });
+                }
             }
         }
 
-        return { needed: false };
+        return { needed: matches.length > 0, matches };
     }
 
     /**
-     * Get all items needed for phases after the current phase
-     * @param {number} currentPhase - User's current completed phase (0 = not started)
-     * @returns {Array} Array of { itemName, phase, phaseId, amount }
+     * Get all items needed across all projects' current and future phases
+     * @param {Object} projectPhases - Map of projectId -> phase currently working on
+     * @returns {Array} Array of { itemName, project, projectId, phase, phaseId, amount }
      */
-    getAllNeededItems(currentPhase) {
+    getAllNeededItems(projectPhases = {}) {
         if (!this.isLoaded) {
             return [];
         }
 
         const neededItems = [];
-        const phases = this.getPhases();
 
-        for (const phase of phases) {
-            if (phase.id <= currentPhase) continue;
-            if (!phase.requirements) continue;
+        for (const project of this.getProjects()) {
+            const workingOnPhase = projectPhases[project.id] || 1;
 
-            for (const req of phase.requirements) {
-                neededItems.push({
-                    itemName: req.item,
-                    phase: phase.name,
-                    phaseId: phase.id,
-                    amount: req.amount
-                });
+            for (const phase of project.phases || []) {
+                if (phase.id < workingOnPhase) continue;
+                if (!phase.requirements) continue;
+
+                for (const req of phase.requirements) {
+                    neededItems.push({
+                        itemName: req.item,
+                        project: project.name,
+                        projectId: project.id,
+                        phase: phase.name,
+                        phaseId: phase.id,
+                        amount: req.amount
+                    });
+                }
             }
         }
 
@@ -117,30 +129,33 @@ export class ProjectTracker {
     }
 
     /**
-     * Get total amount of a specific item needed across all remaining phases
+     * Get total amount of a specific item needed across current and future phases
      * @param {string} itemName - Item name to check
-     * @param {number} currentPhase - User's current completed phase
+     * @param {Object} projectPhases - Map of projectId -> phase currently working on
      * @returns {number} Total amount needed
      */
-    getTotalAmountNeeded(itemName, currentPhase) {
+    getTotalAmountNeeded(itemName, projectPhases = {}) {
         if (!this.isLoaded) {
             return 0;
         }
 
         let total = 0;
-        const phases = this.getPhases();
         const normalizedItemName = itemName.toLowerCase().trim();
 
-        for (const phase of phases) {
-            if (phase.id <= currentPhase) continue;
-            if (!phase.requirements) continue;
+        for (const project of this.getProjects()) {
+            const workingOnPhase = projectPhases[project.id] || 1;
 
-            const req = phase.requirements.find(r =>
-                r.item.toLowerCase().trim() === normalizedItemName
-            );
+            for (const phase of project.phases || []) {
+                if (phase.id < workingOnPhase) continue;
+                if (!phase.requirements) continue;
 
-            if (req) {
-                total += req.amount;
+                const req = phase.requirements.find(r =>
+                    r.item.toLowerCase().trim() === normalizedItemName
+                );
+
+                if (req) {
+                    total += req.amount;
+                }
             }
         }
 

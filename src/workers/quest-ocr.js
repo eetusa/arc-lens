@@ -11,17 +11,17 @@ export class QuestOCR {
 
     // --- CONFIG ---
     // Search area for QUESTS header (left side of screen)
-    this.SEARCH_X_PERCENT = 0.0;
+    this.SEARCH_X_PERCENT = 0.025;  // Start 2.5% from left for tighter crop
     this.SEARCH_Y_PERCENT = 0.065;  // Start below rainbow logo and top bar
-    this.SEARCH_WIDTH_PERCENT = 0.20;  // 20% width
+    this.SEARCH_WIDTH_PERCENT = 0.175;  // 17.5% width
     this.SEARCH_HEIGHT_PERCENT = 0.65; // 65% height to show full quest names area in debug
 
     // QUESTS header icon color (yellow/orange diamond)
-    // Wider range to catch different lighting/color variations
-    this.ICON_H_MIN = 10;
-    this.ICON_H_MAX = 50;
-    this.ICON_S_MIN = 100;
-    this.ICON_V_MIN = 120;
+    // Strict filter to reject dark/brown false positives
+    this.ICON_H_MIN = 15;   // Tighter hue range for yellow
+    this.ICON_H_MAX = 45;
+    this.ICON_S_MIN = 150;  // Higher saturation to reject browns (was 100)
+    this.ICON_V_MIN = 180;  // Higher value to reject dark colors (was 120)
 
     // Quest text area (relative to found QUESTS header)
     this.QUEST_TEXT_X_OFFSET = 0.02;   // Offset from header X to text start
@@ -49,6 +49,14 @@ export class QuestOCR {
     this.lastOcrTime = 0;
     this.OCR_COOLDOWN_MS = 2000; // Only OCR every 2 seconds
     this.lastDetectedQuests = [];
+
+    // Busy flag to prevent concurrent OCR calls
+    this.isBusy = false;
+
+    // Stability tracking - require multiple confirmations before reducing quest count
+    this.stableQuestCount = 0;
+    this.questReductionConfirmations = 0;
+    this.REDUCTION_CONFIRMATIONS_REQUIRED = 3; // Must see fewer quests 3 times to accept
   }
 
   async init(cv, questNames) {
@@ -74,9 +82,24 @@ export class QuestOCR {
     this.allQuestNames = questNames || [];
   }
 
+  // Reset detection state (for testing or when switching contexts)
+  reset() {
+    this.lastOcrTime = 0;
+    this.lastDetectedQuests = [];
+    this.isBusy = false;
+    this.stableQuestCount = 0;
+    this.questReductionConfirmations = 0;
+  }
+
   async detect(cv, srcMat, ocrSession, vocab, onQuestFound = null) {
     if (!this.ready || !srcMat) {
       return { detectedQuests: [], debug: null, questsHeaderFound: false };
+    }
+
+    // Busy check - prevent concurrent OCR calls
+    if (this.isBusy) {
+      console.log('QuestOCR: Skipping - already busy');
+      return { detectedQuests: this.lastDetectedQuests, debug: null, fromCache: true, skippedBusy: true };
     }
 
     // Cooldown check
@@ -85,6 +108,7 @@ export class QuestOCR {
       return { detectedQuests: this.lastDetectedQuests, debug: null, fromCache: true };
     }
 
+    this.isBusy = true;
     let searchView = null;
     let questAreaView = null;
 
@@ -359,9 +383,37 @@ export class QuestOCR {
         }
       }
 
-      // Update cache
+      // Update cache with stability tracking
       this.lastOcrTime = now;
-      this.lastDetectedQuests = detectedQuests;
+
+      // Be conservative about reducing quest count - require multiple confirmations
+      const previousCount = this.lastDetectedQuests.length;
+      const newCount = detectedQuests.length;
+
+      if (newCount >= previousCount) {
+        // Same or more quests - accept immediately
+        this.lastDetectedQuests = detectedQuests;
+        this.stableQuestCount = newCount;
+        this.questReductionConfirmations = 0;
+        console.log(`QuestOCR: Found ${newCount} quests (accepted)`);
+      } else if (newCount === 0) {
+        // Zero quests is likely a detection failure - keep previous results
+        console.log(`QuestOCR: Found 0 quests but keeping previous ${previousCount} (likely detection failure)`);
+        // Don't update lastDetectedQuests
+      } else {
+        // Fewer quests - require confirmation
+        this.questReductionConfirmations++;
+        console.log(`QuestOCR: Found ${newCount} quests (was ${previousCount}), confirmation ${this.questReductionConfirmations}/${this.REDUCTION_CONFIRMATIONS_REQUIRED}`);
+
+        if (this.questReductionConfirmations >= this.REDUCTION_CONFIRMATIONS_REQUIRED) {
+          // Confirmed reduction - accept
+          this.lastDetectedQuests = detectedQuests;
+          this.stableQuestCount = newCount;
+          this.questReductionConfirmations = 0;
+          console.log(`QuestOCR: Reduction confirmed, now ${newCount} quests`);
+        }
+        // Otherwise keep previous results
+      }
 
       // --- 6. PREPARE DEBUG OUTPUT ---
       const finalDebug = new cv.Mat();
@@ -377,7 +429,7 @@ export class QuestOCR {
       finalDebug.delete();
 
       return {
-        detectedQuests: detectedQuests,
+        detectedQuests: this.lastDetectedQuests, // Return stable results, not raw
         debug: debugData,
         questsHeaderFound: true,
         fromCache: false
@@ -385,8 +437,9 @@ export class QuestOCR {
 
     } catch (e) {
       console.error("QuestOCR Error:", e);
-      return { detectedQuests: [], debug: null, questsHeaderFound: false };
+      return { detectedQuests: this.lastDetectedQuests, debug: null, questsHeaderFound: false };
     } finally {
+      this.isBusy = false;
       if (searchView) searchView.delete();
       if (questAreaView) questAreaView.delete();
     }

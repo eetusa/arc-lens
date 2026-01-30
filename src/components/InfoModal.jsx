@@ -5,6 +5,17 @@ import { styles, theme } from '../styles';
 // Changes can be strings or objects with { text, bold: true } for emphasis
 const CHANGELOG = [
   {
+    version: '1.1.3',
+    date: '30.1.2026',
+    changes: [
+      'Added automatic quest recognition from main menu',
+      'UI overhaul (work in progress)',
+      'Added Quest Helper panel foundation (work in progress)',
+      'Added Headwinds update support - new project phases and items',
+      'Improved project tracking system',
+    ]
+  },
+  {
     version: '1.1.2',
     date: '28.1.2026',
     changes: [

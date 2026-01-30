@@ -177,7 +177,7 @@ export default function AdvisorCard({ analysis, isMobile = false }) {
                   {demand.projects && demand.projects.map((p, i) => (
                     <li key={`p-${i}`} style={{ marginBottom: '3px' }}>
                         <span style={{color: '#ab47bc'}}>[P]</span>
-                        {' '}{p.phase}
+                        {' '}{p.project}: {p.phase}
                         {' '}(x{p.amount})
                     </li>
                   ))}

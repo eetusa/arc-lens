@@ -8,6 +8,7 @@ export function useSessionSync({
   userPriorities,
   devPrioritiesEnabled,
   userPrioritiesEnabled,
+  projectProgress,
   currentAnalysis,
   manualAnalysis,
   isInventoryOpen,
@@ -20,6 +21,7 @@ export function useSessionSync({
   setUserPriorities,
   setDevPrioritiesEnabled,
   setUserPrioritiesEnabled,
+  setProjectProgress,
   setManualAnalysis,
 
   // Session config
@@ -117,6 +119,7 @@ export function useSessionSync({
         userPriorities,
         devPrioritiesEnabled,
         userPrioritiesEnabled,
+        projectProgress,
         currentAnalysis,
         manualAnalysis
       });
@@ -135,6 +138,7 @@ export function useSessionSync({
     userPriorities,
     devPrioritiesEnabled,
     userPrioritiesEnabled,
+    projectProgress,
     currentAnalysis,
     manualAnalysis
   ]);
@@ -154,6 +158,7 @@ export function useSessionSync({
         setDevPrioritiesEnabled(payload.devPrioritiesEnabled);
       if (payload.userPrioritiesEnabled !== undefined)
         setUserPrioritiesEnabled(payload.userPrioritiesEnabled);
+      if (payload.projectProgress) setProjectProgress(payload.projectProgress);
     };
 
     client.on('SYNC_INITIAL', handleInitialState);
@@ -168,7 +173,8 @@ export function useSessionSync({
     setActiveQuests,
     setUserPriorities,
     setDevPrioritiesEnabled,
-    setUserPrioritiesEnabled
+    setUserPrioritiesEnabled,
+    setProjectProgress
   ]);
 
   // Host: Send analysis updates (debounced)
@@ -256,6 +262,7 @@ export function useSessionSync({
         setDevPrioritiesEnabled(payload.devPrioritiesEnabled);
       if (payload.userPrioritiesEnabled !== undefined)
         setUserPrioritiesEnabled(payload.userPrioritiesEnabled);
+      if (payload.projectProgress) setProjectProgress(payload.projectProgress);
     };
 
     client.on('SYNC_SETTINGS', handleSettingsUpdate);
@@ -269,7 +276,8 @@ export function useSessionSync({
     setActiveQuests,
     setUserPriorities,
     setDevPrioritiesEnabled,
-    setUserPrioritiesEnabled
+    setUserPrioritiesEnabled,
+    setProjectProgress
   ]);
 
   return {

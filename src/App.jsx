@@ -2,6 +2,9 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { styles, theme } from './styles';
 
 // --- IMPORTS ---
+import AppHeader from './components/AppHeader';
+import Panel, { CenterPanel } from './components/Panel';
+import DebugPanel from './components/DebugPanel';
 import StationPanel from './components/StationPanel';
 import ProjectPanel from './components/ProjectPanel';
 import AdvisorCard from './components/AdvisorCard';
@@ -11,6 +14,7 @@ import ItemSearcher from './components/ItemSearcher';
 import SessionModal from './components/SessionModal';
 import SessionStatus from './components/SessionStatus';
 import SessionConnector from './components/SessionConnector';
+import QuestHelper, { QuestHelperToggleButton, QUEST_TIPS } from './components/QuestHelper';
 import { usePersistentState } from './hooks/usePersistentState';
 import { useVisionSystem } from './hooks/useVisionSystem';
 import { useAppMode, AppMode } from './hooks/useAppMode';
@@ -47,7 +51,7 @@ function App() {
   const noSleepVideoRef = useRef(null);
 
   // --- HOOKS ---
-  const { isCompanionMode, isGameMode, canToggle, toggleMode } = useAppMode();
+  const { isCompanionMode, canToggle, toggleMode } = useAppMode();
   // For backward compatibility with existing code
   const isMobile = isCompanionMode;
 
@@ -62,11 +66,26 @@ function App() {
     setDevPrioritiesEnabled,
     userPrioritiesEnabled,
     setUserPrioritiesEnabled,
-    projectPhase,
-    setProjectPhase,
+    projectPhases,
+    projectProgress,
+    setProjectProgress,
+    setProjectViewing,
+    toggleProjectItemCompletion,
+    setProjectDone,
     questAutoDetect,
-    setQuestAutoDetect
+    setQuestAutoDetect,
+    questHelperEnabled,
+    setQuestHelperEnabled,
+    configPanelOpen,
+    setConfigPanelOpen,
+    advisorPanelOpen,
+    setAdvisorPanelOpen,
+    panelWidths,
+    setPanelWidth
   } = usePersistentState();
+
+  // Mobile bottom sheet state for Quest Helper
+  const [questHelperBottomSheetOpen, setQuestHelperBottomSheetOpen] = useState(false);
 
   const {
     currentVersion,
@@ -75,8 +94,6 @@ function App() {
     markVersionSeen
   } = useVersionTracking();
 
-  // First-time visitor (no version stored yet)
-  const isFirstTimeVisitor = lastSeenVersion === null;
 
   // Priority settings object for vision system
   const prioritySettings = {
@@ -117,6 +134,7 @@ function App() {
     menuDebugRef,
     mainMenuDebugRef,
     playTabDebugRef,
+    questOcrDebugRef,
     isStreaming,
     workerStatus,
     currentAnalysis,
@@ -126,14 +144,15 @@ function App() {
     isInventoryOpen,
     isInMainMenu,
     isInPlayTab,
-    startCapture
+    startCapture,
+    stopCapture
   } = useVisionSystem(
     stationLevels,
     activeQuests,
     prioritySettings,
     inventoryOverride,
     isMobile,
-    projectPhase,
+    projectPhases,
     questAutoDetect,
     questAutoDetect ? handleQuestsDetected : null
   );
@@ -163,6 +182,7 @@ function App() {
     userPriorities,
     devPrioritiesEnabled,
     userPrioritiesEnabled,
+    projectProgress,
     currentAnalysis,
     manualAnalysis,
     isInventoryOpen,
@@ -175,6 +195,7 @@ function App() {
     setUserPriorities,
     setDevPrioritiesEnabled,
     setUserPrioritiesEnabled,
+    setProjectProgress,
     setManualAnalysis,
 
     // Session config
@@ -406,12 +427,61 @@ function App() {
     setManualAnalysis(null);
   };
 
-  const handleProjectPhaseUpdate = (phase) => {
-    setProjectPhase(phase);
+  // Project progress handlers
+  const handleProjectViewingChange = (projectId, phase) => {
+    setProjectViewing(projectId, phase);
 
     // Sync to connected devices
     if (sessionEnabled && isConnected) {
-      syncSettings({ projectPhase: phase });
+      const newProgress = {
+        ...projectProgress,
+        [projectId]: {
+          ...projectProgress[projectId],
+          viewing: phase,
+          completed: projectProgress[projectId]?.completed || {}
+        }
+      };
+      syncSettings({ projectProgress: newProgress });
+    }
+  };
+
+  const handleProjectItemToggle = (projectId, itemKey) => {
+    toggleProjectItemCompletion(projectId, itemKey);
+
+    // Sync to connected devices
+    if (sessionEnabled && isConnected) {
+      const current = projectProgress[projectId] || { viewing: 1, completed: {} };
+      const newCompleted = { ...current.completed };
+      if (newCompleted[itemKey]) {
+        delete newCompleted[itemKey];
+      } else {
+        newCompleted[itemKey] = true;
+      }
+      const newProgress = {
+        ...projectProgress,
+        [projectId]: {
+          ...current,
+          completed: newCompleted
+        }
+      };
+      syncSettings({ projectProgress: newProgress });
+    }
+  };
+
+  const handleProjectDone = (projectId, maxPhase) => {
+    setProjectDone(projectId, maxPhase);
+
+    // Sync to connected devices
+    if (sessionEnabled && isConnected) {
+      const newProgress = {
+        ...projectProgress,
+        [projectId]: {
+          ...projectProgress[projectId],
+          viewing: maxPhase + 1,
+          completed: projectProgress[projectId]?.completed || {}
+        }
+      };
+      syncSettings({ projectProgress: newProgress });
     }
   };
 
@@ -495,26 +565,341 @@ function App() {
       syncSettings({ userPriorities: newPriorities });
     }
   };
-  const TV_STATIC = `url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.4"/%3E%3C/svg%3E')`;
   // --- RENDER ---
+  // Desktop uses new panel layout, mobile uses legacy layout
+  if (!isMobile) {
+    return (
+      <div style={styles.appContainerPanel}>
+        {/* HEADER */}
+        <AppHeader
+          isInventoryOpen={isInventoryOpen}
+          inventoryOverride={inventoryOverride}
+          onInventoryOverrideToggle={() => setInventoryOverride(!inventoryOverride)}
+          workerStatus={workerStatus}
+          showDebug={showDebug}
+          onDebugToggle={() => setShowDebug(!showDebug)}
+          isStreaming={isStreaming}
+          onStartCapture={startCapture}
+          onStopCapture={stopCapture}
+          configPanelOpen={configPanelOpen}
+          onConfigPanelToggle={() => setConfigPanelOpen(!configPanelOpen)}
+          advisorPanelOpen={advisorPanelOpen}
+          onAdvisorPanelToggle={() => setAdvisorPanelOpen(!advisorPanelOpen)}
+          questPanelOpen={questHelperEnabled}
+          onQuestPanelToggle={() => setQuestHelperEnabled(!questHelperEnabled)}
+          sessionEnabled={sessionEnabled}
+          isSessionHost={isSessionHost}
+          isConnected={isConnected}
+          viewerCount={viewerCount}
+          onSessionToggle={() => {
+            if (!sessionEnabled) {
+              const newSessionId = Array.from(crypto.getRandomValues(new Uint32Array(3)))
+                .map(n => (n % 10000).toString().padStart(4, '0'))
+                .join('');
+              setSessionId(newSessionId);
+              setIsSessionHost(true);
+              setSessionEnabled(true);
+            }
+            setShowSessionModal(true);
+          }}
+          onSessionDisconnect={handleDisconnect}
+          onInfoClick={() => setShowInfo(true)}
+          showVersionNotification={showVersionNotification}
+        />
+
+        {/* MAIN CONTENT - Three columns */}
+        <div style={styles.mainContentPanel}>
+          {/* LEFT: Config Panel */}
+          <Panel
+            id="config"
+            isOpen={configPanelOpen}
+            position="left"
+            defaultWidth={280}
+            minWidth={220}
+            maxWidth={400}
+            width={panelWidths.config}
+            onWidthChange={(w) => setPanelWidth('config', w)}
+            glass={true}
+          >
+            <div style={styles.configSidebarContent}>
+              <StationPanel
+                levels={stationLevels}
+                onStationUpdate={handleStationUpdate}
+                activeQuests={activeQuests}
+                allQuests={allQuestNames}
+                onQuestAdd={handleQuestAdd}
+                onQuestRemove={handleQuestRemove}
+                questAutoDetect={questAutoDetect}
+                onQuestAutoDetectToggle={setQuestAutoDetect}
+                isInMainMenu={isInMainMenu}
+                isInPlayTab={isInPlayTab}
+                userPriorities={userPriorities}
+                devPriorities={devPriorities}
+                allItems={allItems}
+                onPriorityAdd={handlePriorityAdd}
+                onPriorityRemove={handlePriorityRemove}
+                onPriorityUpdate={handlePriorityUpdate}
+                devPrioritiesEnabled={devPrioritiesEnabled}
+                userPrioritiesEnabled={userPrioritiesEnabled}
+                onDevPrioritiesToggle={setDevPrioritiesEnabled}
+                onUserPrioritiesToggle={setUserPrioritiesEnabled}
+                projectProgress={projectProgress}
+                projectData={projectData}
+                onProjectViewingChange={handleProjectViewingChange}
+                onProjectItemToggle={handleProjectItemToggle}
+                onProjectDone={handleProjectDone}
+                onItemSelect={handleItemSelect}
+                isMobile={false}
+                hideHeader={true}
+                isCompanionMode={isCompanionMode}
+                canToggleMode={canToggle}
+                onModeToggle={toggleMode}
+                sessionConnected={sessionEnabled && isConnected}
+              />
+            </div>
+          </Panel>
+
+          {/* CENTER: Advisor Panel */}
+          <CenterPanel
+            isOpen={advisorPanelOpen}
+            hasLeftPanel={configPanelOpen}
+            hasRightPanel={questHelperEnabled}
+            maxWidth={900}
+          >
+            <div style={styles.advisorCardWrapper}>
+              <div style={{
+                ...styles.advisorCardPanel,
+                // Purple glow when item is prioritized
+                ...((manualAnalysis || currentAnalysis)?.prioritization?.isPrioritized && {
+                  boxShadow: '0 10px 40px rgba(0,0,0,0.5), 0 0 30px rgba(180, 80, 220, 0.5), 0 0 60px rgba(180, 80, 220, 0.3)',
+                  border: '1px solid rgba(180, 80, 220, 0.6)'
+                })
+              }}>
+                {/* Image Column */}
+                <div style={styles.imageCol}>
+                  <canvas ref={analyticsCanvasRef} style={{...styles.cropCanvas, display: hasData ? 'block' : 'none'}} />
+                  {!hasData && <div style={{color: '#333', fontSize: '12px'}}>NO IMAGE</div>}
+                </div>
+
+                {/* Info Column */}
+                <div style={styles.infoCol}>
+                  {isAnalyzing && (
+                    <div style={styles.loaderContainer}>
+                      <div style={styles.spinner}></div>
+                      <span style={styles.loadingText}>Analyzing</span>
+                    </div>
+                  )}
+
+                  {!(currentAnalysis || manualAnalysis) ? (
+                    <div style={styles.placeholder}>
+                      {isStreaming ? (
+                        <>
+                          <div style={{
+                            width: '12px',
+                            height: '12px',
+                            borderRadius: '50%',
+                            backgroundColor: theme.accent,
+                            boxShadow: `0 0 12px ${theme.accent}`,
+                            animation: 'pulse 1.5s ease-in-out infinite',
+                            marginBottom: '12px'
+                          }} />
+                          <div style={{fontSize:'14px', color: theme.accent, fontWeight: '500'}}>Waiting for item...</div>
+                          <div style={{fontSize:'11px', color: theme.textDim, marginTop: '8px'}}>
+                            Hover over an item in your inventory
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div style={{fontSize:'13px', color: theme.textDim}}>
+                            Click <span style={{color: theme.accent, fontWeight: '600'}}>START</span> to begin screen detection
+                          </div>
+                          <div style={{fontSize:'11px', color: theme.textDim, marginTop: '12px'}}>
+                            or search for items in the Config panel
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  ) : (
+                    <div style={{
+                      opacity: isAnalyzing ? 0.5 : 1,
+                      transition: 'opacity 0.2s',
+                      flex: 1,
+                      height: '100%',
+                      minHeight: 0,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      overflow: 'hidden',
+                      position: 'relative'
+                    }}>
+                      {/* Dismiss button for manual analysis */}
+                      {manualAnalysis && !isStreaming && (
+                        <button
+                          onClick={handleClearManualAnalysis}
+                          style={{
+                            position: 'absolute',
+                            top: '8px',
+                            right: '8px',
+                            width: '28px',
+                            height: '28px',
+                            borderRadius: '50%',
+                            border: `1px solid ${theme.border}`,
+                            backgroundColor: theme.cardBg,
+                            color: theme.textMuted,
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '18px',
+                            lineHeight: '1',
+                            zIndex: 100,
+                            transition: 'all 0.2s',
+                          }}
+                          onMouseEnter={(e) => {
+                            e.target.style.backgroundColor = theme.accent;
+                            e.target.style.color = '#fff';
+                            e.target.style.borderColor = theme.accent;
+                          }}
+                          onMouseLeave={(e) => {
+                            e.target.style.backgroundColor = theme.cardBg;
+                            e.target.style.color = theme.textMuted;
+                            e.target.style.borderColor = theme.border;
+                          }}
+                          title="Clear and show Select Window"
+                        >
+                          &times;
+                        </button>
+                      )}
+                      <AdvisorCard analysis={manualAnalysis || currentAnalysis} isMobile={false} />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Recycle Tabs - Horizontal at bottom of advisor card */}
+              {(manualAnalysis || currentAnalysis)?.recycleOutputs?.length > 0 && (
+                <RecycleTabs
+                  outputs={(manualAnalysis || currentAnalysis).recycleOutputs}
+                  isMobile={false}
+                  horizontal={true}
+                />
+              )}
+            </div>
+          </CenterPanel>
+
+          {/* RIGHT: Quest Helper Panel */}
+          <Panel
+            id="quest"
+            isOpen={questHelperEnabled}
+            position="right"
+            defaultWidth={360}
+            minWidth={280}
+            maxWidth={500}
+            width={panelWidths.quest}
+            onWidthChange={(w) => setPanelWidth('quest', w)}
+            glass={true}
+          >
+            <QuestHelper
+              activeQuests={activeQuests}
+              isEnabled={true}
+              isMobile={false}
+              useFullPanel={true}
+              isOpen={true}
+            />
+          </Panel>
+        </div>
+
+        {/* Hidden video element */}
+        <video ref={videoRef} style={{ display: 'none' }} autoPlay muted playsInline></video>
+
+        {/* DEBUG PANEL - Full-width bottom panel */}
+        <DebugPanel isVisible={isStreaming && showDebug}>
+          <DebugPanel.Item label="Live Feed" status="active" flex={3}>
+            <canvas ref={miniFeedCanvasRef} style={{width:'100%', height:'100%', objectFit:'contain'}} />
+          </DebugPanel.Item>
+
+          <DebugPanel.Item label="Menu Header" status={isInventoryOpen ? 'active' : 'idle'} flex={1}>
+            <canvas ref={menuDebugRef} style={{maxWidth:'100%', maxHeight:'100%', objectFit:'contain'}} />
+          </DebugPanel.Item>
+
+          <DebugPanel.Item label="Item OCR" status={isAnalyzing ? 'active' : 'idle'} flex={2}>
+            <canvas ref={ocrDebugRef} style={{maxWidth:'100%', maxHeight:'100%', objectFit:'contain'}} />
+            <DebugPanel.Overlay>
+              {debugRawText || "Waiting for text..."}
+            </DebugPanel.Overlay>
+          </DebugPanel.Item>
+
+          <DebugPanel.Item
+            label="Main Menu"
+            status={isInMainMenu ? 'active' : 'error'}
+            flex={1}
+          >
+            <canvas ref={mainMenuDebugRef} style={{maxWidth:'100%', maxHeight:'100%', objectFit:'contain'}} />
+          </DebugPanel.Item>
+
+          <DebugPanel.Item
+            label="Play Tab"
+            status={isInPlayTab ? 'active' : 'warning'}
+            flex={1}
+          >
+            <canvas ref={playTabDebugRef} style={{maxWidth:'100%', maxHeight:'100%', objectFit:'contain'}} />
+          </DebugPanel.Item>
+
+          <DebugPanel.Item
+            label="Quest OCR"
+            status={isInPlayTab ? 'active' : 'idle'}
+            flex={2}
+          >
+            <canvas ref={questOcrDebugRef} style={{maxWidth:'100%', maxHeight:'100%', objectFit:'contain'}} />
+          </DebugPanel.Item>
+        </DebugPanel>
+
+        {/* INFO MODAL */}
+        {showInfo && (
+          <InfoModal
+            onClose={() => setShowInfo(false)}
+            currentVersion={currentVersion}
+            isNewVersion={showVersionNotification}
+            onVersionSeen={markVersionSeen}
+          />
+        )}
+
+        {/* SESSION MODAL */}
+        {showSessionModal && sessionId && (
+          <SessionModal
+            sessionId={sessionId}
+            onClose={() => setShowSessionModal(false)}
+          />
+        )}
+
+        {/* DISCLAIMER */}
+        <div style={{
+          ...styles.disclaimer,
+          position: 'fixed'
+        }}>
+          ARC Lens is an independent fan project and is not affiliated with, endorsed by, or connected to Embark Studios or ARC Raiders.
+        </div>
+      </div>
+    );
+  }
+
+  // --- MOBILE RENDER (Legacy Layout) ---
+  const TV_STATIC = `url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.4"/%3E%3C/svg%3E')`;
+
   return (
     <div style={{
     ...styles.container,
-    // Use dynamic viewport height on mobile to handle address bar
-    ...(isMobile && {
-      height: '100dvh',
-      justifyContent: 'flex-start',
-      paddingTop: '70px' // Space for header area (brand + hamburger + connection status)
-    }),
+    height: '100dvh',
+    justifyContent: 'flex-start',
+    paddingTop: '70px',
     backgroundImage: `
       ${TV_STATIC},
       radial-gradient(circle, rgba(60, 54, 65, 0.2) 10%, rgba(20, 27, 41, 1) 100%),
       url('/arclensbg1_cropped.avif')
     `,
-    backgroundSize: '150px 150px, cover, cover', // Tiles the noise, covers the rest
+    backgroundSize: '150px 150px, cover, cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'repeat, no-repeat, no-repeat',
-    backgroundBlendMode: 'overlay, normal, normal' // Blends the noise into the image
+    backgroundBlendMode: 'overlay, normal, normal'
   }}>
 
       {/* BRAND MARK */}
@@ -523,29 +908,6 @@ function App() {
         ...(isMobile && { fontSize: '12px', top: '12px', left: '16px' })
       }}>
         ARC Lens
-        {/* Mode indicator and switch for non-touch devices in Companion mode (hidden when connected) */}
-        {isCompanionMode && canToggle && !(sessionEnabled && isConnected) && (
-          <button
-            onClick={toggleMode}
-            style={{
-              marginLeft: '12px',
-              padding: '2px 8px',
-              fontSize: '9px',
-              backgroundColor: 'transparent',
-              border: `1px solid ${theme.accent}`,
-              borderRadius: '4px',
-              color: theme.accent,
-              cursor: 'pointer',
-              fontWeight: '600',
-              letterSpacing: '0.5px',
-              textTransform: 'uppercase',
-              verticalAlign: 'middle'
-            }}
-            title="Switch to Game Mode for screen capture"
-          >
-            GAME MODE
-          </button>
-        )}
       </div>
 
       {/* MOBILE CONNECTION STATUS - Positioned in top area with proper spacing */}
@@ -635,74 +997,9 @@ function App() {
         </div>
       )}
 
-      {/* STATUS BAR - Hidden on mobile */}
-      {!isMobile && (
-        <div style={styles.statusBar}>
-        <div style={styles.ledContainer}>
-            <div style={styles.led(isInventoryOpen, inventoryOverride)}></div>
-            <span style={styles.ledText(isInventoryOpen)}>
-                {inventoryOverride ? "OVERRIDE ACTIVE" : (isInventoryOpen ? "INVENTORY OPEN" : "INVENTORY CLOSED")}
-            </span>
-        </div>
-        {/* Override button - debug mode only */}
-        {showDebug && (
-          <>
-            <div style={{width:'1px', height:'14px', backgroundColor:'#333', margin:'0 10px'}}></div>
-            <button
-              style={styles.overrideButton(inventoryOverride)}
-              onClick={() => setInventoryOverride(!inventoryOverride)}
-              title="Force inventory detection to always be active"
-            >
-              {inventoryOverride ? 'DISABLE OVERRIDE' : 'FORCE OPEN'}
-            </button>
-          </>
-        )}
-        <div style={{width:'1px', height:'14px', backgroundColor:'#333', margin:'0 10px'}}></div>
-        <span style={{color: theme.textDim}}>WORKER: {workerStatus.toUpperCase()}</span>
-        <div style={{width:'1px', height:'14px', backgroundColor:'#333', margin:'0 10px'}}></div>
-        <div style={styles.toggleLabel} onClick={() => setShowDebug(!showDebug)}>
-            <div style={styles.switchTrack(showDebug)}>
-                <div style={styles.switchKnob(showDebug)}></div>
-            </div>
-            <span style={styles.toggleText}>DEBUG VIEW</span>
-        </div>
-        <div style={{width:'1px', height:'14px', backgroundColor:'#333', margin:'0 10px'}}></div>
-        <SessionStatus
-          isConnected={isConnected}
-          role={sessionEnabled ? (isSessionHost ? 'host' : 'viewer') : null}
-          viewerCount={viewerCount}
-          onToggle={() => {
-            if (!sessionEnabled) {
-              // Generate short session ID (12 digits, numbers only for easy mobile input)
-              const newSessionId = Array.from(crypto.getRandomValues(new Uint32Array(3)))
-                .map(n => (n % 10000).toString().padStart(4, '0'))
-                .join('');
-              setSessionId(newSessionId);
-              setIsSessionHost(true);
-              setSessionEnabled(true);
-            }
-            setShowSessionModal(true);
-          }}
-          onDisconnect={handleDisconnect}
-        />
-        {/* Mode toggle - disabled when connected to session */}
-        {!(sessionEnabled && isConnected) && (
-          <>
-            <div style={{width:'1px', height:'14px', backgroundColor:'#333', margin:'0 10px'}}></div>
-            <div style={styles.toggleLabel} onClick={toggleMode}>
-              <div style={styles.switchTrack(isCompanionMode)}>
-                <div style={styles.switchKnob(isCompanionMode)}></div>
-              </div>
-              <span style={styles.toggleText}>COMPANION MODE</span>
-            </div>
-          </>
-        )}
-      </div>
-      )}
 
       {/* MOBILE HAMBURGER/CLOSE MENU */}
-      {isMobile && (
-        <button
+      <button
           style={{
             position: 'absolute',
             top: '20px',
@@ -738,30 +1035,14 @@ function App() {
             </>
           )}
         </button>
-      )}
 
-      {/* SIDEBAR TOGGLE - Desktop only */}
-      {!isMobile && (
-        <div
-          style={{
-            ...(isFirstTimeVisitor ? styles.sidebarTogglePulsing : styles.sidebarToggle),
-            right: sidebarOpen ? '300px' : '0'
-          }}
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-        >
-          <span style={{color: theme.accent, fontSize: '18px'}}>{sidebarOpen ? '›' : '‹'}</span>
-        </div>
-      )}
-
-      {/* SIDEBAR (Modular Component) */}
+      {/* MOBILE SIDEBAR */}
       <div style={{
         ...styles.sidebar(sidebarOpen),
-        ...(isMobile && {
-          width: '85vw',
-          right: sidebarOpen ? 0 : '-85vw',
-          borderLeft: 'none',
-          boxShadow: 'none'
-        })
+        width: '85vw',
+        right: sidebarOpen ? 0 : '-85vw',
+        borderLeft: 'none',
+        boxShadow: 'none'
       }}>
         {sidebarOpen && (
           <StationPanel
@@ -788,19 +1069,26 @@ function App() {
             onDevPrioritiesToggle={setDevPrioritiesEnabled}
             onUserPrioritiesToggle={setUserPrioritiesEnabled}
             // Project props
-            projectPhase={projectPhase}
+            projectProgress={projectProgress}
             projectData={projectData}
-            onProjectPhaseUpdate={handleProjectPhaseUpdate}
+            onProjectViewingChange={handleProjectViewingChange}
+            onProjectItemToggle={handleProjectItemToggle}
+            onProjectDone={handleProjectDone}
             // Item search props
             onItemSelect={handleItemSelect}
-            isMobile={isMobile}
+            isMobile={true}
             onClose={() => setSidebarOpen(false)}
+            // Companion mode props
+            isCompanionMode={isCompanionMode}
+            canToggleMode={canToggle}
+            onModeToggle={toggleMode}
+            sessionConnected={sessionEnabled && isConnected}
           />
         )}
       </div>
 
       {/* MOBILE: CONNECT TO DESKTOP BUTTON */}
-      {isMobile && !sessionEnabled && (
+      {!sessionEnabled && (
         <button
           onClick={() => setShowSessionConnector(true)}
           style={{
@@ -839,7 +1127,7 @@ function App() {
       )}
 
       {/* MOBILE ITEM SEARCH */}
-      {isMobile && !sessionEnabled && (
+      {!sessionEnabled && (
         <div style={{
           width: 'calc(100% - 32px)',
           maxWidth: '500px',
@@ -855,7 +1143,7 @@ function App() {
       )}
 
       {/* MOBILE PRIORITY GLOW - Outside scroll container so it's not clipped */}
-      {isMobile && (manualAnalysis || currentAnalysis)?.prioritization?.isPrioritized && (
+      {(manualAnalysis || currentAnalysis)?.prioritization?.isPrioritized && (
         <div style={{
           position: 'absolute',
           top: '50%',
@@ -873,52 +1161,34 @@ function App() {
       {/* MAIN CONTENT */}
       <div style={{
         ...styles.mainContentWrapper,
-        ...(isMobile && {
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '12px',
-          width: '100%',
-          paddingTop: 0,
-          paddingRight: '16px',
-          paddingBottom: '60px', // Space for info button
-          paddingLeft: '16px',
-          boxSizing: 'border-box',
-          // Make scrollable on mobile so recycle tabs don't cause layout jumps
-          flex: '1 1 auto',
-          overflowY: 'auto',
-          overflowX: 'hidden',
-          WebkitOverflowScrolling: 'touch'
-        })
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '12px',
+        width: '100%',
+        paddingTop: 0,
+        paddingRight: '16px',
+        paddingBottom: '60px',
+        paddingLeft: '16px',
+        boxSizing: 'border-box',
+        flex: '1 1 auto',
+        overflowY: 'auto',
+        overflowX: 'hidden',
+        WebkitOverflowScrolling: 'touch'
       }}>
+        <div style={{ display: 'contents' }}>
         <div style={{
           ...styles.resultCard,
-          ...(isMobile && {
-            width: '100%',
-            maxWidth: '500px',
-            // Use calc to ensure card fits with space for info button
-            height: 'auto',
-            minHeight: '280px',
-            maxHeight: 'calc(100dvh - 180px)',
-            flex: '1 1 auto'
-          }),
-          // Purple glow effect when item is prioritized (desktop only - mobile uses separate overlay)
-          ...(!isMobile && (manualAnalysis || currentAnalysis)?.prioritization?.isPrioritized ? {
-            boxShadow: '0 10px 40px rgba(0,0,0,0.5), 0 0 30px rgba(180, 80, 220, 0.5), 0 0 60px rgba(180, 80, 220, 0.3), 0 0 90px rgba(180, 80, 220, 0.15)',
-            border: '1px solid rgba(180, 80, 220, 0.6)'
-          } : {}),
+          width: '100%',
+          maxWidth: '500px',
+          height: 'auto',
+          minHeight: '280px',
+          maxHeight: 'calc(100dvh - 180px)',
+          flex: '1 1 auto',
           // Mobile: just the purple border when prioritized (glow handled by overlay)
-          ...(isMobile && (manualAnalysis || currentAnalysis)?.prioritization?.isPrioritized ? {
+          ...((manualAnalysis || currentAnalysis)?.prioritization?.isPrioritized ? {
             border: '1px solid rgba(180, 80, 220, 0.6)'
           } : {})
         }}>
-          {/* Hide image column on mobile */}
-          {!isMobile && (
-            <div style={styles.imageCol}>
-                <canvas ref={analyticsCanvasRef} style={{...styles.cropCanvas, display: hasData ? 'block' : 'none'}} />
-                {!hasData && <div style={{color: '#333', fontSize: '12px'}}>NO IMAGE</div>}
-            </div>
-          )}
-
           <div style={styles.infoCol}>
               {isAnalyzing && (
                   <div style={styles.loaderContainer}>
@@ -929,36 +1199,14 @@ function App() {
 
               {!isStreaming && !manualAnalysis ? (
                   <div style={styles.placeholder}>
-                      {!isMobile && (
-                        <button
-                          style={styles.button}
-                          onClick={startCapture}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = theme.accent;
-                            e.currentTarget.style.color = '#fff';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = 'transparent';
-                            e.currentTarget.style.color = theme.accent;
-                          }}
-                        >
-                          START CAPTURE
-                        </button>
-                      )}
-                      <div style={{fontSize:'12px', marginTop: isMobile ? '0' : '16px', color: theme.textMuted}}>
-                        {isMobile ? 'Search for an item above to view detailed analysis' : 'Or use Item Search in the sidebar'}
+                      <div style={{fontSize:'12px', color: theme.textMuted}}>
+                        Search for an item above to view detailed analysis
                       </div>
                   </div>
               ) : !(currentAnalysis || manualAnalysis) ? (
                   <div style={styles.placeholder}>
-                      {!isMobile && (
-                        <>
-                          <div style={{fontSize:'16px', color: theme.accent}}>Waiting for item...</div>
-                          <div style={{fontSize:'12px'}}>Open Inventory & Hover Item</div>
-                        </>
-                      )}
-                      <div style={{fontSize:'12px', marginTop: isMobile ? '0' : '8px', color: theme.textMuted}}>
-                        {isMobile ? 'Search for an item above to view detailed analysis' : 'Or use Item Search in the sidebar'}
+                      <div style={{fontSize:'12px', color: theme.textMuted}}>
+                        Search for an item above to view detailed analysis
                       </div>
                   </div>
               ) : (
@@ -1011,92 +1259,31 @@ function App() {
                           ×
                         </button>
                       )}
-                      <AdvisorCard analysis={manualAnalysis || currentAnalysis} isMobile={isMobile} />
+                      <AdvisorCard analysis={manualAnalysis || currentAnalysis} isMobile={true} />
                   </div>
               )}
           </div>
         </div>
 
         {/* RECYCLE TABS - Shows what current item breaks into */}
-        {(manualAnalysis || currentAnalysis) && (manualAnalysis || currentAnalysis).recycleOutputs && (manualAnalysis || currentAnalysis).recycleOutputs.length > 0 && (
-          <RecycleTabs outputs={(manualAnalysis || currentAnalysis).recycleOutputs} isMobile={isMobile} />
+        {(manualAnalysis || currentAnalysis)?.recycleOutputs?.length > 0 && (
+          <RecycleTabs outputs={(manualAnalysis || currentAnalysis).recycleOutputs} isMobile={true} />
         )}
+        </div>
       </div>
 
+      {/* Hidden video element (needed for refs but not used on mobile) */}
       <video ref={videoRef} style={{ display: 'none' }} autoPlay muted playsInline></video>
-
-      {/* LIVE FEED */}
-      <div style={{ ...styles.liveFeed, display: (isStreaming && showDebug) ? 'block' : 'none' }}>
-          <canvas ref={miniFeedCanvasRef} style={{width:'100%', height:'100%', objectFit:'contain'}} />
-      </div>
-
-      {/* DEBUG FEEDS */}
-      <div style={{ ...styles.menuDebugFeed, display: (isStreaming && showDebug) ? 'flex' : 'none' }}>
-           <div style={{...styles.debugLabel, backgroundColor: '#d81b60'}}>MENU HEADER (DEBUG)</div>
-           <div style={{flex:1, display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden'}}>
-               <canvas ref={menuDebugRef} style={{maxWidth:'100%', maxHeight:'100%', objectFit:'contain'}} />
-           </div>
-      </div>
-
-      <div style={{ ...styles.ocrDebugFeed, display: (isStreaming && showDebug) ? 'flex' : 'none' }}>
-          <div style={styles.debugLabel}>OCR INPUT (DEBUG)</div>
-          <div style={{flex:1, position:'relative', display:'flex', alignItems:'center', justifyContent:'center', width: '100%', overflow:'hidden'}}>
-              <canvas ref={ocrDebugRef} style={{maxWidth:'100%', maxHeight:'100%', objectFit:'contain'}} />
-              <div style={styles.debugTextOverlay}>
-                {debugRawText || "Waiting for text..."}
-              </div>
-          </div>
-      </div>
-
-      {/* MAIN MENU DEBUG FEEDS - Only show when quest auto-detect is enabled */}
-      {questAutoDetect && (
-        <>
-          <div style={{
-            position: 'absolute', bottom: '240px', left: '20px',
-            width: '80px', height: '100px',
-            backgroundColor: '#000', border: `1px solid ${isInMainMenu ? '#4caf50' : '#ff5722'}`,
-            borderRadius: '8px', overflow: 'hidden', zIndex: 5,
-            display: (isStreaming && showDebug) ? 'flex' : 'none', flexDirection: 'column'
-          }}>
-            <div style={{
-              fontSize: '8px', padding: '2px 4px', color: '#fff',
-              backgroundColor: isInMainMenu ? '#4caf50' : '#ff5722'
-            }}>RAINBOW</div>
-            <div style={{flex:1, display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden'}}>
-              <canvas ref={mainMenuDebugRef} style={{maxWidth:'100%', maxHeight:'100%', objectFit:'contain'}} />
-            </div>
-          </div>
-
-          <div style={{
-            position: 'absolute', bottom: '240px', left: '110px',
-            width: '120px', height: '60px',
-            backgroundColor: '#000', border: `1px solid ${isInPlayTab ? '#4caf50' : '#ff9800'}`,
-            borderRadius: '8px', overflow: 'hidden', zIndex: 5,
-            display: (isStreaming && showDebug) ? 'flex' : 'none', flexDirection: 'column'
-          }}>
-            <div style={{
-              fontSize: '8px', padding: '2px 4px', color: '#fff',
-              backgroundColor: isInPlayTab ? '#4caf50' : '#ff9800'
-            }}>PLAY TAB</div>
-            <div style={{flex:1, display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden'}}>
-              <canvas ref={playTabDebugRef} style={{maxWidth:'100%', maxHeight:'100%', objectFit:'contain'}} />
-            </div>
-          </div>
-        </>
-      )}
 
       {/* INFO BUTTON */}
       <button
         style={{
           ...(showVersionNotification
-            ? styles.infoButtonPulsing(isStreaming && showDebug)
-            : styles.infoButton(isStreaming && showDebug)),
-          ...(isMobile && {
-            bottom: '16px',
-            left: '16px',
-            // Ensure button stays above safe area on iOS
-            paddingBottom: 'env(safe-area-inset-bottom, 0px)'
-          })
+            ? styles.infoButtonPulsing(false)
+            : styles.infoButton(false)),
+          bottom: '16px',
+          left: '16px',
+          paddingBottom: 'env(safe-area-inset-bottom, 0px)'
         }}
         onClick={() => setShowInfo(true)}
         title="About this app"
@@ -1135,11 +1322,21 @@ function App() {
         />
       )}
 
-      {/* DISCLAIMER */}
-      {!isMobile && (
-        <div style={styles.disclaimer}>
-          ARC Lens is an independent fan project and is not affiliated with, endorsed by, or connected to Embark Studios or ARC Raiders.
-        </div>
+      {/* MOBILE QUEST HELPER - Bottom Sheet + Toggle Button */}
+      {questHelperEnabled && (
+        <>
+          <QuestHelperToggleButton
+            onClick={() => setQuestHelperBottomSheetOpen(true)}
+            hasAvailableTips={activeQuests.some(q => QUEST_TIPS[q])}
+          />
+          <QuestHelper
+            activeQuests={activeQuests}
+            isEnabled={questHelperEnabled}
+            isMobile={true}
+            isBottomSheetOpen={questHelperBottomSheetOpen}
+            onBottomSheetClose={() => setQuestHelperBottomSheetOpen(false)}
+          />
+        </>
       )}
 
     </div>

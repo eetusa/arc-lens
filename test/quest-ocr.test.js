@@ -127,7 +127,11 @@ const QUEST_NAMES = [
     "Reduced To Rubble",
     "With A Trace",
     "The Clean Dream",
-    "Armored Transports"
+    "Armored Transports",
+    // New quests from Headwinds update
+    "A Prime Specimen",
+    "The League",
+    "With A View"
 ];
 
 // Test cases - screenshots with expected quests
@@ -151,6 +155,16 @@ const QUEST_TEST_CASES = [
         file: '1440p/menu-closed.png',
         expectedQuests: ['The Root Of The Matter', 'After Rain Comes', "The Major's Footlocker"],
         description: '1440p menu-closed with 3 quests (FLICKERING FLAMES event present)'
+    },
+    {
+        file: '1080p/main-menu-quests-new-patch.png',
+        expectedQuests: ['A Prime Specimen', 'The League', 'With A View', 'Switching The Supply'],
+        description: '1080p PLAY tab with 4 quests (new patch)'
+    },
+    {
+        file: '1440p/main-menu-quests-new-patch.png',
+        expectedQuests: ['A Prime Specimen', 'The League', 'With A View', 'Switching The Supply'],
+        description: '1440p PLAY tab with 4 quests (new patch)'
     },
 ];
 
@@ -255,8 +269,8 @@ describe('QuestOCR', () => {
                 const png = loadPNG(testFilePath);
                 const frameMat = pngToMat(cv, png);
 
-                // Reset cooldown for testing
-                questOCR.lastOcrTime = 0;
+                // Reset all state for testing
+                questOCR.reset();
 
                 // Call detect without OCR session to just see text regions
                 const result = await questOCR.detect(cv, frameMat, null, null);
@@ -293,8 +307,8 @@ describe('QuestOCR', () => {
                 const png = loadPNG(testFilePath);
                 const frameMat = pngToMat(cv, png);
 
-                // Reset cooldown for testing
-                questOCR.lastOcrTime = 0;
+                // Reset all state for testing
+                questOCR.reset();
 
                 // Call detect WITH OCR session
                 const result = await questOCR.detect(cv, frameMat, ocrSession, vocab);

@@ -46992,6 +46992,120 @@
         ],
         "maps": []
     },
+    "tropical_duck": {
+        "updatedAt": "2026-01-30T00:00:00.000Z",
+        "id": "tropical_duck",
+        "name": "Tropical Duck",
+        "foundIn": [],
+        "rarity": "uncommon",
+        "stackSize": 15,
+        "type": "trinket",
+        "value": 1000,
+        "weight": 0.3,
+        "description": "A duck with a tropical vibe.",
+        "disclaimers": [
+            "Can be thrown to create noise"
+        ],
+        "icon": null,
+        "image": null,
+        "sources": [],
+        "maps": []
+    },
+    "gentle_duck": {
+        "updatedAt": "2026-01-30T00:00:00.000Z",
+        "id": "gentle_duck",
+        "name": "Gentle Duck",
+        "foundIn": [],
+        "rarity": "uncommon",
+        "stackSize": 15,
+        "type": "trinket",
+        "value": 1000,
+        "weight": 0.3,
+        "description": "A duck with a gentle demeanor.",
+        "disclaimers": [
+            "Can be thrown to create noise"
+        ],
+        "icon": null,
+        "image": null,
+        "sources": [],
+        "maps": []
+    },
+    "alien_duck": {
+        "updatedAt": "2026-01-30T00:00:00.000Z",
+        "id": "alien_duck",
+        "name": "Alien Duck",
+        "foundIn": [],
+        "rarity": "uncommon",
+        "stackSize": 15,
+        "type": "trinket",
+        "value": 1000,
+        "weight": 0.3,
+        "description": "A duck from another world.",
+        "disclaimers": [
+            "Can be thrown to create noise"
+        ],
+        "icon": null,
+        "image": null,
+        "sources": [],
+        "maps": []
+    },
+    "doodly_duck": {
+        "updatedAt": "2026-01-30T00:00:00.000Z",
+        "id": "doodly_duck",
+        "name": "Doodly Duck",
+        "foundIn": [],
+        "rarity": "rare",
+        "stackSize": 15,
+        "type": "trinket",
+        "value": 3000,
+        "weight": 0.3,
+        "description": "A duck covered in doodles.",
+        "disclaimers": [
+            "Can be thrown to create noise"
+        ],
+        "icon": null,
+        "image": null,
+        "sources": [],
+        "maps": []
+    },
+    "flashy_duck": {
+        "updatedAt": "2026-01-30T00:00:00.000Z",
+        "id": "flashy_duck",
+        "name": "Flashy Duck",
+        "foundIn": [],
+        "rarity": "rare",
+        "stackSize": 15,
+        "type": "trinket",
+        "value": 3000,
+        "weight": 0.3,
+        "description": "A duck that loves to show off.",
+        "disclaimers": [
+            "Can be thrown to create noise"
+        ],
+        "icon": null,
+        "image": null,
+        "sources": [],
+        "maps": []
+    },
+    "familiar_duck": {
+        "updatedAt": "2026-01-30T00:00:00.000Z",
+        "id": "familiar_duck",
+        "name": "Familiar Duck",
+        "foundIn": [],
+        "rarity": "epic",
+        "stackSize": 15,
+        "type": "trinket",
+        "value": 7000,
+        "weight": 0.3,
+        "description": "A duck that feels strangely familiar.",
+        "disclaimers": [
+            "Can be thrown to create noise"
+        ],
+        "icon": null,
+        "image": null,
+        "sources": [],
+        "maps": []
+    },
     "rubber_pad": {
         "updatedAt": "2025-09-07T17:18:28.842Z",
         "id": "rubber_pad",
