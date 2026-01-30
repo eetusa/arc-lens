@@ -94,6 +94,7 @@ const NON_ITEM_PAGES = new Set([
   'Workbench', 'Workshop', 'Medical Lab', 'Practice Range',
   // Misc
   'Free Loadout', 'Coins', 'Integrated Binoculars', 'Integrated Shield Recharger',
+  'Integrated Defibrillator',
 ]);
 
 // Quest/non-item name patterns
