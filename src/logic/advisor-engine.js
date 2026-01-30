@@ -23,7 +23,7 @@ export class AdvisorEngine {
         this.priorityTracker = new PriorityTracker(this.db);
         this.projectTracker = new ProjectTracker();
         this.ready = false;
-        this.defaultProgress = { activeQuestTitles: [], stationLevels: {}, projectPhase: 0 };
+        this.defaultProgress = { activeQuestTitles: [], stationLevels: {}, projectPhases: {} };
     }
 
     async init() {
@@ -146,10 +146,12 @@ export class AdvisorEngine {
         }
 
         // --- Projects ---
-        const projectPhase = userProgress.projectPhase || 0;
-        const projectNeed = this.projectTracker.isItemNeeded(node.name, projectPhase);
+        const projectPhases = userProgress.projectPhases || {};
+        const projectNeed = this.projectTracker.isItemNeeded(node.name, projectPhases);
         if (projectNeed.needed) {
-            analysis.addProjectRequirement(projectNeed.phase, projectNeed.phaseId, projectNeed.amount);
+            for (const match of projectNeed.matches) {
+                analysis.addProjectRequirement(match.project, match.phase, match.phaseId, match.amount);
+            }
         }
 
         // ---------------------------------------------------------

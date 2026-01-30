@@ -9,7 +9,8 @@ const QuestSelector = ({
   questAutoDetect = false,
   onQuestAutoDetectToggle,
   isInMainMenu = false,
-  isInPlayTab = false
+  isInPlayTab = false,
+  embedded = false
 }) => {
   const [inputValue, setInputValue] = useState("");
   const [isFocused, setIsFocused] = useState(false);
@@ -59,9 +60,9 @@ const QuestSelector = ({
   const autoDetectStatus = getAutoDetectStatus();
 
   return (
-    <div style={styles.questContainer}>
+    <div style={embedded ? {} : styles.questContainer}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-        <span style={styles.sectionTitle}>ACTIVE QUESTS</span>
+        {!embedded && <span style={styles.sectionTitle}>Active Quests</span>}
         {onQuestAutoDetectToggle && (
           <div
             style={{
@@ -130,7 +131,12 @@ const QuestSelector = ({
       {!questAutoDetect && (
         <div style={styles.inputWrapper}>
           <input
-            style={{...styles.input, border: `1px solid ${isFocused ? theme.accent : theme.border}`}}
+            style={{
+              ...styles.input,
+              border: `1px solid ${isFocused ? theme.accent : theme.border}`,
+              fontSize: '11px',
+              padding: '6px 8px'
+            }}
             placeholder="Type quest name..."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}

@@ -12,14 +12,15 @@ const PrioritySelector = ({
   devEnabled,
   userEnabled,
   onDevToggle,
-  onUserToggle
+  onUserToggle,
+  embedded = false
 }) => {
   const [showDevModal, setShowDevModal] = useState(false);
   const [showUserModal, setShowUserModal] = useState(false);
 
   return (
-    <div style={styles.priorityContainer}>
-      <span style={styles.sectionTitle}>PRIORITIES</span>
+    <div style={embedded ? {} : styles.priorityContainer}>
+      {!embedded && <span style={styles.sectionTitle}>Priorities</span>}
 
       {/* Default Priorities Row */}
       <div style={styles.priorityRowWithButton}>

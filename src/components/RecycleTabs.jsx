@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { styles } from '../styles';
+import { styles, theme } from '../styles';
 
 // Rarity colors (toned down for backgrounds)
 const RARITY_BG_COLORS = {
@@ -15,15 +15,26 @@ const PRIORITY_BG_COLOR = 'rgba(156, 39, 176, 0.35)';
 const PRIORITY_BORDER_COLOR = '#9c27b0';
 
 /**
- * RecycleTabs - Shows recycle outputs as icon tabs on the right side of the main card
+ * RecycleTabs - Shows recycle outputs as icon tabs
  * Images are preloaded globally by imagePreloader.js on app startup
  *
  * @param {array} outputs - Array of { id, name, amount, rarity, isPrioritized } objects
- * @param {boolean} isMobile - Whether to render in mobile layout (horizontal)
+ * @param {boolean} isMobile - Whether to render in mobile layout
+ * @param {boolean} horizontal - Whether to render horizontally (for panel layout)
  */
-const RecycleTabs = ({ outputs = [], isMobile = false }) => {
+const RecycleTabs = ({ outputs = [], isMobile = false, horizontal = false }) => {
   const [failedImages, setFailedImages] = useState(new Set());
   const [selectedTab, setSelectedTab] = useState(null);
+
+  // Dismiss tooltip when tapping anywhere else
+  // Must be called before any early returns to follow React hooks rules
+  useEffect(() => {
+    if (!isMobile || !selectedTab) return;
+
+    const handleDocumentClick = () => setSelectedTab(null);
+    document.addEventListener('click', handleDocumentClick);
+    return () => document.removeEventListener('click', handleDocumentClick);
+  }, [isMobile, selectedTab]);
 
   if (!outputs || outputs.length === 0) {
     return null;
@@ -39,15 +50,6 @@ const RecycleTabs = ({ outputs = [], isMobile = false }) => {
       setSelectedTab(selectedTab === id ? null : id);
     }
   };
-
-  // Dismiss tooltip when tapping anywhere else
-  useEffect(() => {
-    if (!isMobile || !selectedTab) return;
-
-    const handleDocumentClick = () => setSelectedTab(null);
-    document.addEventListener('click', handleDocumentClick);
-    return () => document.removeEventListener('click', handleDocumentClick);
-  }, [isMobile, selectedTab]);
 
   const getBackgroundColor = (output) => {
     // Priority takes precedence over rarity
@@ -65,16 +67,27 @@ const RecycleTabs = ({ outputs = [], isMobile = false }) => {
     return 'transparent';
   };
 
-  const containerStyle = isMobile ? {
-    position: 'relative',
-    zIndex: 15, // Above resultCard glow (z-index 10)
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: '6px',
-    width: '100%',
-    paddingBottom: '8px'
-  } : styles.recycleTabsContainer;
+  // Determine container style based on layout mode
+  const getContainerStyle = () => {
+    if (isMobile) {
+      return {
+        position: 'relative',
+        zIndex: 15,
+        display: 'flex',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: '6px',
+        width: '100%',
+        paddingBottom: '8px'
+      };
+    }
+    if (horizontal) {
+      return styles.recycleSectionHorizontal;
+    }
+    return styles.recycleTabsContainer;
+  };
+
+  const containerStyle = getContainerStyle();
 
   return (
     <div style={containerStyle}>
@@ -96,6 +109,10 @@ const RecycleTabs = ({ outputs = [], isMobile = false }) => {
           Recycles Into
         </div>
       )}
+      {/* Label for horizontal desktop */}
+      {horizontal && !isMobile && (
+        <span style={styles.recycleSectionLabel}>Recycles Into</span>
+      )}
       {outputs.map((output, index) => {
         const imagePath = `/images/${output.id}.webp`;
         const hasImage = !failedImages.has(output.id);
@@ -104,22 +121,33 @@ const RecycleTabs = ({ outputs = [], isMobile = false }) => {
 
         const tooltipText = `${output.name}${output.isPrioritized ? ' ★' : ''}`;
 
-        const tabStyle = isMobile ? {
-          position: 'relative',
-          width: '52px',
-          minWidth: '52px',
-          height: '52px',
-          backgroundColor: styles.recycleTab(index).backgroundColor,
-          border: styles.recycleTab(index).border,
-          borderRadius: '8px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '4px',
-          boxSizing: 'border-box',
-          flexShrink: 0
-        } : styles.recycleTab(index);
+        // Determine tab style based on layout mode
+        const getTabStyle = () => {
+          if (isMobile) {
+            return {
+              position: 'relative',
+              width: '52px',
+              minWidth: '52px',
+              height: '52px',
+              backgroundColor: styles.recycleTab(index).backgroundColor,
+              border: styles.recycleTab(index).border,
+              borderRadius: '8px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '4px',
+              boxSizing: 'border-box',
+              flexShrink: 0
+            };
+          }
+          if (horizontal) {
+            return styles.recycleTabHorizontal;
+          }
+          return styles.recycleTab(index);
+        };
+
+        const tabStyle = getTabStyle();
 
         const isSelected = selectedTab === output.id;
 
@@ -153,10 +181,18 @@ const RecycleTabs = ({ outputs = [], isMobile = false }) => {
             {!isMobile && (
               <div style={{
                 position: 'absolute',
-                right: '100%',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                marginRight: '8px',
+                // For horizontal layout, show tooltip above; for vertical, show to the left
+                ...(horizontal ? {
+                  bottom: '100%',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  marginBottom: '8px'
+                } : {
+                  right: '100%',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  marginRight: '8px'
+                }),
                 backgroundColor: 'rgba(0, 0, 0, 0.9)',
                 color: '#fff',
                 padding: '4px 8px',
@@ -215,9 +251,26 @@ const RecycleTabs = ({ outputs = [], isMobile = false }) => {
                 ★
               </div>
             )}
-            {/* Desktop: Always show name below image */}
-            {!isMobile && (
+            {/* Desktop: Always show name below image (except in horizontal mode) */}
+            {!isMobile && !horizontal && (
               <div style={{...styles.recycleTabNameDesktop, pointerEvents: 'none'}}>
+                {output.name}
+              </div>
+            )}
+            {/* Horizontal mode: Show truncated name */}
+            {horizontal && !isMobile && (
+              <div style={{
+                fontSize: '8px',
+                lineHeight: '1.2',
+                color: theme.textDim,
+                textAlign: 'center',
+                marginTop: '2px',
+                width: '48px',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                pointerEvents: 'none'
+              }}>
                 {output.name}
               </div>
             )}

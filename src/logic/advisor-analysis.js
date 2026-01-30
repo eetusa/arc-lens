@@ -100,8 +100,8 @@ export class AdvisorAnalysis {
         this.demand.totalRequired += amount;
     }
 
-    addProjectRequirement(phaseName, phaseId, amount) {
-        this.demand.projects.push({ phase: phaseName, phaseId, amount });
+    addProjectRequirement(projectName, phaseName, phaseId, amount) {
+        this.demand.projects.push({ project: projectName, phase: phaseName, phaseId, amount });
         this.demand.totalRequired += amount;
     }
 

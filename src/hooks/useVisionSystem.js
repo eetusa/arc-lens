@@ -10,7 +10,7 @@ export function useVisionSystem(
   prioritySettings = {},
   inventoryOverride = false,
   isMobile = false,
-  projectPhase = 0,
+  projectPhases = {},
   questDetectionEnabled = false,
   onQuestsDetected = null
 ) {
@@ -22,6 +22,7 @@ export function useVisionSystem(
   const menuDebugRef = useRef(null);
   const mainMenuDebugRef = useRef(null);
   const playTabDebugRef = useRef(null);
+  const questOcrDebugRef = useRef(null);
   const workerRef = useRef(null);
   const isLooping = useRef(false);
   const offscreenRef = useRef(null);
@@ -147,6 +148,19 @@ export function useVisionSystem(
         if (playTabCanvas.width !== width) playTabCanvas.width = width;
         if (playTabCanvas.height !== height) playTabCanvas.height = height;
         playTabCanvas.getContext('2d').putImageData(
+          new ImageData(new Uint8ClampedArray(buffer), width, height), 0, 0
+        );
+      }
+    }
+
+    // H. Quest OCR Debug
+    if (payload.questOcrDebug && questOcrDebugRef.current) {
+      const questOcrCanvas = questOcrDebugRef.current;
+      const { width, height, buffer } = payload.questOcrDebug;
+      if (width > 0 && buffer) {
+        if (questOcrCanvas.width !== width) questOcrCanvas.width = width;
+        if (questOcrCanvas.height !== height) questOcrCanvas.height = height;
+        questOcrCanvas.getContext('2d').putImageData(
           new ImageData(new Uint8ClampedArray(buffer), width, height), 0, 0
         );
       }
@@ -287,10 +301,13 @@ export function useVisionSystem(
         }
 
         if (type === 'RESULT') {
-          handleWorkerResult(payload);
+          // Only process results if we're still actively streaming
+          if (isLooping.current) {
+            handleWorkerResult(payload);
 
-          // --- LOOP TRIGGER ---
-          scheduleNextFrame();
+            // --- LOOP TRIGGER ---
+            scheduleNextFrame();
+          }
         }
       };
     }).catch((err) => {
@@ -314,14 +331,14 @@ export function useVisionSystem(
           userPriorities: prioritySettings.userPriorities || [],
           // Inventory override for debug mode
           inventoryOverride: inventoryOverride,
-          // Project phase
-          projectPhase: projectPhase || 0,
+          // Project phases (dynamic, keyed by project ID)
+          projectPhases: projectPhases || {},
           // Quest auto-detection
           questDetectionEnabled: questDetectionEnabled
         }
       });
     }
-  }, [stationLevels, activeQuests, prioritySettings, inventoryOverride, projectPhase, questDetectionEnabled]);
+  }, [stationLevels, activeQuests, prioritySettings, inventoryOverride, projectPhases, questDetectionEnabled]);
 
   // --- START CAPTURE ACTION ---
   const startCapture = async () => {
@@ -399,6 +416,7 @@ export function useVisionSystem(
     menuDebugRef,
     mainMenuDebugRef,
     playTabDebugRef,
+    questOcrDebugRef,
 
     // State
     isStreaming,
@@ -412,6 +430,7 @@ export function useVisionSystem(
     isInPlayTab,
 
     // Actions
-    startCapture
+    startCapture,
+    stopCapture
   };
 }

@@ -14,13 +14,13 @@ export const QuestStatus = Object.freeze({
 });
 
 export const STATIONS_DATA = [
+  { id: "Scrappy",            min: 1, max: 5 },
   { id: "Gunsmith",           min: 0, max: 3 },
   { id: "Gear Bench",         min: 0, max: 3 },
-  { id: "Medical Lab",        min: 0, max: 3 },
+  { id: "Refiner",            min: 0, max: 3 },
   { id: "Explosives Station", min: 0, max: 3 },
   { id: "Utility Station",    min: 0, max: 3 },
-  { id: "Refiner",            min: 0, max: 3 },
-  { id: "Scrappy",            min: 1, max: 5 }
+  { id: "Medical Lab",        min: 0, max: 3 }
 ];
 
 export const GET_DEFAULT_LEVELS = () => {

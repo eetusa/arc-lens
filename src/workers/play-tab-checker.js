@@ -16,7 +16,7 @@ export class PlayTabChecker {
     this.YELLOW_V_MAX = 255;
 
     // Detection threshold - percentage of ROI that must be yellow
-    this.MIN_YELLOW_PERCENT = 0.97; // 97% of ROI must be yellow (strict for static UI)
+    this.MIN_YELLOW_PERCENT = 0.92; // 92% of ROI must be yellow
 
     // ROI configuration - bottom right area where PLAY button appears
     this.ROI_X_PERCENT = 0.913;     // Start at 91.3% from left

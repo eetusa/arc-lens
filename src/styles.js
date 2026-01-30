@@ -5,6 +5,7 @@ export const theme = {
   accent: '#0078d4',
   textMain: '#e0e0e0',
   textDim: '#666',
+  textMuted: '#888',
   success: '#00ff00',
   off: '#333333',
   glow: '0 0 20px rgba(0, 120, 212, 0.15)'
@@ -281,8 +282,21 @@ export const styles = {
     position: 'relative' // Important for absolute dropdown positioning
   },
   sectionTitle: {
-    fontSize: '11px', color: theme.textMain, fontWeight: 'bold',
-    letterSpacing: '1px', marginBottom: '10px', display: 'block'
+    fontSize: '10px',
+    color: theme.textDim,
+    fontWeight: '600',
+    letterSpacing: '1px',
+    marginBottom: '8px',
+    display: 'block',
+    textTransform: 'uppercase'
+  },
+  // Section card for sidebar - unified container
+  sidebarSection: {
+    backgroundColor: 'rgba(255,255,255,0.02)',
+    borderRadius: '8px',
+    padding: '12px',
+    marginBottom: '12px',
+    border: `1px solid rgba(255,255,255,0.04)`
   },
   inputWrapper: {
     position: 'relative',
@@ -810,7 +824,7 @@ export const styles = {
     marginLeft: '-1px', // Overlap with card border
     paddingTop: '20px'
   },
-  recycleTab: (index) => ({
+  recycleTab: (_index) => ({
     position: 'relative',
     width: '60px',
     minHeight: '82px', // Taller to fit name below image
@@ -894,5 +908,474 @@ export const styles = {
     WebkitLineClamp: 2,
     WebkitBoxOrient: 'vertical',
     wordBreak: 'break-word'
+  },
+  // --- TWO-PANEL LAYOUT ---
+  twoPanelContainer: {
+    display: 'flex',
+    alignItems: 'stretch',
+    gap: '16px',
+    maxWidth: '1100px',
+    width: '100%',
+    justifyContent: 'center'
+  },
+  itemAdvisorPanel: {
+    flex: '1 1 auto',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    minWidth: 0
+  },
+  questHelperPanel: {
+    flex: '0 0 300px',
+    maxWidth: '300px',
+    minWidth: '250px',
+    backgroundColor: theme.cardBg,
+    border: `1px solid ${theme.border}`,
+    borderRadius: '12px',
+    boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
+    maxHeight: '500px'
+  },
+  questHelperHeader: {
+    padding: '12px 16px',
+    borderBottom: `1px solid ${theme.border}`,
+    backgroundColor: 'rgba(255,255,255,0.03)',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexShrink: 0
+  },
+  questHelperTitle: {
+    fontSize: '11px',
+    fontWeight: 'bold',
+    color: theme.textMain,
+    letterSpacing: '1px',
+    textTransform: 'uppercase'
+  },
+  questHelperContent: {
+    flex: 1,
+    overflowY: 'auto',
+    padding: '12px'
+  },
+  questHelperEmpty: {
+    textAlign: 'center',
+    color: theme.textDim,
+    fontSize: '12px',
+    padding: '20px 16px',
+    lineHeight: '1.5'
+  },
+  // --- QUEST ACCORDION ---
+  questAccordion: {
+    borderRadius: '8px',
+    border: `1px solid ${theme.border}`,
+    marginBottom: '8px',
+    overflow: 'hidden',
+    backgroundColor: 'rgba(255,255,255,0.02)'
+  },
+  questAccordionHeader: (isExpanded) => ({
+    padding: '10px 12px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    cursor: 'pointer',
+    backgroundColor: isExpanded ? 'rgba(0, 120, 212, 0.1)' : 'transparent',
+    borderBottom: isExpanded ? `1px solid ${theme.border}` : 'none',
+    transition: 'background-color 0.2s'
+  }),
+  questAccordionChevron: (isExpanded) => ({
+    color: theme.accent,
+    fontSize: '12px',
+    transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
+    transition: 'transform 0.2s'
+  }),
+  questAccordionTitle: {
+    flex: 1,
+    fontSize: '12px',
+    fontWeight: '600',
+    color: theme.textMain,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap'
+  },
+  questAccordionBody: {
+    padding: '10px 12px'
+  },
+  questStepList: {
+    listStyle: 'none',
+    margin: 0,
+    padding: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px'
+  },
+  questStep: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '8px',
+    fontSize: '11px',
+    lineHeight: '1.5',
+    color: theme.textDim
+  },
+  questStepNumber: {
+    flexShrink: 0,
+    width: '18px',
+    height: '18px',
+    borderRadius: '50%',
+    backgroundColor: 'rgba(0, 120, 212, 0.2)',
+    border: `1px solid ${theme.accent}`,
+    color: theme.accent,
+    fontSize: '10px',
+    fontWeight: 'bold',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  questStepText: {
+    flex: 1,
+    paddingTop: '1px'
+  },
+  // --- MOBILE BOTTOM SHEET ---
+  bottomSheetOverlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    zIndex: 150,
+    opacity: 0,
+    pointerEvents: 'none',
+    transition: 'opacity 0.3s ease'
+  },
+  bottomSheetOverlayVisible: {
+    opacity: 1,
+    pointerEvents: 'auto'
+  },
+  bottomSheet: {
+    position: 'fixed',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: theme.cardBg,
+    borderTopLeftRadius: '16px',
+    borderTopRightRadius: '16px',
+    boxShadow: '0 -10px 40px rgba(0,0,0,0.5)',
+    zIndex: 160,
+    transform: 'translateY(100%)',
+    transition: 'transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)',
+    maxHeight: '70vh',
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  bottomSheetOpen: {
+    transform: 'translateY(0)'
+  },
+  bottomSheetHandle: {
+    padding: '12px',
+    display: 'flex',
+    justifyContent: 'center',
+    flexShrink: 0
+  },
+  bottomSheetHandleBar: {
+    width: '40px',
+    height: '4px',
+    backgroundColor: theme.border,
+    borderRadius: '2px'
+  },
+  bottomSheetHeader: {
+    padding: '0 16px 12px',
+    borderBottom: `1px solid ${theme.border}`,
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexShrink: 0
+  },
+  bottomSheetTitle: {
+    fontSize: '14px',
+    fontWeight: 'bold',
+    color: theme.textMain
+  },
+  bottomSheetClose: {
+    width: '28px',
+    height: '28px',
+    padding: 0,
+    borderRadius: '50%',
+    backgroundColor: 'transparent',
+    border: `1px solid ${theme.border}`,
+    color: theme.textDim,
+    fontSize: '18px',
+    lineHeight: 1,
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  bottomSheetContent: {
+    flex: 1,
+    overflowY: 'auto',
+    padding: '16px',
+    WebkitOverflowScrolling: 'touch'
+  },
+  // --- QUEST HELPER TOGGLE BUTTON (Mobile) ---
+  questHelperToggleButton: {
+    position: 'fixed',
+    bottom: '16px',
+    right: '16px',
+    width: '48px',
+    height: '48px',
+    borderRadius: '50%',
+    backgroundColor: theme.cardBg,
+    border: `1px solid ${theme.accent}`,
+    color: theme.accent,
+    fontSize: '20px',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
+    zIndex: 100
+  },
+  // --- QUEST HELPER SIDEBAR TOGGLE ---
+  questHelperToggleContainer: {
+    marginTop: '20px',
+    borderTop: `1px solid ${theme.border}`,
+    paddingTop: '15px'
+  },
+  // --- FULL-HEIGHT PANEL LAYOUT (Desktop) ---
+  // Main app container - full viewport flex column with background image + noise
+  appContainerPanel: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100vw',
+    height: '100vh',
+    margin: 0,
+    padding: 0,
+    boxSizing: 'border-box',
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: theme.bg,
+    // TV static noise + darkening gradient + background image
+    backgroundImage: `
+      url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.4"/%3E%3C/svg%3E'),
+      radial-gradient(circle, rgba(60, 54, 65, 0.2) 10%, rgba(20, 27, 41, 1) 100%),
+      url('/arclensbg1_cropped.avif')
+    `,
+    backgroundSize: '150px 150px, cover, cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'repeat, no-repeat, no-repeat',
+    backgroundBlendMode: 'overlay, normal, normal',
+    color: theme.textMain,
+    fontFamily: '"Segoe UI", Roboto, Helvetica, sans-serif',
+    overflow: 'hidden'
+  },
+  // Full-width header
+  header: {
+    height: '44px',
+    minHeight: '44px',
+    width: '100%',
+    backgroundColor: theme.cardBg,
+    borderBottom: `1px solid ${theme.border}`,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '0 16px',
+    boxSizing: 'border-box',
+    zIndex: 100,
+    flexShrink: 0
+  },
+  headerLeft: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px'
+  },
+  headerCenter: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px'
+  },
+  headerRight: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px'
+  },
+  headerBrand: {
+    fontSize: '13px',
+    fontWeight: '600',
+    letterSpacing: '1.5px',
+    color: 'rgba(255, 255, 255, 0.8)',
+    textTransform: 'uppercase',
+    userSelect: 'none'
+  },
+  // Main content area - holds all three panels
+  mainContentPanel: {
+    flex: 1,
+    display: 'flex',
+    overflow: 'hidden',
+    minHeight: 0
+  },
+  // Left config sidebar panel
+  configSidebarPanel: (isOpen) => ({
+    width: isOpen ? '280px' : '0px',
+    minWidth: isOpen ? '280px' : '0px',
+    height: '100%',
+    backgroundColor: 'rgba(15, 15, 15, 0.98)',
+    borderRight: isOpen ? `1px solid ${theme.border}` : 'none',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
+    transition: 'width 0.3s cubic-bezier(0.4, 0.0, 0.2, 1), min-width 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)'
+  }),
+  configSidebarContent: {
+    flex: 1,
+    overflowY: 'auto',
+    padding: '12px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '2px'
+  },
+  // Center advisor panel - flexible width
+  advisorPanelContainer: (hasLeftPanel, hasRightPanel) => ({
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    padding: '24px',
+    boxSizing: 'border-box',
+    // When both panels are hidden, add max-width to center content
+    ...(!hasLeftPanel && !hasRightPanel && {
+      maxWidth: '900px',
+      margin: '0 auto'
+    })
+  }),
+  // Container for advisor card + recycle tabs
+  advisorCardWrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    maxWidth: '750px',
+    height: '100%',
+    maxHeight: '600px',
+    gap: '0'
+  },
+  // Advisor card itself (within the panel)
+  advisorCardPanel: {
+    display: 'flex',
+    flex: 1,
+    backgroundColor: theme.cardBg,
+    border: `1px solid ${theme.border}`,
+    borderRadius: '12px',
+    boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
+    overflow: 'hidden',
+    position: 'relative',
+    zIndex: 2  // Above recycle section which slides under
+  },
+  // Right quest helper panel
+  questHelperPanelFull: (isOpen) => ({
+    width: isOpen ? '360px' : '0px',
+    minWidth: isOpen ? '360px' : '0px',
+    height: '100%',
+    backgroundColor: theme.cardBg,
+    borderLeft: isOpen ? `1px solid ${theme.border}` : 'none',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
+    transition: 'width 0.3s cubic-bezier(0.4, 0.0, 0.2, 1), min-width 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)'
+  }),
+  questHelperPanelHeader: {
+    padding: '16px',
+    borderBottom: `1px solid ${theme.border}`,
+    backgroundColor: 'rgba(255,255,255,0.03)',
+    flexShrink: 0
+  },
+  questHelperPanelTitle: {
+    fontSize: '12px',
+    fontWeight: 'bold',
+    color: theme.textMain,
+    letterSpacing: '1px',
+    textTransform: 'uppercase',
+    margin: 0
+  },
+  questHelperPanelContent: {
+    flex: 1,
+    overflowY: 'auto',
+    padding: '16px'
+  },
+  questHelperMapPlaceholder: {
+    marginTop: '20px',
+    padding: '24px',
+    backgroundColor: 'rgba(255,255,255,0.02)',
+    border: `1px dashed ${theme.border}`,
+    borderRadius: '8px',
+    textAlign: 'center'
+  },
+  questHelperMapPlaceholderText: {
+    fontSize: '11px',
+    color: theme.textDim,
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px'
+  },
+  // Horizontal recycle section (inside advisor panel)
+  recycleSectionHorizontal: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    padding: '12px 16px',
+    paddingTop: '28px',  // Extra padding to account for overlap
+    marginTop: '-16px',  // Slide up further under the card
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    borderTopLeftRadius: 0,  // Sharp top corners
+    borderTopRightRadius: 0,
+    borderBottomLeftRadius: '12px',  // Rounded bottom corners
+    borderBottomRightRadius: '12px',
+    overflowX: 'auto',
+    flexShrink: 0,
+    position: 'relative',
+    zIndex: 1  // Below the card (card is z-index 2)
+  },
+  recycleSectionLabel: {
+    fontSize: '10px',
+    fontWeight: 'bold',
+    color: '#00bcd4',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px',
+    flexShrink: 0,
+    marginRight: '4px'
+  },
+  recycleSectionItems: {
+    display: 'flex',
+    gap: '8px',
+    alignItems: 'center'
+  },
+  recycleTabHorizontal: {
+    position: 'relative',
+    width: '56px',
+    minWidth: '56px',
+    height: '70px',
+    backgroundColor: theme.cardBg,
+    border: `1px solid ${theme.border}`,
+    borderRadius: '6px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '4px',
+    boxSizing: 'border-box',
+    cursor: 'default',
+    flexShrink: 0
+  },
+  // Debug feeds container for panel layout
+  debugFeedsContainer: {
+    position: 'fixed',
+    bottom: '20px',
+    left: '20px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '10px',
+    zIndex: 50
   }
 };

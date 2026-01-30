@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { styles, theme } from '../styles';
 
-const ItemSearcher = ({ allItems, onSelect, compact = false }) => {
+const ItemSearcher = ({ allItems, onSelect, compact = false, embedded = false }) => {
   const [inputValue, setInputValue] = useState("");
   const [isFocused, setIsFocused] = useState(false);
 
@@ -81,11 +81,16 @@ const ItemSearcher = ({ allItems, onSelect, compact = false }) => {
   }
 
   return (
-    <div style={styles.questContainer}>
-      <span style={styles.sectionTitle}>ITEM SEARCH</span>
+    <div style={embedded ? {} : styles.questContainer}>
+      {!embedded && <span style={styles.sectionTitle}>Item Search</span>}
       <div style={styles.inputWrapper}>
         <input
-          style={{...styles.input, borderColor: isFocused ? theme.accent : theme.border}}
+          style={{
+            ...styles.input,
+            borderColor: isFocused ? theme.accent : theme.border,
+            fontSize: '11px',
+            padding: '6px 8px'
+          }}
           placeholder="Type item name..."
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}

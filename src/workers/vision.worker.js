@@ -235,6 +235,7 @@ async function processFrame({ width, height, buffer, bitmap }) {
         // Only check when quest detection is enabled
         let mainMenuDebugData = null;
         let playTabDebugData = null;
+        let questOcrDebugData = null;
 
         if (questDetectionEnabled && mainMenuChecker && mainMenuChecker.ready) {
             const currentTime = Date.now();
@@ -271,6 +272,9 @@ async function processFrame({ width, height, buffer, bitmap }) {
                                 }
                             }
                         );
+
+                        // Capture debug data for quest OCR
+                        questOcrDebugData = questResult.debug;
 
                         // Final update with complete results
                         if (questResult.detectedQuests.length > 0 &&
@@ -340,6 +344,7 @@ async function processFrame({ width, height, buffer, bitmap }) {
             if (menuDebugData && menuDebugData.buffer) transfers.push(menuDebugData.buffer);
             if (mainMenuDebugData && mainMenuDebugData.buffer) transfers.push(mainMenuDebugData.buffer);
             if (playTabDebugData && playTabDebugData.buffer) transfers.push(playTabDebugData.buffer);
+            if (questOcrDebugData && questOcrDebugData.buffer) transfers.push(questOcrDebugData.buffer);
             postMessage({
                 type: 'RESULT',
                 payload: {
@@ -349,6 +354,7 @@ async function processFrame({ width, height, buffer, bitmap }) {
                     menuDebug: menuDebugData,
                     mainMenuDebug: mainMenuDebugData,
                     playTabDebug: playTabDebugData,
+                    questOcrDebug: questOcrDebugData,
                     isInMainMenu: isInMainMenu,
                     isInPlayTab: isInPlayTab
                 }
@@ -491,6 +497,7 @@ async function processFrame({ width, height, buffer, bitmap }) {
         if (menuDebugData) transferList.push(menuDebugData.buffer);
         if (mainMenuDebugData && mainMenuDebugData.buffer) transferList.push(mainMenuDebugData.buffer);
         if (playTabDebugData && playTabDebugData.buffer) transferList.push(playTabDebugData.buffer);
+        if (questOcrDebugData && questOcrDebugData.buffer) transferList.push(questOcrDebugData.buffer);
 
         postMessage({
             type: 'RESULT',
@@ -501,6 +508,7 @@ async function processFrame({ width, height, buffer, bitmap }) {
                 menuDebug: menuDebugData,
                 mainMenuDebug: mainMenuDebugData,
                 playTabDebug: playTabDebugData,
+                questOcrDebug: questOcrDebugData,
                 isInMainMenu: isInMainMenu,
                 isInPlayTab: isInPlayTab
             }

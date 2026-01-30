@@ -43,6 +43,18 @@ body {
   }
 }
 
+/* Capture button attention-grabbing pulse */
+@keyframes captureButtonPulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(46, 125, 50, 0.4), 0 2px 8px rgba(0,0,0,0.3);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(46, 125, 50, 0.7), 0 0 40px rgba(46, 125, 50, 0.3), 0 2px 8px rgba(0,0,0,0.3);
+    transform: scale(1.02);
+  }
+}
+
 /* Instant tooltip for recycle tabs */
 .recycle-tab:hover .recycle-tooltip {
   opacity: 1 !important;
