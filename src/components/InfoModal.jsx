@@ -259,7 +259,7 @@ function InfoModal({ onClose, currentVersion, isNewVersion, onVersionSeen }) {
             </p>
           </div>
 
-          {/* Mobile Companion - NEW FEATURE */}
+          {/* Quest Helper - NEW FEATURE */}
           <div style={{
             ...styles.modalSection,
             background: 'linear-gradient(135deg, rgba(0, 191, 255, 0.1) 0%, rgba(0, 255, 128, 0.1) 100%)',
@@ -273,7 +273,7 @@ function InfoModal({ onClose, currentVersion, isNewVersion, onVersionSeen }) {
               alignItems: 'center',
               gap: '8px'
             }}>
-              Mobile Companion
+              Quest Helper
               <span style={{
                 fontSize: '10px',
                 background: '#00bfff',
@@ -284,30 +284,29 @@ function InfoModal({ onClose, currentVersion, isNewVersion, onVersionSeen }) {
               }}>NEW</span>
             </span>
             <p style={{ margin: '0 0 12px 0' }}>
-              Only have one monitor? Use your phone as a second screen!
-              Join a session from your mobile device to see item recommendations
-              in real-time while you play.
+              Track your active quests with detailed objectives, rewards, and interactive maps!
+              See exactly where to go with quest location markers.
             </p>
             <div style={{ fontSize: '13px', color: '#a0a0a0' }}>
-              <strong style={{ color: '#ccc' }}>How it works:</strong>
-              <ol style={{ ...styles.modalList, marginTop: '8px', marginBottom: 0 }}>
+              <strong style={{ color: '#ccc' }}>Features:</strong>
+              <ul style={{ ...styles.modalList, marginTop: '8px', marginBottom: 0 }}>
                 <li style={styles.modalListItem}>
-                  Start a session on your PC with <strong>"START CAPTURE"</strong>
+                  View quest objectives and rewards at a glance
                 </li>
                 <li style={styles.modalListItem}>
-                  Click <strong>"Connect Mobile"</strong> to display a QR code
+                  Interactive maps with pan and zoom
                 </li>
                 <li style={styles.modalListItem}>
-                  Scan the QR code with your phone, or enter the Session ID manually as a fallback
+                  Quest location markers show exactly where to go
                 </li>
                 <li style={styles.modalListItem}>
-                  Your phone will display recommendations as you hover over items on PC
+                  Upper/lower level toggle for multi-floor areas
                 </li>
-              </ol>
+              </ul>
             </div>
           </div>
 
-          {/* How to use */}
+          {/* How to use - Desktop */}
           <div style={styles.modalSection}>
             <span style={styles.modalSectionTitle}>How to use (Desktop)</span>
             <ol style={styles.modalList}>
@@ -323,6 +322,26 @@ function InfoModal({ onClose, currentVersion, isNewVersion, onVersionSeen }) {
               <li style={styles.modalListItem}>
                 Configure your station levels and active quests using the sidebar
                 (click the <strong>&#8249;</strong> button on the right edge)
+              </li>
+            </ol>
+          </div>
+
+          {/* How to use - Mobile */}
+          <div style={styles.modalSection}>
+            <span style={styles.modalSectionTitle}>How to use (Mobile Companion)</span>
+            <p style={{ margin: '0 0 12px 0', color: '#a0a0a0' }}>
+              Only have one monitor? Use your phone as a second screen to view recommendations
+              while you play on PC.
+            </p>
+            <ol style={styles.modalList}>
+              <li style={styles.modalListItem}>
+                On your <strong>PC</strong>: Start a capture session and click <strong>"Connect Mobile"</strong>
+              </li>
+              <li style={styles.modalListItem}>
+                On your <strong>phone</strong>: Scan the QR code or enter the Session ID manually
+              </li>
+              <li style={styles.modalListItem}>
+                Your phone will display item recommendations in real-time as you hover over items on PC
               </li>
             </ol>
           </div>
