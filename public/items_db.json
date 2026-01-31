@@ -63928,5 +63928,60 @@
         "weight": 0.25,
         "stackSize": 1,
         "description": "Opens a door somewhere on"
+    },
+    "looting_mk_3_safekeeper": {
+        "id": "looting_mk_3_safekeeper",
+        "name": "Looting Mk. 3 (Safekeeper)",
+        "updatedAt": "2026-01-30T23:33:30.824Z",
+        "foundIn": [],
+        "maps": [],
+        "rarity": "epic",
+        "type": "augment",
+        "value": 5000,
+        "weight": 5,
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "advanced_electrical_components",
+                    "name": "Advanced Electrical Components",
+                    "rarity": "rare",
+                    "type": "refined material",
+                    "value": 1750,
+                    "icon": "/items/icons/advanced_electrical_components.webp",
+                    "foundIn": [
+                        "electrical"
+                    ],
+                    "updatedAt": "2025-10-31T07:10:25.404Z"
+                },
+                "amount": 1
+            },
+            {
+                "item": {
+                    "id": "processor",
+                    "name": "Processor",
+                    "rarity": "rare",
+                    "type": "topside material",
+                    "value": 500,
+                    "icon": "/items/icons/processor.webp",
+                    "foundIn": [
+                        "technological"
+                    ],
+                    "updatedAt": "2025-10-20T11:29:16.330Z"
+                },
+                "amount": 1
+            }
+        ]
+    },
+    "tactical_mk_3_revival": {
+        "id": "tactical_mk_3_revival",
+        "name": "Tactical Mk. 3 (Revival)",
+        "updatedAt": "2026-01-30T23:33:31.416Z",
+        "foundIn": [],
+        "maps": [],
+        "rarity": "epic",
+        "type": "augment",
+        "value": 5000,
+        "weight": 3,
+        "description": "This augment includes an"
     }
 }

@@ -65,16 +65,18 @@ export const styles = {
     zIndex: 10
   },
   infoCol: {
-    flex: 1,
+    flex: '1 0 auto', // Grows to fill space, does NOT shrink
+    minWidth: '280px', // Protect analytics from being squeezed
     padding: '24px',
     display: 'flex',
     flexDirection: 'column',
-    // CRITICAL FIX: explicit overflow hidden helps, but flex child behavior is key
     overflow: 'hidden',
     position: 'relative'
   },
   imageCol: {
-    flex: '0 0 300px', backgroundColor: '#000', display: 'flex',
+    flex: '0 1 300px', // Starts at 300px, CAN shrink
+    minWidth: '120px', // Don't go smaller than 120px
+    backgroundColor: '#000', display: 'flex',
     alignItems: 'center', justifyContent: 'center', borderRight: `1px solid ${theme.border}`,
     position: 'relative'
   },

@@ -30,9 +30,12 @@ src/
 │   ├── AdvisorCard.jsx          # Item analysis result card display
 │   ├── InfoModal.jsx            # Help, info modal, and changelog
 │   ├── ItemSearcher.jsx         # Manual item search interface
+│   ├── MapTabs.jsx              # Tab navigation for multi-map quests
+│   ├── MapViewer.jsx            # Interactive pan/zoom map with quest markers
 │   ├── PriorityModal.jsx        # Item priority configuration modal
 │   ├── PrioritySelector.jsx     # Priority selection UI component
 │   ├── ProjectPanel.jsx         # Expedition project phase tracker
+│   ├── QuestHelper.jsx          # Quest helper panel with objectives and maps
 │   ├── QuestSelector.jsx        # Quest selection and tracking UI
 │   ├── RecycleTabs.jsx          # Recycle output display tabs
 │   ├── SessionConnector.jsx     # Mobile companion session connector
@@ -43,12 +46,14 @@ src/
 │   ├── useAppMode.js            # Game/Companion mode toggle
 │   ├── useIsMobile.js           # Mobile device detection
 │   ├── usePersistentState.js    # localStorage-backed state
+│   ├── useQuestData.js          # Quest map data and marker coordinate loader
 │   ├── useSessionSync.js        # WebSocket session synchronization
 │   ├── useVersionTracking.js    # Version tracking and update detection
 │   └── useVisionSystem.js       # Web Worker manager for vision processing
 ├── utils/
 │   ├── analytics.js             # Umami analytics wrapper
 │   ├── imagePreloader.js        # Preload item images
+│   ├── mapCoords.js             # Map coordinate transformation utilities
 │   └── sessionClient.js         # PartyKit WebSocket client
 ├── workers/
 │   ├── vision.worker.js         # Main Web Worker orchestrating all CV/OCR
@@ -74,15 +79,19 @@ src/
 public/
 ├── items_db.json                # Complete item database (scraped from wiki)
 ├── quests.json                  # Quest dependency tree
+├── quests_detailed.json         # Quest objectives, rewards, and quest chains
 ├── projects.json                # Expedition project phases and requirements
 ├── priorities.json              # Developer-managed item priorities
+├── maps.json                    # Map configurations with calibrated transforms
+├── metaforge_quests.json        # Quest marker coordinates from Metaforge API
 ├── image-manifest.json          # Generated manifest for item image preloading
 ├── opencv.js                    # OpenCV.js library
 ├── en_PP-OCRv4_rec_infer.onnx   # PaddleOCR ONNX model
 ├── en_dict.txt                  # OCR vocabulary dictionary
 ├── menu_header.png              # Template for inventory menu detection
 ├── *.wasm                       # ONNX Runtime WASM files
-└── item-images/                 # Item images for display
+├── item-images/                 # Item images for display
+└── maps/                        # Map images (AVIF format, upper/lower variants)
 ```
 
 ### Test Structure
@@ -292,6 +301,40 @@ The project scraper outputs to `public/projects.json` which contains:
 - Item requirements per phase
 - Coin requirements for special phases (Load Stage)
 
+#### Quest Scraper (`scripts/quest-scraper.js`)
+Scrapes detailed quest data from the wiki (objectives, rewards, quest chains):
+```bash
+node scripts/quest-scraper.js --help           # Show all commands
+node scripts/quest-scraper.js --list           # List all wiki quests
+node scripts/quest-scraper.js --scrape <name>  # Scrape single quest
+node scripts/quest-scraper.js --scrape-all     # Scrape all quests
+node scripts/quest-scraper.js --compare        # Compare wiki vs local
+```
+
+#### Metaforge Scraper (`scripts/metaforge-scraper.js`)
+Fetches quest marker coordinates from the Metaforge API:
+```bash
+node scripts/metaforge-scraper.js --help       # Show all commands
+node scripts/metaforge-scraper.js --scrape     # Scrape all maps
+node scripts/metaforge-scraper.js --map <id>   # Scrape specific map
+```
+
+#### Map Calibrator (`scripts/map-calibrator.js`)
+Calibrates map coordinate transforms using reference points:
+```bash
+node scripts/map-calibrator.js --help          # Show all commands
+node scripts/map-calibrator.js --all           # Calibrate all maps
+node scripts/map-calibrator.js <mapId>         # Calibrate specific map
+```
+
+#### Lower Map Calibrator (`scripts/calibrate-lower-maps.js`)
+Calibrates coordinate transforms for underground/lower level map variants:
+```bash
+node scripts/calibrate-lower-maps.js --help    # Show all commands
+node scripts/calibrate-lower-maps.js --all     # Calibrate all lower maps
+node scripts/calibrate-lower-maps.js <mapId>   # Calibrate specific map
+```
+
 ## Testing
 
 ```bash
@@ -456,8 +499,11 @@ The vision worker imports multiple modules. When modifying worker code, ensure i
 ### Data Files
 - **Item database**: `public/items_db.json`
 - **Quest tree**: `public/quests.json`
+- **Quest details**: `public/quests_detailed.json`
 - **Project data**: `public/projects.json`
 - **Priorities**: `public/priorities.json`
+- **Map configs**: `public/maps.json`
+- **Quest markers**: `public/metaforge_quests.json`
 - **Image manifest**: `public/image-manifest.json`
 
 ### Logic Files

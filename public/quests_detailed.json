@@ -1,0 +1,4107 @@
+{
+  "quests": {
+    "picking_up_the_pieces": {
+      "id": "picking_up_the_pieces",
+      "name": "Picking Up The Pieces",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Picking_Up_The_Pieces",
+      "scrapedAt": "2026-01-30T23:10:33.218Z",
+      "questGiver": "Shani",
+      "nextQuest": "Clearer Skies",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Visit any area on your map with a loot category icon",
+          "type": "reach",
+          "location": "your map with a loot category icon"
+        },
+        {
+          "id": 2,
+          "text": "Loot 3 containers",
+          "type": "collect",
+          "amount": 3
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Rattler",
+          "type": "item"
+        },
+        {
+          "amount": 80,
+          "item": "Medium Ammo",
+          "type": "ammo"
+        },
+        {
+          "amount": 1,
+          "item": "Rattler III",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "trash_into_treasure": {
+      "id": "trash_into_treasure",
+      "name": "Trash Into Treasure",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Trash_Into_Treasure",
+      "scrapedAt": "2026-01-30T23:10:33.808Z",
+      "questGiver": "Shani",
+      "previousQuest": "Picking Up The Pieces",
+      "nextQuest": "Off The Radar",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Obtain 6 Wires",
+          "type": "unknown",
+          "amount": 6
+        },
+        {
+          "id": 2,
+          "text": "Obtain 1 Battery",
+          "type": "unknown",
+          "amount": 1
+        }
+      ],
+      "grantedItems": [
+        {
+          "amount": 1,
+          "item": "Binoculars"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Tactical Mk. 1",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Adrenaline Shot",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "clearer_skies": {
+      "id": "clearer_skies",
+      "name": "Clearer Skies",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Clearer_Skies",
+      "scrapedAt": "2026-01-30T23:10:34.422Z",
+      "questGiver": "Shani",
+      "previousQuest": "Picking Up The Pieces",
+      "nextQuest": "Off The Radar",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Destroy 3 ARC enemies",
+          "type": "unknown",
+          "amount": 3
+        },
+        {
+          "id": 2,
+          "text": "Get 3 ARC Alloy for Shani",
+          "type": "unknown",
+          "item": "ARC Alloy for Shani",
+          "amount": 3
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 3,
+          "item": "Sterilized Bandage",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Light Shield",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Hiker Backpack (Black Color)",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "off_the_radar": {
+      "id": "off_the_radar",
+      "name": "Off The Radar",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Off_The_Radar",
+      "scrapedAt": "2026-01-30T23:10:35.017Z",
+      "questGiver": "Shani",
+      "previousQuest": "Clearer Skies",
+      "nextQuest": "A Bad Feeling",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Visit a Field Depot",
+          "type": "reach"
+        },
+        {
+          "id": 2,
+          "text": "Repair the antenna on the roof of the Field Depot",
+          "type": "unknown",
+          "location": "roof of the Field Depot"
+        }
+      ],
+      "grantedItems": [
+        {
+          "amount": 2,
+          "item": "Remote Raider Flare"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 2,
+          "item": "Defibrillator",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Black & White (Origin Color)",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "a_bad_feeling": {
+      "id": "a_bad_feeling",
+      "name": "A Bad Feeling",
+      "wikiUrl": "https://arcraiders.wiki/wiki/A_Bad_Feeling",
+      "scrapedAt": "2026-01-30T23:10:35.606Z",
+      "questGiver": "Celeste",
+      "previousQuest": "Off The Radar",
+      "nextQuest": "Hatch Repairs",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Find and search any ARC Probe or ARC Courier",
+          "type": "locate",
+          "item": "and search any ARC Probe or ARC Courier"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 10,
+          "item": "Metal Parts",
+          "type": "item"
+        },
+        {
+          "amount": 5,
+          "item": "Steel Spring",
+          "type": "item"
+        },
+        {
+          "amount": 5,
+          "item": "Duct Tape",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "a_balanced_harvest": {
+      "id": "a_balanced_harvest",
+      "name": "A Balanced Harvest",
+      "wikiUrl": "https://arcraiders.wiki/wiki/A_Balanced_Harvest",
+      "scrapedAt": "2026-01-30T23:10:36.198Z",
+      "questGiver": "Celeste",
+      "requiredMaps": [
+        "Dam Battlegrounds"
+      ],
+      "previousQuest": "Eyes In The Sky",
+      "nextQuest": "Untended Garden",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Go to the Research & Administration building",
+          "type": "locate",
+          "location": "building"
+        },
+        {
+          "id": 2,
+          "text": "Locate Lab 1 on the upper floor above the reception",
+          "type": "locate",
+          "amount": 1,
+          "location": "upper floor above the reception"
+        },
+        {
+          "id": 3,
+          "text": "Search for any traces of the agricultural research project",
+          "type": "locate"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 3,
+          "item": "Advanced Mechanical Components",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Medium Gun Parts",
+          "type": "item"
+        },
+        {
+          "amount": 10,
+          "item": "Steel Spring",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "a_better_use": {
+      "id": "a_better_use",
+      "name": "A Better Use",
+      "wikiUrl": "https://arcraiders.wiki/wiki/A_Better_Use",
+      "scrapedAt": "2026-01-30T23:10:36.785Z",
+      "questGiver": "Tian Wen",
+      "previousQuest": "The Right Tool",
+      "nextQuest": "Greasing Her Palms",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Request in a Supply Drop from a Call Station",
+          "type": "unknown",
+          "location": "a Supply Drop from a Call Station"
+        },
+        {
+          "id": 2,
+          "text": "Loot a Supply Drop",
+          "type": "collect"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Extended Light Magazine I",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Muzzle Brake II",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Stable Stock I",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "a_lay_of_the_land": {
+      "id": "a_lay_of_the_land",
+      "name": "A Lay Of The Land",
+      "wikiUrl": "https://arcraiders.wiki/wiki/A_Lay_Of_The_Land",
+      "scrapedAt": "2026-01-30T23:10:37.376Z",
+      "questGiver": "Shani",
+      "requiredMaps": [
+        "Spaceport"
+      ],
+      "previousQuest": "A Reveal In Ruins",
+      "nextQuest": "Eyes In The Sky",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Reach the Jiangsu Warehouse",
+          "type": "interact"
+        },
+        {
+          "id": 2,
+          "text": "Find the shipping notes in the foreman's office",
+          "type": "locate",
+          "item": "the shipping notes in the foreman's office"
+        },
+        {
+          "id": 3,
+          "text": "Locate the scanners on the upper floor of Control Tower A6",
+          "type": "locate"
+        },
+        {
+          "id": 4,
+          "text": "Deliver 1 LiDAR Scanner to Shani",
+          "type": "deliver",
+          "item": "LiDAR Scanner to Shani",
+          "amount": 1,
+          "location": "Shani"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Dam Testing Annex Key",
+          "type": "key"
+        },
+        {
+          "amount": 3,
+          "item": "Zipline",
+          "type": "item"
+        },
+        {
+          "amount": 2,
+          "item": "Smoke Grenade",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "a_new_type_of_plant": {
+      "id": "a_new_type_of_plant",
+      "name": "A New Type Of Plant",
+      "wikiUrl": "https://arcraiders.wiki/wiki/A_New_Type_Of_Plant",
+      "scrapedAt": "2026-01-30T23:10:37.968Z",
+      "questGiver": "Lance",
+      "requiredMaps": [
+        "Dam Battlegrounds"
+      ],
+      "previousQuest": "Building A Library",
+      "nextQuest": "Armored Transports",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Search for the new plant near the Baron Husk in the Old Battleground",
+          "type": "locate",
+          "location": "Baron Husk in the Old Battleground"
+        },
+        {
+          "id": 2,
+          "text": "Deliver the Possibly Toxic Plant to Lance",
+          "type": "deliver",
+          "item": "the Possibly Toxic Plant to Lance",
+          "location": "Lance"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Vita Shot",
+          "type": "item"
+        },
+        {
+          "amount": 5,
+          "item": "Antiseptic",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "a_reveal_in_ruins": {
+      "id": "a_reveal_in_ruins",
+      "name": "A Reveal In Ruins",
+      "wikiUrl": "https://arcraiders.wiki/wiki/A_Reveal_In_Ruins",
+      "scrapedAt": "2026-01-30T23:10:38.558Z",
+      "questGiver": "Lance",
+      "requiredMaps": [
+        "Buried City"
+      ],
+      "previousQuest": "Medical Merchandise",
+      "nextQuest": "A Lay Of The Land",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Search for an ESR Analyzer inside any pharmacy in Buried City",
+          "type": "locate",
+          "map": "Buried City",
+          "location": "Buried City"
+        },
+        {
+          "id": 2,
+          "text": "Deliver the ESR Analyzer to Lance",
+          "type": "deliver",
+          "item": "the ESR Analyzer to Lance",
+          "location": "Lance"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Tactical Mk. 3 (Healing)",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Surge Shield Recharger",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "a_symbol_of_unification": {
+      "id": "a_symbol_of_unification",
+      "name": "A Symbol Of Unification",
+      "wikiUrl": "https://arcraiders.wiki/wiki/A_Symbol_Of_Unification",
+      "scrapedAt": "2026-01-30T23:10:39.144Z",
+      "questGiver": "Celeste",
+      "requiredMaps": [
+        "Dam Battlegrounds"
+      ],
+      "previousQuest": "Unexpected Initiative",
+      "nextQuest": "Celeste's Journals",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Reach the Formicai Outpost in Dam Battlegrounds",
+          "type": "reach",
+          "map": "Dam Battlegrounds",
+          "location": "Dam Battlegrounds"
+        },
+        {
+          "id": 2,
+          "text": "Locate the flag at the Formicai Outpost",
+          "type": "locate",
+          "location": "Formicai Outpost"
+        },
+        {
+          "id": 3,
+          "text": "Hoist the flag on the small platform overlooking the Red Lake",
+          "type": "unknown",
+          "location": "small platform overlooking the Red Lake"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 3,
+          "item": "Mod Components",
+          "type": "item"
+        },
+        {
+          "amount": 5,
+          "item": "Duct Tape",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Aviator Outfit (Dusted Cream Color)",
+          "type": "outfit"
+        }
+      ],
+      "category": "main"
+    },
+    "a_warm_place_to_rest": {
+      "id": "a_warm_place_to_rest",
+      "name": "A Warm Place To Rest",
+      "wikiUrl": "https://arcraiders.wiki/wiki/A_Warm_Place_To_Rest",
+      "scrapedAt": "2026-01-30T23:10:39.737Z",
+      "questGiver": "Apollo",
+      "requiredMaps": [
+        "Buried City"
+      ],
+      "previousQuest": "Switching The Supply",
+      "nextQuest": "Prescriptions Of The Past",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Locate the Abandoned Highway Camp",
+          "type": "locate"
+        },
+        {
+          "id": 2,
+          "text": "Search for any signs of survivors",
+          "type": "locate"
+        },
+        {
+          "id": 3,
+          "text": "Follow the red markers",
+          "type": "unknown"
+        },
+        {
+          "id": 4,
+          "text": "Inspect the grave",
+          "type": "unknown"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 3,
+          "item": "Noisemaker",
+          "type": "item"
+        },
+        {
+          "amount": 5,
+          "item": "Light Stick",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Rosary",
+          "type": "item"
+        },
+        {
+          "amount": 5,
+          "item": "Blue Light Stick",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Radio Renegade Outfit (Goggles Variant)",
+          "type": "outfit"
+        }
+      ],
+      "category": "main"
+    },
+    "after_rain_comes": {
+      "id": "after_rain_comes",
+      "name": "After Rain Comes",
+      "wikiUrl": "https://arcraiders.wiki/wiki/After_Rain_Comes",
+      "scrapedAt": "2026-01-30T23:10:40.328Z",
+      "questGiver": "Celeste",
+      "requiredMaps": [
+        "Buried City"
+      ],
+      "previousQuest": "Eyes In The Sky",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Find the flooded solar panels nearby the Grandioso Apartments The panels are in the north side of the pond east of the building itself",
+          "type": "locate",
+          "item": "the flooded solar panels nearby the Grandioso Apartments The panels are in the north side of the pond east of the building itself",
+          "location": "north side of the pond east of the building itself"
+        },
+        {
+          "id": 2,
+          "text": "Repair the solar panels using 5 Wires and 2 Battery",
+          "type": "unknown",
+          "amount": 5
+        }
+      ],
+      "grantedItems": [
+        {
+          "amount": 1,
+          "item": "Zipline"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 5,
+          "item": "Blue Light Stick",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Antiseptic",
+          "type": "item"
+        },
+        {
+          "amount": 5,
+          "item": "Durable Cloth",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "armored_transports": {
+      "id": "armored_transports",
+      "name": "Armored Transports",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Armored_Transports",
+      "scrapedAt": "2026-01-30T23:10:40.918Z",
+      "questGiver": "Tian Wen",
+      "requiredMaps": [
+        "The Blue Gate"
+      ],
+      "previousQuest": "A New Type Of Plant",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Reach the Checkpoint",
+          "type": "reach"
+        },
+        {
+          "id": 2,
+          "text": "Search the Guard huts for a Armored Patrol Key Card Note: If the player dies while carrying the Key Card, a Spare Key will be available to loot inside a Security Hut nearby to the Patrol Cars.",
+          "type": "locate",
+          "location": "loot inside a Security Hut nearby to the Patrol Cars"
+        },
+        {
+          "id": 3,
+          "text": "Reach the Traffic Tunnel near the Blue Gate Checkpoint",
+          "type": "reach",
+          "map": "Blue Gate",
+          "location": "Blue Gate Checkpoint"
+        },
+        {
+          "id": 4,
+          "text": "Find and unlock the rear door of an armored patrol car Note: There are multiple of these cars inside the tunnel, but the location of the locked car is randomized - you will have to find it on your own. It is unclear whether there is only one locked car or whether multiple can spawn. It is also unclear whether multiple players can open the same car for the quest objective.",
+          "type": "locate",
+          "item": "and unlock the rear door of an armored patrol car Note: There are multiple of these cars inside the tunnel",
+          "location": "find it on your own"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 3,
+          "item": "Smoke Grenade",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Defibrillator",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Aviator Outfit (Blue Yellow Color)",
+          "type": "outfit"
+        }
+      ],
+      "category": "main"
+    },
+    "back_on_top": {
+      "id": "back_on_top",
+      "name": "Back On Top",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Back_On_Top",
+      "scrapedAt": "2026-01-30T23:10:41.506Z",
+      "questGiver": "Tian Wen",
+      "requiredMaps": [
+        "Dam Battlegrounds",
+        "Buried City",
+        "Spaceport",
+        "The Blue Gate"
+      ],
+      "previousQuest": "Celeste's Journals",
+      "nextQuest": "Our Presence Up There",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "On Dam Battlegrounds , mark the Pattern House",
+          "type": "interact",
+          "map": "Dam Battlegrounds",
+          "location": "Dam Battlegrounds"
+        },
+        {
+          "id": 2,
+          "text": "On The Blue Gate , mark the white lookout tower south of the Warehouse Complex",
+          "type": "interact",
+          "map": "Blue Gate",
+          "location": "Blue Gate"
+        },
+        {
+          "id": 3,
+          "text": "On Spaceport , mark the South Trench Tower",
+          "type": "unknown",
+          "location": "Spaceport"
+        },
+        {
+          "id": 4,
+          "text": "On Buried City , mark the building with the mural in the Buried Properties",
+          "type": "unknown",
+          "map": "Buried City",
+          "location": "Buried City"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Renegade",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Stable Stock III",
+          "type": "item"
+        },
+        {
+          "amount": 80,
+          "item": "Medium Ammo",
+          "type": "ammo"
+        },
+        {
+          "amount": 1,
+          "item": "Renegade I",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "bees": {
+      "id": "bees",
+      "name": "Bees!",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Bees!",
+      "scrapedAt": "2026-01-30T23:10:42.099Z",
+      "questGiver": "Celeste",
+      "requiredMaps": [
+        "The Blue Gate"
+      ],
+      "previousQuest": "Flickering Threat",
+      "nextQuest": "Espresso",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Reach the Olive Grove in Blue Gate",
+          "type": "reach",
+          "map": "Blue Gate",
+          "location": "Blue Gate"
+        },
+        {
+          "id": 2,
+          "text": "Search the bee hives around the Olive Grove",
+          "type": "locate"
+        }
+      ],
+      "grantedItems": [
+        {
+          "amount": 5,
+          "item": "Yellow Light Stick"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Advanced Electrical Components",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Sensors",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "broken_monument": {
+      "id": "broken_monument",
+      "name": "Broken Monument",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Broken_Monument",
+      "scrapedAt": "2026-01-30T23:10:42.688Z",
+      "questGiver": "Tian Wen",
+      "requiredMaps": [
+        "Dam Battlegrounds"
+      ],
+      "previousQuest": "What We Left Behind",
+      "nextQuest": "Marked For Death",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Reach the hallowed grounds by the Scrap Yard",
+          "type": "reach"
+        },
+        {
+          "id": 2,
+          "text": "Search for a compass near the broken-down vehicles",
+          "type": "locate"
+        },
+        {
+          "id": 3,
+          "text": "Search for the video tape near the cylindrical containers",
+          "type": "locate",
+          "location": "cylindrical containers"
+        },
+        {
+          "id": 4,
+          "text": "Search for the old field rations in the Raider camp",
+          "type": "locate",
+          "location": "Raider camp"
+        },
+        {
+          "id": 5,
+          "text": "Deliver the First Wave Tape to Tian Wen",
+          "type": "deliver",
+          "item": "the First Wave Tape to Tian Wen",
+          "location": "Tian Wen"
+        },
+        {
+          "id": 6,
+          "text": "Deliver First Wave Compass to Tian Wen",
+          "type": "deliver",
+          "item": "First Wave Compass to Tian Wen",
+          "location": "Tian Wen"
+        },
+        {
+          "id": 7,
+          "text": "Deliver First Wave Rations to Tian Wen",
+          "type": "deliver",
+          "item": "First Wave Rations to Tian Wen",
+          "location": "Tian Wen"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Arpeggio",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Compensator II",
+          "type": "item"
+        },
+        {
+          "amount": 80,
+          "item": "Medium Ammo",
+          "type": "ammo"
+        },
+        {
+          "amount": 1,
+          "item": "Arpeggio I",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "building_a_library": {
+      "id": "building_a_library",
+      "name": "Building A Library",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Building_A_Library",
+      "scrapedAt": "2026-01-30T23:10:43.276Z",
+      "questGiver": "Apollo",
+      "requiredMaps": [
+        "Buried City"
+      ],
+      "previousQuest": "Digging Up Dirt",
+      "nextQuest": "A New Type Of Plant",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Locate the Library in the City Center",
+          "type": "locate",
+          "location": "City Center"
+        },
+        {
+          "id": 2,
+          "text": "Find 1 romance book",
+          "type": "locate",
+          "item": "romance book",
+          "amount": 1
+        },
+        {
+          "id": 3,
+          "text": "Find 1 detective book",
+          "type": "locate",
+          "item": "detective book",
+          "amount": 1
+        },
+        {
+          "id": 4,
+          "text": "Find 1 adventure book",
+          "type": "locate",
+          "item": "adventure book",
+          "amount": 1
+        },
+        {
+          "id": 5,
+          "text": "Deliver 3 books to Apollo",
+          "type": "deliver",
+          "item": "books to Apollo",
+          "amount": 3,
+          "location": "Apollo"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Explosive Mine",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Jolt Mine",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Heavy Fuze Grenade",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "celeste_s_journals": {
+      "id": "celeste_s_journals",
+      "name": "Celeste's Journals",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Celeste's_Journals",
+      "scrapedAt": "2026-01-30T23:10:43.912Z",
+      "questGiver": "Celeste",
+      "requiredMaps": [
+        "Dam Battlegrounds"
+      ],
+      "previousQuest": "A Symbol Of Unification",
+      "nextQuest": "Back On Top",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Retrieve Celeste's Journals from the South Swamp Outpost",
+          "type": "unknown"
+        },
+        {
+          "id": 2,
+          "text": "Retrieve Celeste's Journals from the northern outpost overlooking the Red Lakes",
+          "type": "unknown"
+        },
+        {
+          "id": 3,
+          "text": "Deliver 2 Journals to Celeste",
+          "type": "deliver",
+          "item": "Journals to Celeste",
+          "amount": 2,
+          "location": "Celeste"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Magnetic Accelerator",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Heavy Gun Parts",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Exodus Modules",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "communication_hideout": {
+      "id": "communication_hideout",
+      "name": "Communication Hideout",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Communication_Hideout",
+      "scrapedAt": "2026-01-30T23:10:44.532Z",
+      "questGiver": "Shani",
+      "requiredMaps": [
+        "Buried City"
+      ],
+      "previousQuest": "Lost In Transmission",
+      "nextQuest": "Into The Fray",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Reach the Red Tower in Old Town",
+          "type": "reach",
+          "location": "Old Town"
+        },
+        {
+          "id": 2,
+          "text": "Find missing battery cell",
+          "type": "locate",
+          "item": "missing battery cell"
+        },
+        {
+          "id": 3,
+          "text": "Install battery cell in the Generator",
+          "type": "unknown",
+          "location": "Generator"
+        },
+        {
+          "id": 4,
+          "text": "Enable the power on the Generator",
+          "type": "unknown",
+          "location": "Generator"
+        },
+        {
+          "id": 5,
+          "text": "Boot the antenna terminal near the Red Tower",
+          "type": "unknown",
+          "location": "Red Tower"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Anvil",
+          "type": "item"
+        },
+        {
+          "amount": 40,
+          "item": "Heavy Ammo",
+          "type": "ammo"
+        },
+        {
+          "amount": 1,
+          "item": "Anvil III",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Aviator Outfit (Crimson Racer Color)",
+          "type": "outfit"
+        }
+      ],
+      "category": "main"
+    },
+    "digging_up_dirt": {
+      "id": "digging_up_dirt",
+      "name": "Digging Up Dirt",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Digging_Up_Dirt",
+      "scrapedAt": "2026-01-30T23:10:45.143Z",
+      "questGiver": "Celeste",
+      "requiredMaps": [
+        "Buried City"
+      ],
+      "previousQuest": "Tribute To Toledo",
+      "nextQuest": "Turnabout",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Locate the Santa Maria Houses in Old Town",
+          "type": "locate",
+          "location": "Old Town"
+        },
+        {
+          "id": 2,
+          "text": "Locate the Dead Drop inside the courtyard",
+          "type": "locate"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 2,
+          "item": "Advanced Electrical Components",
+          "type": "item"
+        },
+        {
+          "amount": 2,
+          "item": "Speaker Component",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "doctor_s_orders": {
+      "id": "doctor_s_orders",
+      "name": "Doctor's Orders",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Doctor's_Orders",
+      "scrapedAt": "2026-01-30T23:10:45.750Z",
+      "questGiver": "Lance",
+      "previousQuest": "Greasing Her Palms",
+      "nextQuest": "Medical Merchandise",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Obtain 1 Syringe",
+          "type": "unknown",
+          "amount": 1
+        },
+        {
+          "id": 2,
+          "text": "Obtain 2 Antiseptic",
+          "type": "unknown",
+          "amount": 2
+        },
+        {
+          "id": 3,
+          "text": "Obtain 1 Durable Cloth",
+          "type": "unknown",
+          "amount": 1
+        },
+        {
+          "id": 4,
+          "text": "Obtain 1 Great Mullein",
+          "type": "unknown",
+          "amount": 1,
+          "location": "Mullein"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 3,
+          "item": "Adrenaline Shot",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Sterilized Bandage",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Surge Shield Recharger",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "dormant_barons": {
+      "id": "dormant_barons",
+      "name": "Dormant Barons",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Dormant_Barons",
+      "scrapedAt": "2026-01-30T23:10:46.332Z",
+      "questGiver": "Shani",
+      "requiredMaps": [
+        "Dam Battlegrounds",
+        "Spaceport",
+        "The Blue Gate"
+      ],
+      "previousQuest": "Greasing Her Palms",
+      "nextQuest": "Mixed Signals",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Loot a Baron Husk",
+          "type": "collect",
+          "location": "Husk"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 3,
+          "item": "Door Blocker",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Li'l Smoke Grenade",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "down_to_earth": {
+      "id": "down_to_earth",
+      "name": "Down To Earth",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Down_To_Earth",
+      "scrapedAt": "2026-01-30T23:10:46.919Z",
+      "questGiver": "Shani",
+      "previousQuest": "Hatch Repairs",
+      "nextQuest": "The Trifecta",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Visit a Field Depot",
+          "type": "reach"
+        },
+        {
+          "id": 2,
+          "text": "Deliver a Field Crate to Supply Station",
+          "type": "deliver",
+          "item": "Field Crate to Supply Station",
+          "location": "Supply Station"
+        },
+        {
+          "id": 3,
+          "text": "Collect the reward",
+          "type": "collect",
+          "item": "the reward"
+        }
+      ],
+      "grantedItems": [
+        {
+          "amount": 1,
+          "item": "Binoculars"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Combat Mk. 1",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Medium Shield",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "echoes_of_victory_ridge": {
+      "id": "echoes_of_victory_ridge",
+      "name": "Echoes Of Victory Ridge",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Echoes_Of_Victory_Ridge",
+      "scrapedAt": "2026-01-30T23:10:47.511Z",
+      "questGiver": "Celeste",
+      "requiredMaps": [
+        "Dam Battlegrounds"
+      ],
+      "previousQuest": "Keeping The Memory",
+      "nextQuest": "Unexpected Initiative",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Reach Victory Ridge",
+          "type": "reach"
+        },
+        {
+          "id": 2,
+          "text": "Retrieve the battle plans from the hideout under the broken highway",
+          "type": "unknown"
+        },
+        {
+          "id": 3,
+          "text": "Deliver Major Aiva's Patch to Celeste",
+          "type": "deliver",
+          "item": "Major Aiva's Patch to Celeste",
+          "location": "Celeste"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 6,
+          "item": "Crude Explosives",
+          "type": "item"
+        },
+        {
+          "amount": 2,
+          "item": "Processor",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Music Box",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "espresso": {
+      "id": "espresso",
+      "name": "Espresso",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Espresso",
+      "scrapedAt": "2026-01-30T23:10:48.102Z",
+      "questGiver": "Apollo",
+      "previousQuest": "Bees!",
+      "nextQuest": "Life Of A Pharmacist",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Find an Espresso Machine to salvage for spare parts",
+          "type": "locate",
+          "item": "an Espresso Machine to salvage for spare parts",
+          "location": "salvage for spare parts"
+        },
+        {
+          "id": 2,
+          "text": "Get the Espresso Machine Parts for Apollo",
+          "type": "unknown",
+          "item": "the Espresso Machine Parts for Apollo"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Coffee Pot",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Adrenaline Shot",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "eyes_in_the_sky": {
+      "id": "eyes_in_the_sky",
+      "name": "Eyes In The Sky",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Eyes_In_The_Sky",
+      "scrapedAt": "2026-01-30T23:10:48.753Z",
+      "questGiver": "Shani",
+      "requiredMaps": [
+        "Dam Battlegrounds",
+        "Buried City",
+        "Spaceport"
+      ],
+      "previousQuest": "A Lay Of The Land",
+      "nextQuest": "After Rain Comes",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "On Dam Battlegrounds , install a LiDAR Scanner at the top of the Control Tower.",
+          "type": "unknown",
+          "map": "Dam Battlegrounds",
+          "location": "Dam Battlegrounds"
+        },
+        {
+          "id": 2,
+          "text": "On Spaceport , install a LiDAR Scanner at the Communications Tower",
+          "type": "unknown",
+          "location": "Spaceport"
+        },
+        {
+          "id": 3,
+          "text": "On Buried City , install a LiDAR Scanner on top of the Galleria sign",
+          "type": "unknown",
+          "map": "Buried City",
+          "location": "Buried City"
+        }
+      ],
+      "grantedItems": [
+        {
+          "amount": 1,
+          "item": "Zipline"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 3,
+          "item": "Tagging Grenade",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Vita Spray",
+          "type": "item"
+        },
+        {
+          "amount": 5,
+          "item": "Light Stick",
+          "type": "item"
+        },
+        {
+          "amount": 5,
+          "item": "Yellow Light Stick",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "eyes_on_the_prize": {
+      "id": "eyes_on_the_prize",
+      "name": "Eyes On The Prize",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Eyes_On_The_Prize",
+      "scrapedAt": "2026-01-30T23:10:49.345Z",
+      "questGiver": "Tian Wen",
+      "requiredMaps": [
+        "Buried City"
+      ],
+      "previousQuest": "Market Correction",
+      "nextQuest": "Industrial Espionage",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Find the secluded roof terrace south-west of the Southern Station, look for blue tarps.",
+          "type": "locate",
+          "item": "the secluded roof terrace south-west of the Southern Station"
+        },
+        {
+          "id": 2,
+          "text": "Rewire the solar panel using 3 Wires",
+          "type": "unknown",
+          "amount": 3
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Extended Shotgun Mag II",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Extended Medium Mag II",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "flickering_threat": {
+      "id": "flickering_threat",
+      "name": "Flickering Threat",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Flickering_Threat",
+      "scrapedAt": "2026-01-30T23:10:49.967Z",
+      "questGiver": "Celeste",
+      "requiredMaps": [
+        "Dam Battlegrounds"
+      ],
+      "previousQuest": "Power Out",
+      "nextQuest": "Bees!",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Find the Generator Room",
+          "type": "locate",
+          "item": "the Generator Room"
+        },
+        {
+          "id": 2,
+          "text": "Repair the Generator Requires 4 Wires",
+          "type": "unknown",
+          "amount": 4
+        },
+        {
+          "id": 3,
+          "text": "Find the Ventilation Shaft It is the tall building to the West of the elevator, accessible via the SE door of the Generator Room",
+          "type": "locate",
+          "item": "the Ventilation Shaft It is the tall building to the West of the elevator",
+          "location": "Shaft It is the tall building to the West of the elevator"
+        },
+        {
+          "id": 4,
+          "text": "Enable the power via the power switch underneath the stairs",
+          "type": "unknown"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 5,
+          "item": "Medium Gun Parts",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Advanced Mechanical Components",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Radio Renegade Outfit (Helmet Variant)",
+          "type": "outfit"
+        }
+      ],
+      "category": "main"
+    },
+    "greasing_her_palms": {
+      "id": "greasing_her_palms",
+      "name": "Greasing Her Palms",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Greasing_Her_Palms",
+      "scrapedAt": "2026-01-30T23:10:50.558Z",
+      "questGiver": "Celeste",
+      "requiredMaps": [
+        "Dam Battlegrounds",
+        "Buried City",
+        "Spaceport"
+      ],
+      "previousQuest": "A Better Use",
+      "nextQuest": "Doctor's Orders",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "On Dam Battlegrounds visit the Locked Room in the Water Treatment Control building",
+          "type": "reach",
+          "map": "Dam Battlegrounds",
+          "location": "Dam Battlegrounds visit the Locked Room in the Water Treatment Control building"
+        },
+        {
+          "id": 2,
+          "text": "On Spaceport , scope out the rocket thrusters outside the Rocket Assembly",
+          "type": "unknown",
+          "location": "Spaceport"
+        },
+        {
+          "id": 3,
+          "text": "On Buried City , visit the barricaded area on floor 6 of the Space Travel Building",
+          "type": "reach",
+          "amount": 6,
+          "map": "Buried City",
+          "location": "Buried City"
+        }
+      ],
+      "grantedItems": [
+        {
+          "amount": 1,
+          "item": "Dam Surveillance Key"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Lure Grenade",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Speaker Component",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Electrical Components",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Lure Grenade Blueprint",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "hatch_repairs": {
+      "id": "hatch_repairs",
+      "name": "Hatch Repairs",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Hatch_Repairs",
+      "scrapedAt": "2026-01-30T23:10:51.148Z",
+      "questGiver": "Shani",
+      "previousQuest": "A Bad Feeling",
+      "nextQuest": "Down To Earth",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Repair the leaking hydraulic pipes near a Raider Hatch",
+          "type": "unknown",
+          "location": "a Raider Hatch"
+        },
+        {
+          "id": 2,
+          "text": "Search for a Hatch Key near the Raider Hatch",
+          "type": "locate",
+          "location": "Raider Hatch"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Raider Hatch Key",
+          "type": "key"
+        },
+        {
+          "amount": 1,
+          "item": "Binoculars",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "industrial_espionage": {
+      "id": "industrial_espionage",
+      "name": "Industrial Espionage",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Industrial_Espionage",
+      "scrapedAt": "2026-01-30T23:10:51.739Z",
+      "questGiver": "Tian Wen",
+      "requiredMaps": [
+        "Buried City"
+      ],
+      "previousQuest": "Eyes On The Prize",
+      "nextQuest": "Unexpected Initiative",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Find TianWen's weapon cache near the Gas Station in the Outskirts",
+          "type": "locate",
+          "item": "TianWen's weapon cache near the Gas Station in the Outskirts",
+          "location": "cache near the Gas Station in the Outskirts"
+        },
+        {
+          "id": 2,
+          "text": "Deliver the Burletta to the rival weapon cache",
+          "type": "deliver",
+          "item": "the Burletta to the rival weapon cache",
+          "location": "rival weapon cache"
+        },
+        {
+          "id": 3,
+          "text": "Plant a bug on the weapon cache",
+          "type": "unknown",
+          "location": "weapon cache"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 3,
+          "item": "Mechanical Components",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Simple Gun Parts",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "into_the_fray": {
+      "id": "into_the_fray",
+      "name": "Into The Fray",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Into_The_Fray",
+      "scrapedAt": "2026-01-30T23:10:52.340Z",
+      "questGiver": "Shani",
+      "previousQuest": "Communication Hideout",
+      "nextQuest": "Paving The Way",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Destroy a Leaper",
+          "type": "unknown"
+        },
+        {
+          "id": 2,
+          "text": "Obtain a Leaper Pulse Unit",
+          "type": "unknown",
+          "location": "a Leaper Pulse Unit"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Vulcano",
+          "type": "item"
+        },
+        {
+          "amount": 40,
+          "item": "Shotgun Ammo",
+          "type": "ammo"
+        },
+        {
+          "amount": 1,
+          "item": "Vulcano III",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Radio Renegade Outfit (Grey Color)",
+          "type": "outfit"
+        },
+        {
+          "amount": 1,
+          "item": "Backpack Charm (Burger Boy)",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "keeping_the_memory": {
+      "id": "keeping_the_memory",
+      "name": "Keeping The Memory",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Keeping_The_Memory",
+      "scrapedAt": "2026-01-30T23:10:52.934Z",
+      "questGiver": "Celeste",
+      "requiredMaps": [
+        "Dam Battlegrounds"
+      ],
+      "previousQuest": "Straight Record",
+      "nextQuest": "Echoes Of Victory Ridge",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Reach the wreckage in the Formicai Hills",
+          "type": "reach",
+          "location": "Formicai Hills"
+        },
+        {
+          "id": 2,
+          "text": "Search for the missing helmet",
+          "type": "locate"
+        },
+        {
+          "id": 3,
+          "text": "Return the helmet to the memorial",
+          "type": "unknown",
+          "location": "memorial"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 5,
+          "item": "Simple Gun Parts",
+          "type": "item"
+        },
+        {
+          "amount": 5,
+          "item": "Duct Tape",
+          "type": "item"
+        },
+        {
+          "amount": 5,
+          "item": "Magnet",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "life_of_a_pharmacist": {
+      "id": "life_of_a_pharmacist",
+      "name": "Life Of A Pharmacist",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Life_Of_A_Pharmacist",
+      "scrapedAt": "2026-01-30T23:10:53.526Z",
+      "questGiver": "Lance",
+      "requiredMaps": [
+        "Buried City"
+      ],
+      "previousQuest": "Espresso",
+      "nextQuest": "Tribute To Toledo",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Find the Arbusto Farmacia by the collapsed highway",
+          "type": "locate",
+          "item": "the Arbusto Farmacia by the collapsed highway",
+          "location": "Farmacia by the collapsed highway"
+        },
+        {
+          "id": 2,
+          "text": "Document the pharmacist's hobbies",
+          "type": "unknown"
+        },
+        {
+          "id": 3,
+          "text": "Document the pharmacist's family",
+          "type": "unknown"
+        },
+        {
+          "id": 4,
+          "text": "Document the pharmacist's taste",
+          "type": "unknown"
+        },
+        {
+          "id": 5,
+          "text": "Document the pharmacist's skills",
+          "type": "kill"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Defibrillator",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Surge Shield Recharger",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Sterilized Bandage",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "lost_in_transmission": {
+      "id": "lost_in_transmission",
+      "name": "Lost In Transmission",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Lost_In_Transmission",
+      "scrapedAt": "2026-01-30T23:10:54.111Z",
+      "questGiver": "Shani",
+      "requiredMaps": [
+        "Spaceport"
+      ],
+      "previousQuest": "Our Presence Up There",
+      "nextQuest": "Communication Hideout",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Visit Control Tower A6",
+          "type": "reach"
+        },
+        {
+          "id": 2,
+          "text": "Reach the top of Control Tower A6",
+          "type": "reach"
+        },
+        {
+          "id": 3,
+          "text": "Establish a connection from the terminal",
+          "type": "unknown",
+          "location": "from the terminal"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Snap Hook",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "marked_for_death": {
+      "id": "marked_for_death",
+      "name": "Marked For Death",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Marked_For_Death",
+      "scrapedAt": "2026-01-30T23:10:54.703Z",
+      "questGiver": "Tian Wen",
+      "requiredMaps": [
+        "Buried City"
+      ],
+      "previousQuest": "Broken Monument",
+      "nextQuest": "Market Correction",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Reach the Su Durante Warehouses in the Outskirts in Buried City",
+          "type": "interact",
+          "map": "Buried City",
+          "location": "Outskirts in Buried City"
+        },
+        {
+          "id": 2,
+          "text": "Search for Tian Wen's cache near the Warehouses",
+          "type": "locate",
+          "location": "Warehouses"
+        },
+        {
+          "id": 3,
+          "text": "Follow the clues",
+          "type": "unknown"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Shotgun Choke II",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Angled Grip II",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "market_correction": {
+      "id": "market_correction",
+      "name": "Market Correction",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Market_Correction",
+      "scrapedAt": "2026-01-30T23:10:55.405Z",
+      "questGiver": "Tian Wen",
+      "requiredMaps": [
+        "Buried City"
+      ],
+      "previousQuest": "Marked For Death",
+      "nextQuest": "Eyes On The Prize",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Locate the cache near Marano Station",
+          "type": "locate",
+          "location": "Marano Station"
+        },
+        {
+          "id": 2,
+          "text": "Sabotage the cache",
+          "type": "unknown"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Silencer II",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Extended Light Mag I",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Compensator I",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "medical_merchandise": {
+      "id": "medical_merchandise",
+      "name": "Medical Merchandise",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Medical_Merchandise",
+      "scrapedAt": "2026-01-30T23:10:56.051Z",
+      "questGiver": "Lance",
+      "requiredMaps": [
+        "Dam Battlegrounds",
+        "Buried City",
+        "Spaceport"
+      ],
+      "previousQuest": "Doctor's Orders",
+      "nextQuest": "A Reveal In Ruins",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "On Spaceport , search 2 containers in the Departure Building's exam rooms.",
+          "type": "locate",
+          "amount": 2,
+          "location": "Spaceport"
+        },
+        {
+          "id": 2,
+          "text": "Search 3 containers in the Hospital on Buried City .",
+          "type": "locate",
+          "amount": 3,
+          "map": "Buried City",
+          "location": "Hospital on Buried City"
+        },
+        {
+          "id": 3,
+          "text": "On Dam Battlegrounds , search 2 containers in the Research & Administration building's medical room.",
+          "type": "locate",
+          "amount": 2,
+          "map": "Dam Battlegrounds",
+          "location": "Dam Battlegrounds"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 3,
+          "item": "Defibrillator",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Vita Shot",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Backpack Charm (Banana)",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "mixed_signals": {
+      "id": "mixed_signals",
+      "name": "Mixed Signals",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Mixed_Signals",
+      "scrapedAt": "2026-01-30T23:10:56.643Z",
+      "questGiver": "Shani",
+      "previousQuest": "Dormant Barons",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Destroy an ARC Surveyor",
+          "type": "unknown"
+        },
+        {
+          "id": 2,
+          "text": "Obtain 1 Surveyor Vault",
+          "type": "unknown",
+          "amount": 1
+        }
+      ],
+      "grantedItems": [
+        {
+          "amount": 3,
+          "item": "Jolt Mine"
+        },
+        {
+          "amount": 2,
+          "item": "Showstopper"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Photoelectric Cloak",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Raider Hatch Key",
+          "type": "key"
+        }
+      ],
+      "category": "main"
+    },
+    "our_presence_up_there": {
+      "id": "our_presence_up_there",
+      "name": "Our Presence Up There",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Our_Presence_Up_There",
+      "scrapedAt": "2026-01-30T23:10:57.238Z",
+      "questGiver": "Shani",
+      "requiredMaps": [
+        "Dam Battlegrounds"
+      ],
+      "previousQuest": "Back On Top",
+      "nextQuest": "Lost In Transmission",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Visit the Pattern House in The Dam",
+          "type": "interact",
+          "location": "Dam"
+        },
+        {
+          "id": 2,
+          "text": "Find and flip the power switch",
+          "type": "locate",
+          "item": "and flip the power switch"
+        },
+        {
+          "id": 3,
+          "text": "Complete the antenna installation on the roof",
+          "type": "unknown",
+          "location": "on the roof"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Buried City Town Hall Key",
+          "type": "key"
+        },
+        {
+          "amount": 1,
+          "item": "Raider Hatch Key",
+          "type": "key"
+        },
+        {
+          "amount": 3,
+          "item": "Jolt Mine",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "out_of_the_shadows": {
+      "id": "out_of_the_shadows",
+      "name": "Out Of The Shadows",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Out_Of_The_Shadows",
+      "scrapedAt": "2026-01-30T23:10:57.830Z",
+      "questGiver": "Shani",
+      "previousQuest": "A Symbol Of Unification",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Destroy a Rocketeer",
+          "type": "unknown"
+        },
+        {
+          "id": 2,
+          "text": "Obtain a Rocketeer Driver",
+          "type": "unknown",
+          "location": "a Rocketeer Driver"
+        }
+      ],
+      "grantedItems": [
+        {
+          "amount": 1,
+          "item": "Medium Shield"
+        },
+        {
+          "amount": 1,
+          "item": "Combat Mk. 2"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 3,
+          "item": "Surge Shield Recharger",
+          "type": "item"
+        },
+        {
+          "amount": 2,
+          "item": "Wolfpack",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "power_out": {
+      "id": "power_out",
+      "name": "Power Out",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Power_Out",
+      "scrapedAt": "2026-01-30T23:10:58.466Z",
+      "questGiver": "Celeste",
+      "requiredMaps": [
+        "Spaceport"
+      ],
+      "previousQuest": "Prescriptions Of The Past",
+      "nextQuest": "Flickering Threat",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Find the Electrical Substation south of the Spaceport",
+          "type": "locate",
+          "item": "the Electrical Substation south of the Spaceport",
+          "location": "south of the Spaceport"
+        },
+        {
+          "id": 2,
+          "text": "Find any sign of the missing engineer",
+          "type": "locate",
+          "item": "any sign of the missing engineer"
+        },
+        {
+          "id": 3,
+          "text": "Install the fuse",
+          "type": "interact"
+        },
+        {
+          "id": 4,
+          "text": "Restore the power",
+          "type": "unknown"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 5,
+          "item": "Wires",
+          "type": "item"
+        },
+        {
+          "amount": 5,
+          "item": "Explosive Compound",
+          "type": "item"
+        },
+        {
+          "amount": 5,
+          "item": "Oil",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Radio Renegade Outfit (Bag Variant)",
+          "type": "outfit"
+        }
+      ],
+      "category": "main"
+    },
+    "prescriptions_of_the_past": {
+      "id": "prescriptions_of_the_past",
+      "name": "Prescriptions Of The Past",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Prescriptions_Of_The_Past",
+      "scrapedAt": "2026-01-30T23:10:59.052Z",
+      "questGiver": "Lance",
+      "requiredMaps": [
+        "Spaceport"
+      ],
+      "previousQuest": "A Warm Place To Rest",
+      "nextQuest": "Power Out",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Visit the Departure Building in Spaceport",
+          "type": "reach",
+          "location": "Spaceport"
+        },
+        {
+          "id": 2,
+          "text": "Find the Medical Exam Room inside the Departure Building Northwest section of 2nd floor",
+          "type": "locate",
+          "item": "the Medical Exam Room inside the Departure Building Northwest section of 2nd floor",
+          "amount": 2
+        },
+        {
+          "id": 3,
+          "text": "Search for the records",
+          "type": "locate"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Heavy Shield",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Tactical Mk. 3 (Healing)",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Adrenaline Shot",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "safe_passage": {
+      "id": "safe_passage",
+      "name": "Safe Passage",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Safe_Passage",
+      "scrapedAt": "2026-01-30T23:10:59.662Z",
+      "questGiver": "Apollo",
+      "previousQuest": "A Bad Feeling",
+      "nextQuest": "What Goes Around",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Destroy 2 ARC enemies using any explosive grenade",
+          "type": "unknown",
+          "amount": 2
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 5,
+          "item": "Li'l Smoke Grenade",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Shrapnel Grenade",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Barricade Kit",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "source_of_the_contamination": {
+      "id": "source_of_the_contamination",
+      "name": "Source Of The Contamination",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Source_Of_The_Contamination",
+      "scrapedAt": "2026-01-30T23:11:00.250Z",
+      "questGiver": "Celeste",
+      "requiredMaps": [
+        "Dam Battlegrounds"
+      ],
+      "previousQuest": "Water Troubles",
+      "nextQuest": "Switching The Supply",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Reach the Water Treatment Building in The Dam",
+          "type": "reach",
+          "location": "Dam"
+        },
+        {
+          "id": 2,
+          "text": "Search for the Flood Spill Intake near the Swamp",
+          "type": "locate",
+          "location": "Swamp"
+        },
+        {
+          "id": 3,
+          "text": "Investigate any suspicious objects",
+          "type": "unknown"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 5,
+          "item": "Steel Spring",
+          "type": "item"
+        },
+        {
+          "amount": 5,
+          "item": "Duct Tape",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Mod Components",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "sparks_fly": {
+      "id": "sparks_fly",
+      "name": "Sparks Fly",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Sparks_Fly",
+      "scrapedAt": "2026-01-30T23:11:00.840Z",
+      "questGiver": "Apollo",
+      "previousQuest": "What Goes Around",
+      "nextQuest": "Out Of The Shadows",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Destroy a Hornet with a Trigger 'Nade or Snap Blast Grenade",
+          "type": "photograph"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 4,
+          "item": "Crude Explosives",
+          "type": "item"
+        },
+        {
+          "amount": 2,
+          "item": "Processor",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Trigger 'Nade Blueprint",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "straight_record": {
+      "id": "straight_record",
+      "name": "Straight Record",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Straight_Record",
+      "scrapedAt": "2026-01-30T23:11:01.460Z",
+      "questGiver": "Celeste",
+      "requiredMaps": [
+        "Dam Battlegrounds"
+      ],
+      "previousQuest": "Broken Monument",
+      "nextQuest": "Keeping The Memory",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Reach Victory Ridge",
+          "type": "reach"
+        },
+        {
+          "id": 2,
+          "text": "Find the old EMP trap",
+          "type": "locate",
+          "item": "the old EMP trap"
+        },
+        {
+          "id": 3,
+          "text": "Disable the first power switch",
+          "type": "unknown"
+        },
+        {
+          "id": 4,
+          "text": "Disable the second power switch",
+          "type": "unknown"
+        },
+        {
+          "id": 5,
+          "text": "Disable the third power switch",
+          "type": "unknown"
+        },
+        {
+          "id": 6,
+          "text": "Shut down the EMP trap",
+          "type": "unknown"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 5,
+          "item": "Medium Gun Parts",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Advanced Mechanical Components",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "switching_the_supply": {
+      "id": "switching_the_supply",
+      "name": "Switching The Supply",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Switching_The_Supply",
+      "scrapedAt": "2026-01-30T23:11:02.051Z",
+      "questGiver": "Celeste",
+      "requiredMaps": [
+        "Spaceport"
+      ],
+      "previousQuest": "Source Of The Contamination",
+      "nextQuest": "A Warm Place To Rest",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Find the tunnels under the Spaceport",
+          "type": "locate",
+          "item": "the tunnels under the Spaceport"
+        },
+        {
+          "id": 2,
+          "text": "Find and turn the valve in the tunnels under Spaceport",
+          "type": "locate",
+          "item": "and turn the valve in the tunnels under Spaceport",
+          "location": "tunnels under Spaceport"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Spaceport Trench Tower Key",
+          "type": "key"
+        },
+        {
+          "amount": 3,
+          "item": "Synthesized Fuel",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Radio Renegade Outfit (Blue Color)",
+          "type": "outfit"
+        }
+      ],
+      "category": "main"
+    },
+    "the_right_tool": {
+      "id": "the_right_tool",
+      "name": "The Right Tool",
+      "wikiUrl": "https://arcraiders.wiki/wiki/The_Right_Tool",
+      "scrapedAt": "2026-01-30T23:11:02.640Z",
+      "questGiver": "Tian Wen",
+      "previousQuest": "A Bad Feeling",
+      "nextQuest": "A Better Use",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Destroy a Fireball",
+          "type": "unknown"
+        },
+        {
+          "id": 2,
+          "text": "Destroy a Hornet",
+          "type": "unknown"
+        },
+        {
+          "id": 3,
+          "text": "Destroy a Turret",
+          "type": "unknown"
+        }
+      ],
+      "grantedItems": [
+        {
+          "amount": 1,
+          "item": "Ferro"
+        },
+        {
+          "amount": 20,
+          "item": "Heavy Ammo"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Stitcher",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Extended Light Mag I",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Stitcher II",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "the_root_of_the_matter": {
+      "id": "the_root_of_the_matter",
+      "name": "The Root Of The Matter",
+      "wikiUrl": "https://arcraiders.wiki/wiki/The_Root_Of_The_Matter",
+      "scrapedAt": "2026-01-30T23:11:03.261Z",
+      "questGiver": "Celeste",
+      "requiredMaps": [
+        "Buried City"
+      ],
+      "previousQuest": "Untended Garden",
+      "nextQuest": "Water Troubles",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Go to the Research Building",
+          "type": "locate",
+          "location": "Research Building"
+        },
+        {
+          "id": 2,
+          "text": "Search the seed vault in the \"room with a great view\" Park-facing room the northern section of the building, on floor where the upward and downward zips align.",
+          "type": "locate",
+          "location": "of the building"
+        },
+        {
+          "id": 3,
+          "text": "Deliver the Experimental Seed Sample to Celeste",
+          "type": "deliver",
+          "item": "the Experimental Seed Sample to Celeste",
+          "location": "Celeste"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Backpack Charm (Succulent)",
+          "type": "item"
+        },
+        {
+          "amount": 1000,
+          "item": "Coins",
+          "type": "coins"
+        }
+      ],
+      "category": "main"
+    },
+    "the_major_s_footlocker": {
+      "id": "the_major_s_footlocker",
+      "name": "The Major's Footlocker",
+      "wikiUrl": "https://arcraiders.wiki/wiki/The_Major's_Footlocker",
+      "scrapedAt": "2026-01-30T23:11:03.851Z",
+      "questGiver": "Tian Wen",
+      "requiredMaps": [
+        "Dam Battlegrounds"
+      ],
+      "previousQuest": "A Symbol Of Unification",
+      "nextQuest": "Back On Top",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Search for Major Aiva's mementos in the apartments northwest of The Dam",
+          "type": "locate",
+          "location": "apartments northwest of The Dam"
+        },
+        {
+          "id": 2,
+          "text": "Deliver Major Aiva's Mementos to Tian Wen",
+          "type": "deliver",
+          "item": "Major Aiva's Mementos to Tian Wen",
+          "location": "Tian Wen"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Hullcracker Blueprint",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "the_trifecta": {
+      "id": "the_trifecta",
+      "name": "The Trifecta",
+      "wikiUrl": "https://arcraiders.wiki/wiki/The_Trifecta",
+      "scrapedAt": "2026-01-30T23:11:04.476Z",
+      "questGiver": "Shani",
+      "previousQuest": "Down To Earth",
+      "nextQuest": "Dormant Barons",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Destroy a Wasp (x/2)",
+          "type": "unknown"
+        },
+        {
+          "id": 2,
+          "text": "Get a Wasp Driver for Shani (x/2)",
+          "type": "unknown",
+          "item": "Wasp Driver for Shani (x/2)"
+        },
+        {
+          "id": 3,
+          "text": "Destroy a Hornet (x/2)",
+          "type": "unknown"
+        },
+        {
+          "id": 4,
+          "text": "Get a Hornet Driver for Shani (x/2)",
+          "type": "unknown",
+          "item": "Hornet Driver for Shani (x/2)"
+        },
+        {
+          "id": 5,
+          "text": "Destroy a Snitch (x/2)",
+          "type": "unknown"
+        },
+        {
+          "id": 6,
+          "text": "Get a Snitch Scanner for Shani (x/2)",
+          "type": "unknown",
+          "item": "Snitch Scanner for Shani (x/2)"
+        }
+      ],
+      "grantedItems": [
+        {
+          "amount": 3,
+          "item": "Remote Raider Flare"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Raider Hatch Key",
+          "type": "key"
+        },
+        {
+          "amount": 2,
+          "item": "Defibrillator",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Dam Control Tower Key",
+          "type": "key"
+        },
+        {
+          "amount": 1,
+          "item": "Origin Outfit (Orange Camo Color)",
+          "type": "outfit"
+        }
+      ],
+      "category": "main"
+    },
+    "tribute_to_toledo": {
+      "id": "tribute_to_toledo",
+      "name": "Tribute To Toledo",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Tribute_To_Toledo",
+      "scrapedAt": "2026-01-30T23:11:05.061Z",
+      "questGiver": "Celeste",
+      "previousQuest": "Life Of A Pharmacist",
+      "nextQuest": "Digging Up Dirt",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Get a Power Rod for Celeste",
+          "type": "unknown",
+          "item": "Power Rod for Celeste"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 5,
+          "item": "Magnet",
+          "type": "item"
+        },
+        {
+          "amount": 2,
+          "item": "Advanced Mechanical Components",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Synthesized Fuel",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "turnabout": {
+      "id": "turnabout",
+      "name": "Turnabout",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Turnabout",
+      "scrapedAt": "2026-01-30T23:11:05.699Z",
+      "questGiver": "Celeste",
+      "requiredMaps": [
+        "Spaceport"
+      ],
+      "previousQuest": "Digging Up Dirt",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Go to the North Trench Tower (Key is Required)",
+          "type": "reach"
+        },
+        {
+          "id": 2,
+          "text": "Locate and upload the blackmail files to Celeste",
+          "type": "locate",
+          "location": "Celeste"
+        }
+      ],
+      "grantedItems": [
+        {
+          "amount": 1,
+          "item": "Spaceport Trench Tower Key"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 2,
+          "item": "Heavy Gun Parts",
+          "type": "item"
+        },
+        {
+          "amount": 2,
+          "item": "Medium Gun Parts",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "unexpected_initiative": {
+      "id": "unexpected_initiative",
+      "name": "Unexpected Initiative",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Unexpected_Initiative",
+      "scrapedAt": "2026-01-30T23:11:06.287Z",
+      "questGiver": "Tian Wen",
+      "requiredMaps": [
+        "Buried City"
+      ],
+      "previousQuest": "Echoes Of Victory Ridge",
+      "nextQuest": "A Symbol Of Unification",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Reach the Grandioso Apartments in Buried City",
+          "type": "reach",
+          "map": "Buried City",
+          "location": "Buried City"
+        },
+        {
+          "id": 2,
+          "text": "Search for a Moisture Meter on the rooftop of the Grandioso Apartments",
+          "type": "locate",
+          "location": "rooftop of the Grandioso Apartments"
+        },
+        {
+          "id": 3,
+          "text": "Reach Piazza Roma in Buried City",
+          "type": "reach",
+          "map": "Buried City",
+          "location": "Buried City"
+        },
+        {
+          "id": 4,
+          "text": "Search for a Nutrient Meter in the broken rooftop gardens at Piazza Roma",
+          "type": "locate",
+          "location": "broken rooftop gardens at Piazza Roma"
+        },
+        {
+          "id": 5,
+          "text": "Deliver a Nutrient Meter to Tian Wen",
+          "type": "deliver",
+          "item": "Nutrient Meter to Tian Wen",
+          "location": "Tian Wen"
+        },
+        {
+          "id": 6,
+          "text": "Deliver a Moisture Meter to Tian Wen",
+          "type": "deliver",
+          "item": "Moisture Meter to Tian Wen",
+          "location": "Tian Wen"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Il Toro",
+          "type": "item"
+        },
+        {
+          "amount": 40,
+          "item": "Shotgun Ammo",
+          "type": "ammo"
+        },
+        {
+          "amount": 1,
+          "item": "Shotgun Choke II",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Il Toro I",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "untended_garden": {
+      "id": "untended_garden",
+      "name": "Untended Garden",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Untended_Garden",
+      "scrapedAt": "2026-01-30T23:11:06.877Z",
+      "questGiver": "Celeste",
+      "requiredMaps": [
+        "Dam Battlegrounds"
+      ],
+      "previousQuest": "A Balanced Harvest",
+      "nextQuest": "The Root Of The Matter",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Go to the Hydroponic Dome Complex",
+          "type": "reach",
+          "location": "Hydroponic Dome Complex"
+        },
+        {
+          "id": 2,
+          "text": "Access the data archive in one of the domes",
+          "type": "unknown",
+          "location": "one of the domes"
+        },
+        {
+          "id": 3,
+          "text": "Upload the data to the computer terminal in any Field Depot",
+          "type": "unknown",
+          "location": "computer terminal in any Field Depot"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 3,
+          "item": "Advanced Mechanical Components",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Heavy Gun Parts",
+          "type": "item"
+        },
+        {
+          "amount": 5,
+          "item": "Canister",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "water_troubles": {
+      "id": "water_troubles",
+      "name": "Water Troubles",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Water_Troubles",
+      "scrapedAt": "2026-01-30T23:11:07.467Z",
+      "questGiver": "Celeste",
+      "requiredMaps": [
+        "Dam Battlegrounds"
+      ],
+      "previousQuest": "The Root Of The Matter",
+      "nextQuest": "Source Of The Contamination",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Locate the Flood Access Tunnel under the Red Lake Balcony",
+          "type": "locate"
+        },
+        {
+          "id": 2,
+          "text": "Find the intake to the District's Water Supply",
+          "type": "locate",
+          "item": "the intake to the District's Water Supply"
+        },
+        {
+          "id": 3,
+          "text": "Sample the water",
+          "type": "unknown"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 3,
+          "item": "Mechanical Components",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Simple Gun Parts",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Steel Spring",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "what_goes_around": {
+      "id": "what_goes_around",
+      "name": "What Goes Around",
+      "wikiUrl": "https://arcraiders.wiki/wiki/What_Goes_Around",
+      "scrapedAt": "2026-01-30T23:11:08.057Z",
+      "questGiver": "Apollo",
+      "previousQuest": "Safe Passage",
+      "nextQuest": "Sparks Fly",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Destroy any ARC using a Fireball Burner",
+          "type": "unknown"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 3,
+          "item": "Blaze Grenade",
+          "type": "item"
+        },
+        {
+          "amount": 2,
+          "item": "Noisemaker",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Backpack Charm (Cans)",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "what_we_left_behind": {
+      "id": "what_we_left_behind",
+      "name": "What We Left Behind",
+      "wikiUrl": "https://arcraiders.wiki/wiki/What_We_Left_Behind",
+      "scrapedAt": "2026-01-30T23:11:08.687Z",
+      "questGiver": "Tian Wen",
+      "requiredMaps": [
+        "Dam Battlegrounds",
+        "Buried City",
+        "Spaceport"
+      ],
+      "previousQuest": "Dormant Barons",
+      "nextQuest": "Broken Monument",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "On Buried City , search 2 containers in the Raider Camp beneath the Parking Garage. To reach the raiders camp, take the elevator zipline to the lower level buried in the sand.",
+          "type": "locate",
+          "amount": 2,
+          "map": "Buried City",
+          "location": "Buried City"
+        },
+        {
+          "id": 2,
+          "text": "On Dam Battlegrounds , search for anything significant in the South Swamp Outpost.",
+          "type": "locate",
+          "map": "Dam Battlegrounds",
+          "location": "Dam Battlegrounds"
+        },
+        {
+          "id": 3,
+          "text": "On Spaceport , search for anything significant in Bilguun's Hideout, next to the Container Storage. Is a tall structure next to the wall on the east side.",
+          "type": "locate",
+          "location": "Spaceport"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Muzzle Brake II",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Vertical Grip II",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Stable Stock II",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "paving_the_way": {
+      "id": "paving_the_way",
+      "name": "Paving The Way",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Paving_The_Way",
+      "scrapedAt": "2026-01-30T23:11:09.307Z",
+      "questGiver": "Apollo",
+      "requiredMaps": [
+        "Dam Battlegrounds",
+        "Blue Gate",
+        "Buried City"
+      ],
+      "previousQuest": "Into The Fray",
+      "nextQuest": "Deciphering The Data",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Go to any ENELICA building",
+          "type": "reach",
+          "location": "any ENELICA building"
+        },
+        {
+          "id": 2,
+          "text": "Search for a notice board with a note from the researcher",
+          "type": "locate"
+        },
+        {
+          "id": 3,
+          "text": "On Buried City , reach the top floor above the Convinio in Piazza Roma",
+          "type": "reach",
+          "map": "Buried City",
+          "location": "Buried City"
+        },
+        {
+          "id": 4,
+          "text": "Find the researcher's flat and search for any research data",
+          "type": "locate",
+          "item": "the researcher's flat and search for any research data",
+          "location": "and search for any research data"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Raider Hatch Key",
+          "type": "key"
+        },
+        {
+          "amount": 3,
+          "item": "Seeker Grenade",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Advanced Electrical Components",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "deciphering_the_data": {
+      "id": "deciphering_the_data",
+      "name": "Deciphering The Data",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Deciphering_The_Data",
+      "scrapedAt": "2026-01-30T23:11:09.993Z",
+      "questGiver": "Shani",
+      "requiredMaps": [
+        "Spaceport"
+      ],
+      "previousQuest": "Paving The Way",
+      "nextQuest": "Groundbreaking",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Use the Magnetic Decryptor in the Fuel Control Building",
+          "type": "interact",
+          "location": "Fuel Control Building"
+        },
+        {
+          "id": 2,
+          "text": "Reach the Arrival Building in Spaceport",
+          "type": "reach",
+          "location": "Spaceport"
+        },
+        {
+          "id": 3,
+          "text": "Use the Magnetic Decryptor on the top floor of the Arrival Building",
+          "type": "interact",
+          "location": "top floor of the Arrival Building"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 3,
+          "item": "Defibrillator",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Trailblazer",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "groundbreaking": {
+      "id": "groundbreaking",
+      "name": "Groundbreaking",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Groundbreaking",
+      "scrapedAt": "2026-01-30T23:11:10.581Z",
+      "questGiver": "Apollo",
+      "requiredMaps": [
+        "The Blue Gate"
+      ],
+      "previousQuest": "Deciphering The Data",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Find a spare Blue Gate Communication Tower Key [ 1 ]",
+          "type": "locate",
+          "item": "spare Blue Gate Communication Tower Key [ 1 ]",
+          "map": "Blue Gate"
+        },
+        {
+          "id": 2,
+          "text": "Enter the locked room at Pilgrim's Peak",
+          "type": "unknown"
+        },
+        {
+          "id": 3,
+          "text": "Search the room for any construction research",
+          "type": "locate",
+          "location": "research"
+        },
+        {
+          "id": 4,
+          "text": "Find the building pictured on the whiteboard",
+          "type": "locate",
+          "item": "the building pictured on the whiteboard",
+          "location": "whiteboard"
+        },
+        {
+          "id": 5,
+          "text": "Photograph the abandoned housing project",
+          "type": "photograph"
+        }
+      ],
+      "grantedItems": [
+        {
+          "amount": 1,
+          "item": "Blue Gate Communication Tower Key"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Power Rod",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Warden Outfit (Tangerine Color)",
+          "type": "outfit"
+        }
+      ],
+      "category": "main"
+    },
+    "a_toxic_trail": {
+      "id": "a_toxic_trail",
+      "name": "A Toxic Trail",
+      "wikiUrl": "https://arcraiders.wiki/wiki/A_Toxic_Trail",
+      "scrapedAt": "2026-01-30T23:11:11.179Z",
+      "questGiver": "Shani",
+      "requiredMaps": [
+        "Dam Battlegrounds"
+      ],
+      "previousQuest": "Life Of A Pharmacist",
+      "nextQuest": "The Stench Of Corruption",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Return to the water intake below the Water Treatment Control building",
+          "type": "unknown",
+          "location": "water intake below the Water Treatment Control building"
+        },
+        {
+          "id": 2,
+          "text": "Search the swamp for traces of the barrel's origins",
+          "type": "locate"
+        },
+        {
+          "id": 3,
+          "text": "Take a photo of the barrel truck",
+          "type": "photograph",
+          "location": "of the barrel truck"
+        },
+        {
+          "id": 4,
+          "text": "Search the trunk for clues about the saboteur's identity",
+          "type": "locate"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Tactical Mk. 2",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Zipline",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Pulse Mine",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Gas Mine",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "the_stench_of_corruption": {
+      "id": "the_stench_of_corruption",
+      "name": "The Stench Of Corruption",
+      "wikiUrl": "https://arcraiders.wiki/wiki/The_Stench_Of_Corruption",
+      "scrapedAt": "2026-01-30T23:11:11.791Z",
+      "questGiver": "Shani",
+      "requiredMaps": [
+        "Spaceport"
+      ],
+      "previousQuest": "A Toxic Trail",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Reach the southwest lobby of the Departure Building",
+          "type": "reach"
+        },
+        {
+          "id": 2,
+          "text": "Find the staff locker room",
+          "type": "locate",
+          "item": "the staff locker room"
+        },
+        {
+          "id": 3,
+          "text": "Search the room for any clues of the saboteur's identity",
+          "type": "locate"
+        },
+        {
+          "id": 4,
+          "text": "Reach the tunnels below the Spaceport",
+          "type": "reach"
+        },
+        {
+          "id": 5,
+          "text": "Use the key on any Flushing Terminal to override the bypass protocol",
+          "type": "interact",
+          "location": "any Flushing Terminal to override the bypass protocol"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Air Freshener",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Dam Staff Room Key",
+          "type": "key"
+        },
+        {
+          "amount": 3,
+          "item": "Noisemaker",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Warden Outfit (Blue Color)",
+          "type": "outfit"
+        }
+      ],
+      "category": "main"
+    },
+    "the_clean_dream": {
+      "id": "the_clean_dream",
+      "name": "The Clean Dream",
+      "wikiUrl": "https://arcraiders.wiki/wiki/The_Clean_Dream",
+      "scrapedAt": "2026-01-30T23:11:12.373Z",
+      "questGiver": "Apollo",
+      "requiredMaps": [
+        "Spaceport",
+        "The Blue Gate"
+      ],
+      "previousQuest": "With A Trace",
+      "nextQuest": "A Prime Specimen",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "On Spaceport, search 4 containers in the underground tunnels",
+          "type": "locate",
+          "amount": 4,
+          "location": "Spaceport"
+        },
+        {
+          "id": 2,
+          "text": "Find and monitor any Filtration System in the tunnels Filtration System Objective This is the Filtration System Objective",
+          "type": "locate",
+          "item": "and monitor any Filtration System in the tunnels Filtration System Objective This is the Filtration System Objective",
+          "location": "System in the tunnels Filtration System Objective This is the Filtration System Objective"
+        },
+        {
+          "id": 3,
+          "text": "On The Blue Gate, visit the Maintenance Bunker",
+          "type": "reach",
+          "map": "Blue Gate",
+          "location": "Blue Gate"
+        },
+        {
+          "id": 4,
+          "text": "Monitor the Purification System in the bunker Purification Quest Interaction Purification Quest Interaction Location",
+          "type": "interact",
+          "location": "System in the bunker Purification Quest Interaction Purification Quest Interaction Location"
+        },
+        {
+          "id": 5,
+          "text": "Find and photograph the blueprints in the bunker",
+          "type": "photograph",
+          "item": "and photograph the blueprints in the bunker",
+          "location": "bunker"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Deadline",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Showstopper",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Heavy Fuze Grenade",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "the_league": {
+      "id": "the_league",
+      "name": "The League",
+      "wikiUrl": "https://arcraiders.wiki/wiki/The_League",
+      "scrapedAt": "2026-01-30T23:11:12.966Z",
+      "questGiver": "Apollo",
+      "requiredMaps": [
+        "Dam Battlegrounds",
+        "Buried City"
+      ],
+      "previousQuest": "Sparks Fly",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Deliver a Deflated Football to Apollo",
+          "type": "deliver",
+          "item": "Deflated Football to Apollo",
+          "location": "Apollo"
+        },
+        {
+          "id": 2,
+          "text": "Deliver a Bicycle Pump for Apollo",
+          "type": "deliver",
+          "item": "Bicycle Pump for Apollo"
+        },
+        {
+          "id": 3,
+          "text": "On Dam Battlegrounds , photograph the goal by the Water Towers",
+          "type": "photograph",
+          "map": "Dam Battlegrounds",
+          "location": "Dam Battlegrounds"
+        },
+        {
+          "id": 4,
+          "text": "On Buried City , photograph the football magazines in any kiosk",
+          "type": "photograph",
+          "map": "Buried City",
+          "location": "Buried City"
+        }
+      ],
+      "grantedItems": [
+        {
+          "amount": 5,
+          "item": "Light Stick"
+        },
+        {
+          "amount": 5,
+          "item": "Light Stick"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Faded Flush (Aviator Color) (page does not exist)",
+          "type": "item"
+        },
+        {
+          "amount": 5,
+          "item": "Tagging Grenade",
+          "type": "item"
+        },
+        {
+          "amount": 5,
+          "item": "Firecracker",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Faded Flush (Aviator Color)",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "movie_night": {
+      "id": "movie_night",
+      "name": "Movie Night",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Movie_Night",
+      "scrapedAt": "2026-01-30T23:11:13.551Z",
+      "questGiver": "Apollo",
+      "previousQuest": "With A View",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Deliver a Portable TV to Apollo",
+          "type": "deliver",
+          "item": "Portable TV to Apollo",
+          "location": "Apollo"
+        },
+        {
+          "id": 2,
+          "text": "On Stella Montis , search the Cultural Archives for old movie tapes",
+          "type": "locate",
+          "map": "Stella Montis",
+          "location": "Stella Montis"
+        },
+        {
+          "id": 3,
+          "text": "Deliver the Stack Of Movie Tapes to Apollo",
+          "type": "deliver",
+          "item": "the Stack Of Movie Tapes to Apollo",
+          "location": "Apollo"
+        }
+      ],
+      "grantedItems": [
+        {
+          "amount": 3,
+          "item": "Light Stick"
+        },
+        {
+          "amount": 3,
+          "item": "Light Stick"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 3,
+          "item": "Showstopper",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Smoke Grenade",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Fireworks Box",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "with_a_view": {
+      "id": "with_a_view",
+      "name": "With A View",
+      "wikiUrl": "https://arcraiders.wiki/wiki/With_A_View",
+      "scrapedAt": "2026-01-30T23:11:14.145Z",
+      "questGiver": "Shani",
+      "previousQuest": "Snap And Salvage",
+      "nextQuest": "Movie Night",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Obtain a Rotary Encoder",
+          "type": "unknown",
+          "location": "a Rotary Encoder"
+        },
+        {
+          "id": 2,
+          "text": "Visit any of the Control Rooms near the Assembly Line",
+          "type": "reach",
+          "location": "Assembly Line"
+        },
+        {
+          "id": 3,
+          "text": "Use the Rotary Encoder to activate the server switch",
+          "type": "interact",
+          "location": "activate the server switch"
+        },
+        {
+          "id": 4,
+          "text": "Interact with a nearby computer to help identify the correct paths",
+          "type": "interact",
+          "location": "help identify the correct paths"
+        },
+        {
+          "id": 5,
+          "text": "Deliver an Ion Sputter to Shani",
+          "type": "deliver",
+          "item": "an Ion Sputter to Shani",
+          "location": "Sputter to Shani"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 5,
+          "item": "Steel Spring",
+          "type": "item"
+        },
+        {
+          "amount": 5,
+          "item": "Wires",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Tactical Mk. 2",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "combat_recon": {
+      "id": "combat_recon",
+      "name": "Combat Recon",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Combat_Recon",
+      "scrapedAt": "2026-01-30T23:11:14.765Z",
+      "questGiver": "Shani",
+      "requiredMaps": [
+        "Buried City"
+      ],
+      "previousQuest": "Into The Fray",
+      "nextQuest": "Bombing Run",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Scope out a cover spot in the Parking Garage staircases",
+          "type": "unknown",
+          "location": "Parking Garage staircases"
+        },
+        {
+          "id": 2,
+          "text": "Scope out a cover spot in the buses near Marano Park",
+          "type": "interact",
+          "location": "buses near Marano Park"
+        },
+        {
+          "id": 3,
+          "text": "Scope out a cover spot in the attics around Main Street",
+          "type": "unknown",
+          "location": "attics around Main Street"
+        },
+        {
+          "id": 4,
+          "text": "Destroy 2 Spotters",
+          "type": "unknown",
+          "amount": 2
+        },
+        {
+          "id": 5,
+          "text": "Deliver a Spotter Relay to Shani",
+          "type": "deliver",
+          "item": "Spotter Relay to Shani",
+          "location": "Shani"
+        }
+      ],
+      "grantedItems": [
+        {
+          "amount": 1,
+          "item": "Binoculars"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 5,
+          "item": "Firecracker",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Fireworks Box",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Radio Renegade Outfit (Red Color)",
+          "type": "outfit"
+        }
+      ],
+      "category": "main"
+    },
+    "bombing_run": {
+      "id": "bombing_run",
+      "name": "Bombing Run",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Bombing_Run",
+      "scrapedAt": "2026-01-30T23:11:15.353Z",
+      "questGiver": "Shani",
+      "previousQuest": "Combat Recon",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Destroy a Bombardier",
+          "type": "unknown"
+        },
+        {
+          "id": 2,
+          "text": "Deliver a Bombardier Cell to Shani",
+          "type": "deliver",
+          "item": "Bombardier Cell to Shani",
+          "location": "Shani"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Finger Gun Single Shot Emote (page does not exist)",
+          "type": "item"
+        },
+        {
+          "amount": 30,
+          "item": "Raider Tokens",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Finger Gun Single Shot Emote",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "on_deaf_ears": {
+      "id": "on_deaf_ears",
+      "name": "On Deaf Ears",
+      "wikiUrl": "https://arcraiders.wiki/wiki/On_Deaf_Ears",
+      "scrapedAt": "2026-01-30T23:11:15.950Z",
+      "questGiver": "Lance",
+      "requiredMaps": [
+        "Stella Montis"
+      ],
+      "previousQuest": "Groundbreaking",
+      "nextQuest": "On The Map",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Find the researcher's guest logs on the reception computers",
+          "type": "locate",
+          "item": "the researcher's guest logs on the reception computers",
+          "location": "reception computers"
+        },
+        {
+          "id": 2,
+          "text": "Find where the researcher held their lecture, and access their notes",
+          "type": "locate",
+          "item": "where the researcher held their lecture"
+        },
+        {
+          "id": 3,
+          "text": "Find information about the prototypes on the Medical Research computers",
+          "type": "locate",
+          "item": "information about the prototypes on the Medical Research computers",
+          "location": "about the prototypes on the Medical Research computers"
+        },
+        {
+          "id": 4,
+          "text": "Find the printed shipping logs in the Assembly Workshops",
+          "type": "locate",
+          "item": "the printed shipping logs in the Assembly Workshops",
+          "location": "Assembly Workshops"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Navy Blue (Warden Color) (page does not exist)",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Lure Grenade",
+          "type": "item"
+        },
+        {
+          "amount": 5,
+          "item": "Noisemaker",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Shaker",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Navy Blue (Warden Color)",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "on_the_map": {
+      "id": "on_the_map",
+      "name": "On The Map",
+      "wikiUrl": "https://arcraiders.wiki/wiki/On_The_Map",
+      "scrapedAt": "2026-01-30T23:11:16.583Z",
+      "questGiver": "Lance",
+      "previousQuest": "On Deaf Ears",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Head to where the Fuel Lines snapped, and transmit your location",
+          "type": "photograph",
+          "location": "where the Fuel Lines snapped"
+        },
+        {
+          "id": 2,
+          "text": "Head to the antenna near the Fuel Control, and transmit your location",
+          "type": "unknown",
+          "location": "antenna near the Fuel Control"
+        },
+        {
+          "id": 3,
+          "text": "Head to the cactus patch in the wall breach, and transmit your location",
+          "type": "reach",
+          "location": "cactus patch in the wall breach"
+        },
+        {
+          "id": 4,
+          "text": "Transmit your location from the roof of the Container Storage building",
+          "type": "unknown",
+          "location": "from the roof of the Container Storage building"
+        },
+        {
+          "id": 5,
+          "text": "Find the container covered in tarp, and mark it",
+          "type": "locate",
+          "item": "the container covered in tarp",
+          "location": "tarp"
+        }
+      ],
+      "grantedItems": [
+        {
+          "amount": 3,
+          "item": "Defibrillator"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 3,
+          "item": "Sterilized Bandage",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Surge Shield Recharger",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Tactical Mk. 3 (Healing)",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "a_prime_specimen": {
+      "id": "a_prime_specimen",
+      "name": "A Prime Specimen",
+      "wikiUrl": "https://arcraiders.wiki/wiki/A_Prime_Specimen",
+      "scrapedAt": "2026-01-30T23:11:17.184Z",
+      "questGiver": "Shani",
+      "requiredMaps": [
+        "The Blue Gate"
+      ],
+      "previousQuest": "The Clean Dream",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Obtain 2 ARC Powercells",
+          "type": "unknown",
+          "amount": 2
+        },
+        {
+          "id": 2,
+          "text": "Interact with any ARC Deforester",
+          "type": "interact"
+        },
+        {
+          "id": 3,
+          "text": "Loot an ARC Deforester",
+          "type": "collect"
+        }
+      ],
+      "grantedItems": [
+        {
+          "amount": 3,
+          "item": "Remote Raider Flare"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Patrol Car Key",
+          "type": "key"
+        },
+        {
+          "amount": 3,
+          "item": "Door Blocker",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "a_first_foothold": {
+      "id": "a_first_foothold",
+      "name": "A First Foothold",
+      "wikiUrl": "https://arcraiders.wiki/wiki/A_First_Foothold",
+      "scrapedAt": "2026-01-30T23:11:17.780Z",
+      "questGiver": "Apollo",
+      "requiredMaps": [
+        "The Blue Gate"
+      ],
+      "nextQuest": "Reduced To Rubble",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Stabilize the observation deck near the Ridgeline",
+          "type": "unknown",
+          "location": "deck near the Ridgeline"
+        },
+        {
+          "id": 2,
+          "text": "Enable the comms terminal near the Olive Grove",
+          "type": "unknown",
+          "location": "Olive Grove"
+        },
+        {
+          "id": 3,
+          "text": "Rotate the satellite dishes on the church roof, north of the Data Vault",
+          "type": "unknown",
+          "location": "church roof"
+        },
+        {
+          "id": 4,
+          "text": "Nail down the roof plates on the Raider structure near Trapper's Glade",
+          "type": "unknown"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 3,
+          "item": "Shrapnel Grenade",
+          "type": "item"
+        },
+        {
+          "amount": 2,
+          "item": "Snap Blast Grenade",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Heavy Fuze Grenade",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "reduced_to_rubble": {
+      "id": "reduced_to_rubble",
+      "name": "Reduced To Rubble",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Reduced_To_Rubble",
+      "scrapedAt": "2026-01-30T23:11:18.372Z",
+      "questGiver": "Shani",
+      "requiredMaps": [
+        "The Blue Gate"
+      ],
+      "previousQuest": "A First Foothold",
+      "nextQuest": "With A Trace",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Take a photo of the Collapsed Highway",
+          "type": "photograph",
+          "location": "of the Collapsed Highway"
+        },
+        {
+          "id": 2,
+          "text": "Go to the Broken Earth",
+          "type": "reach",
+          "location": "Broken Earth"
+        },
+        {
+          "id": 3,
+          "text": "Follow the trail of destruction though the Broken Earth",
+          "type": "unknown",
+          "location": "though the Broken Earth"
+        },
+        {
+          "id": 4,
+          "text": "Investigate the unknown ARC machines",
+          "type": "unknown"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Zipline",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Barricade Kit",
+          "type": "item"
+        },
+        {
+          "amount": 3,
+          "item": "Door Blocker",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "with_a_trace": {
+      "id": "with_a_trace",
+      "name": "With A Trace",
+      "wikiUrl": "https://arcraiders.wiki/wiki/With_A_Trace",
+      "scrapedAt": "2026-01-30T23:11:18.959Z",
+      "questGiver": "Shani",
+      "requiredMaps": [
+        "The Blue Gate"
+      ],
+      "previousQuest": "Reduced To Rubble",
+      "nextQuest": "Armored Transports",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Reach the Barren Clearing",
+          "type": "reach"
+        },
+        {
+          "id": 2,
+          "text": "Find signs of who brought down the ARC machines",
+          "type": "locate",
+          "item": "signs of who brought down the ARC machines"
+        },
+        {
+          "id": 3,
+          "text": "Inspect the Adorned Wreckage",
+          "type": "unknown"
+        },
+        {
+          "id": 4,
+          "text": "Inspect the communications device",
+          "type": "unknown"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Looting Mk. 2",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Medium Shield",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "in_my_image": {
+      "id": "in_my_image",
+      "name": "In My Image",
+      "wikiUrl": "https://arcraiders.wiki/wiki/In_My_Image",
+      "scrapedAt": "2026-01-30T23:11:19.551Z",
+      "questGiver": "Lance",
+      "requiredMaps": [
+        "Stella Montis"
+      ],
+      "previousQuest": "A Bad Feeling",
+      "nextQuest": "Cold Storage",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Deploy into Stella Montis",
+          "type": "unknown",
+          "map": "Stella Montis",
+          "location": "Stella Montis"
+        },
+        {
+          "id": 2,
+          "text": "Find and search 3 Androids",
+          "type": "locate",
+          "item": "and search 3 Androids",
+          "amount": 3
+        }
+      ],
+      "grantedItems": [
+        {
+          "amount": 3,
+          "item": "Defibrillator"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 2,
+          "item": "Looting Mk. 2",
+          "type": "item"
+        },
+        {
+          "amount": 5,
+          "item": "Green Light Stick",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    },
+    "cold_storage": {
+      "id": "cold_storage",
+      "name": "Cold Storage",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Cold_Storage",
+      "scrapedAt": "2026-01-30T23:11:20.139Z",
+      "questGiver": "Shani",
+      "requiredMaps": [
+        "Stella Montis"
+      ],
+      "previousQuest": "In My Image",
+      "nextQuest": "Snap And Salvage",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Search any J Kozma Ventures container",
+          "type": "locate"
+        },
+        {
+          "id": 2,
+          "text": "Deliver the Rare Books to Shani",
+          "type": "deliver",
+          "item": "the Rare Books to Shani",
+          "location": "Shani"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 3,
+          "item": "Gas Mine",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Raider Hatch Key",
+          "type": "key"
+        }
+      ],
+      "category": "main"
+    },
+    "snap_and_salvage": {
+      "id": "snap_and_salvage",
+      "name": "Snap And Salvage",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Snap_And_Salvage",
+      "scrapedAt": "2026-01-30T23:11:20.740Z",
+      "questGiver": "Tian Wen",
+      "requiredMaps": [
+        "Stella Montis"
+      ],
+      "previousQuest": "Cold Storage",
+      "nextQuest": "With A View",
+      "objectives": [
+        {
+          "id": 1,
+          "text": "Take a Photo of any of the Rovers in the Sandbox",
+          "type": "photograph",
+          "location": "of any of the Rovers in the Sandbox"
+        },
+        {
+          "id": 2,
+          "text": "Search the papers in the Security Checkpoint room by the Lobby",
+          "type": "locate",
+          "location": "Security Checkpoint room by the Lobby"
+        },
+        {
+          "id": 3,
+          "text": "Deliver a Flow Controller to Tian Wen",
+          "type": "deliver",
+          "item": "Flow Controller to Tian Wen",
+          "location": "Tian Wen"
+        },
+        {
+          "id": 4,
+          "text": "Deliver a Magnetron to Tian Wen",
+          "type": "deliver",
+          "item": "Magnetron to Tian Wen",
+          "location": "to Tian Wen"
+        }
+      ],
+      "rewards": [
+        {
+          "amount": 1,
+          "item": "Burletta",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Silencer II",
+          "type": "item"
+        },
+        {
+          "amount": 1,
+          "item": "Extended Light Mag II",
+          "type": "item"
+        },
+        {
+          "amount": 100,
+          "item": "Light Ammo",
+          "type": "ammo"
+        },
+        {
+          "amount": 1,
+          "item": "Burletta III",
+          "type": "item"
+        }
+      ],
+      "category": "main"
+    }
+  },
+  "lastUpdated": "2026-01-30T23:11:21.242Z"
+}

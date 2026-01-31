@@ -33,7 +33,7 @@ function SessionStatus({ isConnected, role, viewerCount, onToggle, onDisconnect 
           e.currentTarget.style.color = theme.accent;
         }}
       >
-        Mobile
+        Connect Mobile
       </button>
     );
   }
