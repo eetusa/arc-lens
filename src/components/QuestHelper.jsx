@@ -402,7 +402,7 @@ function QuestHelperFullPanel({ activeQuests }) {
                     selectedMarkerId={selectedMarkerId}
                     focusMarkerId={focusMarkerId}
                     onMarkerClick={(marker) => {
-                      setSelectedMarkerId(marker.id);
+                      setSelectedMarkerId(marker?.id || null);
                     }}
                   />
                 </div>

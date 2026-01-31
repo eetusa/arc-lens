@@ -517,6 +517,9 @@ const MapViewer = forwardRef(function MapViewer({
         return;
       }
     }
+
+    // Clicked on map but not on a marker - deselect
+    onMarkerClick(null);
   }, [markers, viewState, activeTransform, onMarkerClick]);
 
   if (!mapConfig) {
