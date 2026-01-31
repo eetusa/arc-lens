@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { styles, theme } from '../styles'; // Adjusted import path
 
 const QuestSelector = ({
@@ -14,6 +15,31 @@ const QuestSelector = ({
 }) => {
   const [inputValue, setInputValue] = useState("");
   const [isFocused, setIsFocused] = useState(false);
+  const inputRef = useRef(null);
+  const [, forceUpdate] = useState(0);
+
+  // Force re-render on scroll to update dropdown position
+  useEffect(() => {
+    if (!isFocused) return;
+
+    const handleScroll = () => forceUpdate(n => n + 1);
+
+    // Listen on window and all scrollable ancestors
+    window.addEventListener('scroll', handleScroll, true);
+    window.addEventListener('resize', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll, true);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, [isFocused]);
+
+  // Calculate dropdown position from input ref (called during render)
+  const getDropdownPos = () => {
+    if (!inputRef.current) return { top: 0, left: 0, width: 0 };
+    const rect = inputRef.current.getBoundingClientRect();
+    return { top: rect.bottom, left: rect.left, width: rect.width };
+  };
 
   const suggestions = useMemo(() => {
     if (!inputValue.trim()) return [];
@@ -131,6 +157,7 @@ const QuestSelector = ({
       {!questAutoDetect && (
         <div style={styles.inputWrapper}>
           <input
+            ref={inputRef}
             style={{
               ...styles.input,
               border: `1px solid ${isFocused ? theme.accent : theme.border}`,
@@ -145,15 +172,32 @@ const QuestSelector = ({
             onKeyDown={handleKeyDown}
           />
 
-          {isFocused && suggestions.length > 0 && (
-            <div style={styles.dropdown}>
-              {suggestions.map((quest, idx) => (
-                <div key={quest} style={styles.suggestionItem(idx === 0)} onClick={() => handleAdd(quest)}>
-                  {quest}
-                </div>
-              ))}
-            </div>
-          )}
+          {isFocused && suggestions.length > 0 && (() => {
+            const pos = getDropdownPos();
+            return createPortal(
+              <div style={{
+                position: 'fixed',
+                top: pos.top,
+                left: pos.left,
+                width: pos.width,
+                maxHeight: '150px',
+                overflowY: 'auto',
+                backgroundColor: '#1a1a1a',
+                border: `1px solid ${theme.border}`,
+                borderTop: 'none',
+                zIndex: 1000,
+                boxShadow: '0 4px 10px rgba(0,0,0,0.5)',
+                borderRadius: '0 0 4px 4px'
+              }}>
+                {suggestions.map((quest, idx) => (
+                  <div key={quest} style={styles.suggestionItem(idx === 0)} onClick={() => handleAdd(quest)}>
+                    {quest}
+                  </div>
+                ))}
+              </div>,
+              document.body
+            );
+          })()}
         </div>
       )}
 

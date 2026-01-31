@@ -87,34 +87,59 @@ export default function Panel({
     }
   }, [isDragging, handleMouseMove, handleMouseUp]);
 
-  // Resize handle component
+  // Track hover state for resize handle
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Resize handle component with visible grip indicator
   const ResizeHandle = () => (
     <div
       onMouseDown={handleMouseDown}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       style={{
         position: 'absolute',
         top: 0,
         bottom: 0,
-        width: '6px',
+        width: '16px',
         cursor: 'col-resize',
         zIndex: 10,
         // Position on opposite side of panel position
-        ...(position === 'left' ? { right: '-3px' } : { left: '-3px' }),
+        ...(position === 'left' ? { right: '-8px' } : { left: '-8px' }),
         // Visual indicator
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
       }}
     >
-      {/* Visible handle line */}
+      {/* Visible grip pill with dots */}
       <div style={{
-        width: '2px',
-        height: '40px',
-        backgroundColor: isDragging ? theme.accent : 'transparent',
-        borderRadius: '1px',
-        transition: 'background-color 0.15s ease',
-        opacity: 0.6
-      }} />
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '4px',
+        padding: '12px 4px',
+        borderRadius: '6px',
+        backgroundColor: isDragging
+          ? 'rgba(0, 120, 212, 0.4)'
+          : isHovered
+            ? 'rgba(255, 255, 255, 0.15)'
+            : 'rgba(255, 255, 255, 0.08)',
+        border: `1px solid ${isDragging ? theme.accent : isHovered ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.1)'}`,
+        transition: 'all 0.15s ease',
+        boxShadow: isDragging ? `0 0 8px ${theme.accent}` : 'none'
+      }}>
+        {[0, 1, 2].map(i => (
+          <div key={i} style={{
+            width: '4px',
+            height: '4px',
+            borderRadius: '50%',
+            backgroundColor: isDragging ? theme.accent : '#888',
+            opacity: isDragging ? 1 : isHovered ? 0.9 : 0.6,
+            transition: 'all 0.15s ease'
+          }} />
+        ))}
+      </div>
     </div>
   );
 

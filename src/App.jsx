@@ -614,7 +614,7 @@ function App() {
             id="config"
             isOpen={configPanelOpen}
             position="left"
-            defaultWidth={280}
+            defaultWidth={400}
             minWidth={220}
             maxWidth={400}
             width={panelWidths.config}
@@ -791,7 +791,7 @@ function App() {
             id="quest"
             isOpen={questHelperEnabled}
             position="right"
-            defaultWidth={360}
+            defaultWidth={500}
             minWidth={280}
             maxWidth={500}
             width={panelWidths.quest}
