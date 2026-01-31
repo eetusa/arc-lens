@@ -24,6 +24,7 @@ const MapViewer = forwardRef(function MapViewer({
   focusMarkerId = null
 }, ref) {
   const canvasRef = useRef(null);
+  const animationRef = useRef(null);
   const [containerNode, setContainerNode] = useState(null);
   const [mapImage, setMapImage] = useState(null);
   const [altMapImage, setAltMapImage] = useState(null); // The other level's image for blending
@@ -68,6 +69,48 @@ const MapViewer = forwardRef(function MapViewer({
   useEffect(() => {
     containerSizeRef.current = containerSize;
   }, [containerSize]);
+
+  // Animate view to target position
+  const animateToView = useCallback((targetView, duration = 300) => {
+    // Cancel any ongoing animation
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+    }
+
+    const startTime = performance.now();
+    const startView = { ...viewStateRef.current };
+
+    const animate = (currentTime) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Ease-out cubic for smooth deceleration
+      const eased = 1 - Math.pow(1 - progress, 3);
+
+      setViewState({
+        zoom: startView.zoom + (targetView.zoom - startView.zoom) * eased,
+        panX: startView.panX + (targetView.panX - startView.panX) * eased,
+        panY: startView.panY + (targetView.panY - startView.panY) * eased
+      });
+
+      if (progress < 1) {
+        animationRef.current = requestAnimationFrame(animate);
+      } else {
+        animationRef.current = null;
+      }
+    };
+
+    animationRef.current = requestAnimationFrame(animate);
+  }, []);
+
+  // Cleanup animation on unmount
+  useEffect(() => {
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, []);
 
   // Load map image (or lower variant)
   useEffect(() => {
@@ -250,33 +293,52 @@ const MapViewer = forwardRef(function MapViewer({
     // Zoom level for focused view - moderate zoom to show context
     const targetZoom = 0.35;
 
-    // Center on the marker
-    const panX = containerSize.width / 2 - pixel.x * targetZoom;
-    const panY = containerSize.height / 2 - pixel.y * targetZoom;
+    // Calculate pan limits (so map edges don't go past container edges)
+    const minPanX = containerSize.width - mapImage.width * targetZoom;
+    const maxPanX = 0;
+    const minPanY = containerSize.height - mapImage.height * targetZoom;
+    const maxPanY = 0;
 
-    setViewState({ zoom: targetZoom, panX, panY });
+    // Center on the marker, clamped to map boundaries
+    let panX = containerSize.width / 2 - pixel.x * targetZoom;
+    let panY = containerSize.height / 2 - pixel.y * targetZoom;
+    panX = Math.min(maxPanX, Math.max(minPanX, panX));
+    panY = Math.min(maxPanY, Math.max(minPanY, panY));
+
+    animateToView({ zoom: targetZoom, panX, panY });
   }, [focusMarkerId, markers, activeTransform, mapImage, containerSize]);
 
   // Expose methods via ref
   useImperativeHandle(ref, () => ({
     focusMarker: (markerId) => {
+      if (!mapImage) return;
       const marker = markers.find(m => m.id === markerId);
       if (!marker || !activeTransform) return;
 
       const pixel = coordsToPixels(marker.lat, marker.lng, activeTransform);
       const targetZoom = 0.35;
-      const panX = containerSize.width / 2 - pixel.x * targetZoom;
-      const panY = containerSize.height / 2 - pixel.y * targetZoom;
 
-      setViewState({ zoom: targetZoom, panX, panY });
+      // Calculate pan limits (so map edges don't go past container edges)
+      const minPanX = containerSize.width - mapImage.width * targetZoom;
+      const maxPanX = 0;
+      const minPanY = containerSize.height - mapImage.height * targetZoom;
+      const maxPanY = 0;
+
+      // Center on the marker, clamped to map boundaries
+      let panX = containerSize.width / 2 - pixel.x * targetZoom;
+      let panY = containerSize.height / 2 - pixel.y * targetZoom;
+      panX = Math.min(maxPanX, Math.max(minPanX, panX));
+      panY = Math.min(maxPanY, Math.max(minPanY, panY));
+
+      animateToView({ zoom: targetZoom, panX, panY });
     },
     resetView: () => {
       const defaultView = calculateDefaultView();
       if (defaultView) {
-        setViewState(defaultView);
+        animateToView(defaultView);
       }
     }
-  }), [markers, activeTransform, containerSize, calculateDefaultView]);
+  }), [markers, activeTransform, containerSize, calculateDefaultView, mapImage]);
 
   // Render canvas
   useEffect(() => {
