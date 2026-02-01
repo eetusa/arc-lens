@@ -217,15 +217,17 @@ const MapViewer = forwardRef(function MapViewer({
     };
   }, [containerNode]);
 
-  // Calculate default view - fit to height, center on markers (clamped to map edges)
+  // Calculate default view - fit to cover (no empty space), center on markers (clamped to map edges)
   const calculateDefaultView = useCallback(() => {
     if (!mapImage || containerSize.width === 0 || containerSize.height === 0) return null;
 
     const imgWidth = mapImage.width;
     const imgHeight = mapImage.height;
 
-    // Always fit to height - no empty space vertically
-    const zoom = containerSize.height / imgHeight;
+    // Use "cover" fit - choose the larger zoom so map fills container with no empty space
+    const zoomToFitWidth = containerSize.width / imgWidth;
+    const zoomToFitHeight = containerSize.height / imgHeight;
+    const zoom = Math.max(zoomToFitWidth, zoomToFitHeight);
 
     // Calculate pan limits (so map edges don't go past container edges)
     const minPanX = containerSize.width - imgWidth * zoom;
