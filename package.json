@@ -2,7 +2,7 @@
   "name": "arc-lens",
   "description": "Real-time inventory analysis and item advisor for ARC Raiders",
   "private": true,
-  "version": "1.2.0",
+  "version": "1.2.0a",
   "type": "module",
   "scripts": {
     "dev": "vite",

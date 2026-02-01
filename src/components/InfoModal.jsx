@@ -5,6 +5,14 @@ import { styles, theme } from '../styles';
 // Changes can be strings or objects with { text, bold: true } for emphasis
 const CHANGELOG = [
   {
+    version: '1.2.0a',
+    date: '1.2.2026',
+    changes: [
+      'Fixed map viewer initial zoom to always fill container without empty space',
+      'Fixed quest markers persisting incorrectly when switching between quests',
+    ]
+  },
+  {
     version: '1.2.0',
     date: '31.1.2026',
     changes: [
