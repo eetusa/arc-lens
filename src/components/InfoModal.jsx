@@ -5,6 +5,13 @@ import { styles, theme } from '../styles';
 // Changes can be strings or objects with { text, bold: true } for emphasis
 const CHANGELOG = [
   {
+    version: '1.2.0b',
+    date: '8.2.2026',
+    changes: [
+      'Fixed recycle item tooltips being hidden behind the advisor card',
+    ]
+  },
+  {
     version: '1.2.0a',
     date: '1.2.2026',
     changes: [
