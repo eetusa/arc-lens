@@ -5,6 +5,14 @@ import { styles, theme } from '../styles';
 // Changes can be strings or objects with { text, bold: true } for emphasis
 const CHANGELOG = [
   {
+    version: '1.2.1',
+    date: '8.2.2026',
+    changes: [
+      'Improved map image quality when zoomed out',
+      'Map can no longer be panned or zoomed out of bounds',
+    ]
+  },
+  {
     version: '1.2.0b',
     date: '8.2.2026',
     changes: [
