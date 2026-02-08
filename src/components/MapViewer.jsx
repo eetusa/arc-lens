@@ -2,6 +2,147 @@ import React, { useRef, useEffect, useState, useCallback, useImperativeHandle, f
 import { theme } from '../styles';
 import { coordsToPixels } from '../utils/mapCoords';
 
+// --- WebGL helpers for mipmap-quality map rendering ---
+
+const MAP_VERT = `#version 300 es
+in vec2 a_pos;
+uniform vec2 u_res;
+uniform vec2 u_imgSize;
+uniform vec2 u_offset;
+uniform float u_scale;
+out vec2 v_uv;
+void main() {
+  v_uv = a_pos;
+  vec2 px = a_pos * u_imgSize * u_scale + u_offset;
+  vec2 cp = px / u_res * 2.0 - 1.0;
+  gl_Position = vec4(cp.x, -cp.y, 0.0, 1.0);
+}`;
+
+const MAP_FRAG = `#version 300 es
+precision mediump float;
+in vec2 v_uv;
+uniform sampler2D u_tex;
+uniform float u_alpha;
+out vec4 outColor;
+void main() {
+  // LOD bias: selects a higher-res mip level than default,
+  // preserving text readability while still using mipmaps for anti-aliasing
+  vec4 c = texture(u_tex, v_uv, -1.25);
+  outColor = vec4(c.rgb, c.a * u_alpha);
+}`;
+
+function initMapGL(canvas) {
+  const gl = canvas.getContext('webgl2', { alpha: false, antialias: false });
+  if (!gl) return null;
+
+  const compile = (type, src) => {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+      console.error('Shader error:', gl.getShaderInfoLog(s));
+      gl.deleteShader(s);
+      return null;
+    }
+    return s;
+  };
+
+  const vs = compile(gl.VERTEX_SHADER, MAP_VERT);
+  const fs = compile(gl.FRAGMENT_SHADER, MAP_FRAG);
+  if (!vs || !fs) return null;
+
+  const prog = gl.createProgram();
+  gl.attachShader(prog, vs);
+  gl.attachShader(prog, fs);
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+    console.error('Program link error:', gl.getProgramInfoLog(prog));
+    return null;
+  }
+
+  // Unit quad as triangle strip
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([0,0, 1,0, 0,1, 1,1]), gl.STATIC_DRAW);
+
+  const vao = gl.createVertexArray();
+  gl.bindVertexArray(vao);
+  const aPos = gl.getAttribLocation(prog, 'a_pos');
+  gl.enableVertexAttribArray(aPos);
+  gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+  const locs = {
+    res: gl.getUniformLocation(prog, 'u_res'),
+    imgSize: gl.getUniformLocation(prog, 'u_imgSize'),
+    offset: gl.getUniformLocation(prog, 'u_offset'),
+    scale: gl.getUniformLocation(prog, 'u_scale'),
+    tex: gl.getUniformLocation(prog, 'u_tex'),
+    alpha: gl.getUniformLocation(prog, 'u_alpha'),
+  };
+
+  const anisoExt = gl.getExtension('EXT_texture_filter_anisotropic');
+  const maxAniso = anisoExt ? gl.getParameter(anisoExt.MAX_TEXTURE_MAX_ANISOTROPY_EXT) : 1;
+
+  console.log('[MapViewer] WebGL2 initialized', {
+    maxTextureSize: gl.getParameter(gl.MAX_TEXTURE_SIZE),
+    anisotropy: maxAniso,
+    renderer: gl.getParameter(gl.RENDERER)
+  });
+
+  return { gl, prog, vao, buf, locs, vs, fs, anisoExt, maxAniso, canvas };
+}
+
+// Two reusable offscreen canvases for mip generation (ping-pong)
+const mipCanvases = [null, null];
+
+function createMipmapTexture(glRes, image) {
+  const { gl, anisoExt, maxAniso } = glRes;
+  const tex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+
+  // Upload base level (level 0)
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+
+  // Generate custom mip levels using canvas 2D's Mitchell/high-quality filter
+  // instead of gl.generateMipmap() which uses a blurry box filter.
+  // Each level is halved from the previous using two alternating canvases.
+  if (!mipCanvases[0]) {
+    mipCanvases[0] = document.createElement('canvas');
+    mipCanvases[1] = document.createElement('canvas');
+  }
+
+  let w = image.width;
+  let h = image.height;
+  let level = 0;
+  let source = image;
+
+  while (w > 1 || h > 1) {
+    w = Math.max(1, Math.floor(w / 2));
+    h = Math.max(1, Math.floor(h / 2));
+    level++;
+
+    const target = mipCanvases[level % 2];
+    target.width = w;
+    target.height = h;
+    const ctx = target.getContext('2d');
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(source, 0, 0, w, h);
+
+    gl.texImage2D(gl.TEXTURE_2D, level, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, target);
+    source = target;
+  }
+
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  if (anisoExt) {
+    gl.texParameterf(gl.TEXTURE_2D, anisoExt.TEXTURE_MAX_ANISOTROPY_EXT, maxAniso);
+  }
+  return tex;
+}
+
 /**
  * MapViewer - Interactive map component with pan/zoom and marker rendering
  *
@@ -39,6 +180,10 @@ const MapViewer = forwardRef(function MapViewer({
   const [isInitialized, setIsInitialized] = useState(false);
   const [showLower, setShowLower] = useState(false);
 
+  // WebGL resources for map rendering, 2D canvas overlay for markers
+  const glRef = useRef(null);
+  const markerCanvasRef = useRef(null);
+
   // Track previous map ID for render-time state resets
   const [prevMapId, setPrevMapId] = useState(mapConfig?.id);
 
@@ -67,6 +212,7 @@ const MapViewer = forwardRef(function MapViewer({
   const prevShowLowerRef = useRef(showLower);
   const viewStateRef = useRef(viewState);
   const containerSizeRef = useRef(containerSize);
+  const mapImageRef = useRef(mapImage);
 
   // Keep refs in sync
   useEffect(() => {
@@ -75,6 +221,28 @@ const MapViewer = forwardRef(function MapViewer({
   useEffect(() => {
     containerSizeRef.current = containerSize;
   }, [containerSize]);
+  useEffect(() => {
+    mapImageRef.current = mapImage;
+  }, [mapImage]);
+
+  // Clamp view: enforce minimum zoom (cover fit) and pan bounds (no empty edges)
+  const clampView = useCallback(({ zoom, panX, panY }) => {
+    const img = mapImageRef.current;
+    const cs = containerSizeRef.current;
+    if (!img || cs.width === 0) return { zoom, panX, panY };
+
+    const minZoom = Math.max(cs.width / img.width, cs.height / img.height);
+    const z = Math.max(minZoom, Math.min(3, zoom));
+
+    const minPanX = cs.width - img.width * z;
+    const minPanY = cs.height - img.height * z;
+
+    return {
+      zoom: z,
+      panX: Math.min(0, Math.max(minPanX, panX)),
+      panY: Math.min(0, Math.max(minPanY, panY))
+    };
+  }, []);
 
   // Animate view to target position
   const animateToView = useCallback((targetView, duration = 300) => {
@@ -93,11 +261,11 @@ const MapViewer = forwardRef(function MapViewer({
       // Ease-out cubic for smooth deceleration
       const eased = 1 - Math.pow(1 - progress, 3);
 
-      setViewState({
+      setViewState(clampView({
         zoom: startView.zoom + (targetView.zoom - startView.zoom) * eased,
         panX: startView.panX + (targetView.panX - startView.panX) * eased,
         panY: startView.panY + (targetView.panY - startView.panY) * eased
-      });
+      }));
 
       if (progress < 1) {
         animationRef.current = requestAnimationFrame(animate);
@@ -109,11 +277,22 @@ const MapViewer = forwardRef(function MapViewer({
     animationRef.current = requestAnimationFrame(animate);
   }, []);
 
-  // Cleanup animation on unmount
+  // Cleanup animation and WebGL on unmount
   useEffect(() => {
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
+      }
+      const res = glRef.current;
+      if (res) {
+        const { gl } = res;
+        if (res.mainTex) gl.deleteTexture(res.mainTex);
+        if (res.altTex) gl.deleteTexture(res.altTex);
+        gl.deleteProgram(res.prog);
+        gl.deleteShader(res.vs);
+        gl.deleteShader(res.fs);
+        gl.deleteBuffer(res.buf);
+        glRef.current = null;
       }
     };
   }, []);
@@ -362,63 +541,122 @@ const MapViewer = forwardRef(function MapViewer({
     }
   }), [markers, activeTransform, containerSize, calculateDefaultView, mapImage]);
 
-  // Render canvas
+  // Render: WebGL for map images, 2D canvas overlay for markers
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas || !mapImage || containerSize.width === 0 || containerSize.height === 0) return;
+    const markerCanvas = markerCanvasRef.current;
+    if (!canvas || !markerCanvas || !mapImage || containerSize.width === 0 || containerSize.height === 0) return;
 
-    // Set canvas internal dimensions to match container (prevents stretching)
-    canvas.width = containerSize.width;
-    canvas.height = containerSize.height;
+    const dpr = window.devicePixelRatio || 1;
+    const pxW = Math.floor(containerSize.width * dpr);
+    const pxH = Math.floor(containerSize.height * dpr);
 
-    const ctx = canvas.getContext('2d');
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = 'high';
+    // --- WebGL map rendering ---
+
+    // Lazy-init WebGL (or re-init if canvas element changed)
+    if (!glRef.current || glRef.current.canvas !== canvas) {
+      if (glRef.current) {
+        const old = glRef.current;
+        if (old.mainTex) old.gl.deleteTexture(old.mainTex);
+        if (old.altTex) old.gl.deleteTexture(old.altTex);
+        old.gl.deleteProgram(old.prog);
+        old.gl.deleteShader(old.vs);
+        old.gl.deleteShader(old.fs);
+        old.gl.deleteBuffer(old.buf);
+      }
+      glRef.current = initMapGL(canvas);
+      if (!glRef.current) return;
+    }
+
+    const glRes = glRef.current;
+    const { gl, prog, vao, locs } = glRes;
+
+    // Upload/update main texture if image changed
+    if (glRes.currentMainImage !== mapImage) {
+      if (glRes.mainTex) gl.deleteTexture(glRes.mainTex);
+      glRes.mainTex = createMipmapTexture(glRes, mapImage);
+      glRes.currentMainImage = mapImage;
+      glRes.mainSize = [mapImage.width, mapImage.height];
+      const err = gl.getError();
+      console.log('[MapViewer] Texture uploaded', mapImage.width, 'x', mapImage.height, err ? `GL_ERROR: ${err}` : 'OK');
+    }
+
+    // Upload/update alt texture if image changed
+    if (altMapImage && glRes.currentAltImage !== altMapImage) {
+      if (glRes.altTex) gl.deleteTexture(glRes.altTex);
+      glRes.altTex = createMipmapTexture(glRes, altMapImage);
+      glRes.currentAltImage = altMapImage;
+      glRes.altSize = [altMapImage.width, altMapImage.height];
+    } else if (!altMapImage && glRes.altTex) {
+      gl.deleteTexture(glRes.altTex);
+      glRes.altTex = null;
+      glRes.currentAltImage = null;
+    }
+
+    // Resize GL canvas only when needed
+    if (canvas.width !== pxW || canvas.height !== pxH) {
+      canvas.width = pxW;
+      canvas.height = pxH;
+    }
+    gl.viewport(0, 0, pxW, pxH);
+
+    // Clear to background color (#0a0a0a)
+    gl.clearColor(10/255, 10/255, 10/255, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    gl.useProgram(prog);
+    gl.bindVertexArray(vao);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+    // Pass resolution in CSS pixels (shader converts to clip space)
+    gl.uniform2f(locs.res, containerSize.width, containerSize.height);
+
     const { zoom, panX, panY } = viewState;
 
-    // Clear canvas
-    ctx.fillStyle = '#0a0a0a';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Draw alternate level image underneath (blended) if available
-    if (altMapImage && mapConfig?.lowerTransform && mapConfig?.transform) {
+    // Draw alternate level image underneath (blended at 35%) if available
+    if (glRes.altTex && mapConfig?.lowerTransform && mapConfig?.transform) {
       const altTransform = showLower ? mapConfig.transform : mapConfig.lowerTransform;
-
-      // Calculate scale ratio between transforms
       const scaleRatioX = altTransform.scaleX / activeTransform.scaleX;
       const scaleRatioY = altTransform.scaleY / activeTransform.scaleY;
-
-      // Calculate offset adjustment
-      // For a game coord (lat, lng): altPixel = lng * altScale + altOffset
-      // We want it to align with: mainPixel = lng * mainScale + mainOffset
-      // So: altPan = panX + (mainOffset - altOffset * scaleRatio) * zoom...
-      // Simpler: find where origin of game coords maps to on each image
       const mainOriginX = activeTransform.offsetX;
       const mainOriginY = activeTransform.offsetY;
       const altOriginX = altTransform.offsetX;
       const altOriginY = altTransform.offsetY;
-
-      // Alt image pan adjustment to align game coordinates
       const altPanX = panX + (mainOriginX - altOriginX * scaleRatioX) * zoom;
       const altPanY = panY + (mainOriginY - altOriginY * scaleRatioY) * zoom;
       const altZoom = zoom * Math.min(scaleRatioX, scaleRatioY);
 
-      ctx.save();
-      ctx.globalAlpha = 0.35; // Draw underneath at reduced opacity
-      ctx.translate(altPanX, altPanY);
-      ctx.scale(altZoom, altZoom);
-      ctx.drawImage(altMapImage, 0, 0);
-      ctx.restore();
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, glRes.altTex);
+      gl.uniform1i(locs.tex, 0);
+      gl.uniform2f(locs.imgSize, glRes.altSize[0], glRes.altSize[1]);
+      gl.uniform2f(locs.offset, altPanX, altPanY);
+      gl.uniform1f(locs.scale, altZoom);
+      gl.uniform1f(locs.alpha, 0.35);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     }
 
     // Draw main map image
-    ctx.save();
-    ctx.translate(panX, panY);
-    ctx.scale(zoom, zoom);
-    ctx.drawImage(mapImage, 0, 0);
-    ctx.restore();
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, glRes.mainTex);
+    gl.uniform1i(locs.tex, 0);
+    gl.uniform2f(locs.imgSize, glRes.mainSize[0], glRes.mainSize[1]);
+    gl.uniform2f(locs.offset, panX, panY);
+    gl.uniform1f(locs.scale, zoom);
+    gl.uniform1f(locs.alpha, 1.0);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
-    // Draw markers
+    // --- 2D marker overlay ---
+    if (markerCanvas.width !== pxW || markerCanvas.height !== pxH) {
+      markerCanvas.width = pxW;
+      markerCanvas.height = pxH;
+    }
+    const ctx = markerCanvas.getContext('2d');
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, pxW, pxH);
+    ctx.scale(dpr, dpr);
+
     if (activeTransform) {
       for (let i = 0; i < markers.length; i++) {
         const marker = markers[i];
@@ -487,12 +725,12 @@ const MapViewer = forwardRef(function MapViewer({
 
   const handleMouseMove = useCallback((e) => {
     if (!isDragging) return;
-    setViewState(prev => ({
+    setViewState(prev => clampView({
       ...prev,
       panX: e.clientX - dragStart.x,
       panY: e.clientY - dragStart.y
     }));
-  }, [isDragging, dragStart]);
+  }, [isDragging, dragStart, clampView]);
 
   const handleMouseUp = useCallback(() => {
     setIsDragging(false);
@@ -508,15 +746,16 @@ const MapViewer = forwardRef(function MapViewer({
     const zoomFactor = e.deltaY < 0 ? 1.15 : 0.87;
 
     setViewState(prev => {
-      const newZoom = Math.max(0.05, Math.min(3, prev.zoom * zoomFactor));
+      // Clamp zoom first so pan calculation uses the correct ratio
+      const newZoom = clampView({ zoom: prev.zoom * zoomFactor, panX: 0, panY: 0 }).zoom;
 
       // Zoom towards mouse position
       const newPanX = mouseX - (mouseX - prev.panX) * (newZoom / prev.zoom);
       const newPanY = mouseY - (mouseY - prev.panY) * (newZoom / prev.zoom);
 
-      return { zoom: newZoom, panX: newPanX, panY: newPanY };
+      return clampView({ zoom: newZoom, panX: newPanX, panY: newPanY });
     });
-  }, []);
+  }, [clampView]);
 
   // Click handler for markers
   const handleClick = useCallback((e) => {
@@ -567,19 +806,22 @@ const MapViewer = forwardRef(function MapViewer({
         onWheel={handleWheel}
         onClick={handleClick}
       />
+      <canvas
+        ref={markerCanvasRef}
+        style={containerStyles.markerCanvas}
+      />
 
       {/* Zoom controls */}
       <div style={containerStyles.controls}>
         <button
           style={containerStyles.controlButton}
           onClick={() => setViewState(prev => {
-            const newZoom = Math.min(3, prev.zoom * 1.3);
-            // Zoom towards center of view
+            const newZoom = clampView({ zoom: prev.zoom * 1.3, panX: 0, panY: 0 }).zoom;
             const centerX = containerSize.width / 2;
             const centerY = containerSize.height / 2;
             const newPanX = centerX - (centerX - prev.panX) * (newZoom / prev.zoom);
             const newPanY = centerY - (centerY - prev.panY) * (newZoom / prev.zoom);
-            return { zoom: newZoom, panX: newPanX, panY: newPanY };
+            return clampView({ zoom: newZoom, panX: newPanX, panY: newPanY });
           })}
           title="Zoom in"
         >
@@ -588,13 +830,12 @@ const MapViewer = forwardRef(function MapViewer({
         <button
           style={containerStyles.controlButton}
           onClick={() => setViewState(prev => {
-            const newZoom = Math.max(0.05, prev.zoom / 1.3);
-            // Zoom towards center of view
+            const newZoom = clampView({ zoom: prev.zoom / 1.3, panX: 0, panY: 0 }).zoom;
             const centerX = containerSize.width / 2;
             const centerY = containerSize.height / 2;
             const newPanX = centerX - (centerX - prev.panX) * (newZoom / prev.zoom);
             const newPanY = centerY - (centerY - prev.panY) * (newZoom / prev.zoom);
-            return { zoom: newZoom, panX: newPanX, panY: newPanY };
+            return clampView({ zoom: newZoom, panX: newPanX, panY: newPanY });
           })}
           title="Zoom out"
         >
@@ -653,8 +894,15 @@ const containerStyles = {
     display: 'block',
     width: '100%',
     height: '100%',
-    cursor: 'grab',
-    imageRendering: 'high-quality'
+    cursor: 'grab'
+  },
+  markerCanvas: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    pointerEvents: 'none'
   },
   controls: {
     position: 'absolute',
