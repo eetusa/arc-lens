@@ -1328,16 +1328,15 @@ export const styles = {
     gap: '8px',
     padding: '12px 16px',
     paddingTop: '28px',  // Extra padding to account for overlap
-    marginTop: '-16px',  // Slide up further under the card
+    marginTop: '-16px',  // Slide up to connect with card
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
     borderTopLeftRadius: 0,  // Sharp top corners
     borderTopRightRadius: 0,
     borderBottomLeftRadius: '12px',  // Rounded bottom corners
     borderBottomRightRadius: '12px',
     overflowX: 'auto',
-    flexShrink: 0,
-    position: 'relative',
-    zIndex: 1  // Below the card (card is z-index 2)
+    flexShrink: 0
+    // No position/z-index: allows child tooltips to escape stacking context
   },
   recycleSectionLabel: {
     fontSize: '10px',
