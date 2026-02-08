@@ -39,10 +39,17 @@ const MapViewer = forwardRef(function MapViewer({
   const [isInitialized, setIsInitialized] = useState(false);
   const [showLower, setShowLower] = useState(false);
 
-  // Reset lower toggle when map changes
-  useEffect(() => {
+  // Track previous map ID for render-time state resets
+  const [prevMapId, setPrevMapId] = useState(mapConfig?.id);
+
+  // Reset states when map changes (render-time adjustment pattern)
+  if (prevMapId !== mapConfig?.id) {
+    setPrevMapId(mapConfig?.id);
     setShowLower(false);
-  }, [mapConfig?.id]);
+    setIsInitialized(false);
+    setMapImage(null);
+    setAltMapImage(null);
+  }
 
   // Get the active transform (use lowerTransform when showing lower level)
   const activeTransform = showLower && mapConfig?.lowerTransform
@@ -56,8 +63,7 @@ const MapViewer = forwardRef(function MapViewer({
     }
   }, []);
 
-  // Track previous state for level toggle handling
-  const prevMapIdRef = useRef(mapConfig?.id);
+  // Track previous showLower for level toggle handling
   const prevShowLowerRef = useRef(showLower);
   const viewStateRef = useRef(viewState);
   const containerSizeRef = useRef(containerSize);
@@ -117,8 +123,7 @@ const MapViewer = forwardRef(function MapViewer({
     const imageSrc = showLower && mapConfig?.lowerImage ? mapConfig.lowerImage : mapConfig?.image;
     if (!imageSrc) return;
 
-    const isMapChange = prevMapIdRef.current !== mapConfig?.id;
-    const isLevelToggle = !isMapChange && prevShowLowerRef.current !== showLower;
+    const isLevelToggle = prevShowLowerRef.current !== showLower;
 
     // Get the old and new transforms
     const oldTransform = prevShowLowerRef.current && mapConfig?.lowerTransform
@@ -142,20 +147,14 @@ const MapViewer = forwardRef(function MapViewer({
       pendingCenterCoords = { lat, lng, zoom, newTransform };
     }
 
-    prevMapIdRef.current = mapConfig?.id;
     prevShowLowerRef.current = showLower;
 
-    // Clear old image before loading new one
-    setMapImage(null);
-
-    // Only reset view state when actual map changes, not when toggling levels
-    if (isMapChange) {
-      setIsInitialized(false);
-      setAltMapImage(null);
-    }
+    // Track current request to handle race conditions
+    let isCancelled = false;
 
     const img = new Image();
     img.onload = () => {
+      if (isCancelled) return;
       setMapImage(img);
 
       // If we have pending center coords from a level toggle, restore the view
@@ -172,23 +171,34 @@ const MapViewer = forwardRef(function MapViewer({
       }
     };
     img.onerror = () => {
+      if (isCancelled) return;
       console.error('Failed to load map image:', imageSrc);
     };
     img.src = imageSrc;
+
+    return () => {
+      isCancelled = true;
+    };
   }, [mapConfig?.id, mapConfig?.image, mapConfig?.lowerImage, mapConfig?.lowerTransform, mapConfig?.transform, showLower]);
 
   // Preload the alternate level image for blending
   useEffect(() => {
     if (!mapConfig?.lowerImage || !mapConfig?.image) {
-      setAltMapImage(null);
       return;
     }
 
     // Load the opposite level's image
+    let isCancelled = false;
     const altSrc = showLower ? mapConfig.image : mapConfig.lowerImage;
     const img = new Image();
-    img.onload = () => setAltMapImage(img);
+    img.onload = () => {
+      if (!isCancelled) setAltMapImage(img);
+    };
     img.src = altSrc;
+
+    return () => {
+      isCancelled = true;
+    };
   }, [mapConfig?.id, mapConfig?.image, mapConfig?.lowerImage, showLower]);
 
   // Track container size
@@ -205,13 +215,15 @@ const MapViewer = forwardRef(function MapViewer({
       }
     };
 
-    updateSize();
+    // Use requestAnimationFrame for initial size to avoid sync setState in effect
+    const rafId = requestAnimationFrame(updateSize);
     const timer = setTimeout(updateSize, 100);
 
     const observer = new ResizeObserver(updateSize);
     observer.observe(containerNode);
 
     return () => {
+      cancelAnimationFrame(rafId);
       clearTimeout(timer);
       observer.disconnect();
     };
@@ -272,15 +284,23 @@ const MapViewer = forwardRef(function MapViewer({
   // Initialize view when map loads or container size changes
   useEffect(() => {
     if (!mapImage || containerSize.width === 0 || containerSize.height === 0) return;
+    if (isInitialized) return;
 
-    // Only auto-initialize once per map
-    if (!isInitialized) {
-      const defaultView = calculateDefaultView();
-      if (defaultView) {
-        setViewState(defaultView);
-        setIsInitialized(true);
-      }
-    }
+    // Auto-initialize once per map (triggered by async image load)
+    const defaultView = calculateDefaultView();
+    if (!defaultView) return;
+
+    // Use queueMicrotask to avoid synchronous setState in effect body
+    let isCancelled = false;
+    queueMicrotask(() => {
+      if (isCancelled) return;
+      setViewState(defaultView);
+      setIsInitialized(true);
+    });
+
+    return () => {
+      isCancelled = true;
+    };
   }, [mapImage, containerSize, isInitialized, calculateDefaultView]);
 
   // Focus on marker when focusMarkerId changes
