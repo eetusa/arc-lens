@@ -205,20 +205,21 @@ function parseType(infobox) {
 
 // Parse sell price from infobox
 // Structure: <tr class="data-sellprice ..."><td>...<span class="template-price">...<img>...NUMBER</span>
+// Note: Wiki HTML puts the price as text after the inner </span>, possibly with whitespace
 function parseSellPrice(infobox) {
   const row = infobox.match(/<tr[^>]*class="[^"]*data-sellprice[^"]*"[^>]*>([\s\S]*?)<\/tr>/i);
   if (!row) return null;
 
   // Extract all prices (weapons have multiple for each tier)
   const prices = [];
-  const priceMatches = row[1].matchAll(/<span class="template-price">[\s\S]*?<\/span>(\d+(?:,\d+)*)/g);
+  const priceMatches = row[1].matchAll(/<span class="template-price">[\s\S]*?<\/span>\s*(\d+(?:,\d+)*)/g);
   for (const match of priceMatches) {
     prices.push(parseInt(match[1].replace(/,/g, '')));
   }
 
   // Also try simpler pattern: just find numbers after the img in template-price
   if (prices.length === 0) {
-    const simpleMatch = row[1].match(/template-price[\s\S]*?>(\d+(?:,\d+)*)</);
+    const simpleMatch = row[1].match(/template-price[\s\S]*?>\s*(\d+(?:,\d+)*)</);
     if (simpleMatch) {
       prices.push(parseInt(simpleMatch[1].replace(/,/g, '')));
     }
@@ -948,7 +949,15 @@ async function addMissingItem(itemName, localDB) {
 
   console.log(`    ✓ Added "${itemName}" (${wikiItem.type || 'unknown type'}, ${wikiItem.rarity || 'unknown rarity'})`);
 
-  return localItem;
+  // Check for missing critical fields
+  const criticalFields = ['rarity', 'type', 'weight'];
+  if (localItem.type !== 'key') criticalFields.push('value');
+  const missingFields = criticalFields.filter(f => !localItem[f]);
+  if (missingFields.length > 0) {
+    console.log(`    ⚠ Missing fields: ${missingFields.join(', ')}`);
+  }
+
+  return { item: localItem, missingFields };
 }
 
 // Main CLI
@@ -972,6 +981,7 @@ Usage:
   node scripts/wiki-scraper.js --update <name>   Update single item from wiki
   node scripts/wiki-scraper.js --update-all      Update all items with issues (interactive)
   node scripts/wiki-scraper.js --add-missing     Add missing items from wiki to local DB
+  node scripts/wiki-scraper.js --validate        Validate items_db.json for missing fields
   node scripts/wiki-scraper.js --report          Generate comparison report (matching only)
 
 Examples:
@@ -1563,11 +1573,15 @@ Examples:
 
     let added = 0;
     let failed = 0;
+    const incompleteItems = [];
 
     for (const itemName of missingItems) {
       const result = await addMissingItem(itemName, localDB);
       if (result) {
         added++;
+        if (result.missingFields.length > 0) {
+          incompleteItems.push({ name: itemName, missing: result.missingFields });
+        }
       } else {
         failed++;
       }
@@ -1578,9 +1592,52 @@ Examples:
     console.log(`Added: ${added}`);
     console.log(`Failed/Skipped: ${failed}`);
 
+    if (incompleteItems.length > 0) {
+      console.log(`\n⚠ Incomplete items (missing fields):`);
+      for (const { name, missing } of incompleteItems) {
+        console.log(`  ${name} — missing: ${missing.join(', ')}`);
+      }
+    }
+
     if (added > 0) {
       console.log('');
       saveLocalDB(localDB);
+    }
+  }
+
+  else if (command === '--validate') {
+    console.log('=== Database Validation ===');
+    const items = Object.values(localDB);
+    console.log(`Total items: ${items.length}\n`);
+
+    const fieldChecks = [
+      { field: 'value', label: 'value (excluding keys)', skip: item => item.type === 'key' },
+      { field: 'rarity', label: 'rarity' },
+      { field: 'type', label: 'type' },
+      { field: 'weight', label: 'weight' },
+    ];
+
+    let totalMissing = 0;
+
+    console.log('Missing fields:');
+    for (const { field, label, skip } of fieldChecks) {
+      const missing = items.filter(item => {
+        if (skip && skip(item)) return false;
+        return !item[field];
+      });
+      totalMissing += missing.length;
+      console.log(`  ${label}: ${missing.length} items`);
+      if (missing.length > 0) {
+        const names = missing.map(i => i.name).sort();
+        console.log(`    - ${names.join(', ')}`);
+      }
+    }
+
+    console.log('');
+    if (totalMissing === 0) {
+      console.log('✓ No critical issues found.');
+    } else {
+      console.log(`⚠ ${totalMissing} items have incomplete data.`);
     }
   }
 

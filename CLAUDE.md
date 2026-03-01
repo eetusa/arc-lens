@@ -2,6 +2,24 @@
 
 This document provides context for AI assistants (Claude, Copilot, etc.) working on this codebase.
 
+## Before Starting Any Task (MANDATORY)
+
+**STOP. Before writing any code or editing any file, check your branch:**
+
+```bash
+git fetch origin && git status && git log --oneline origin/master..HEAD
+```
+
+Then apply this decision:
+1. On `master` → create a new feature branch immediately
+2. On a feature branch with commits **not yet in** `origin/master` → **ASK the user** whether to continue on this branch or start a new one
+3. On a feature branch whose commits are **already in** `origin/master` (PR was merged) → switch to master and create a new branch
+4. In doubt → create a new branch from master
+
+**Do not skip this step. Do not proceed to implementation until branch is confirmed.**
+
+This applies even when the user provides a plan to implement. The very first action is always the branch check — before reading files, before editing code, before anything.
+
 ## Project Overview
 
 **ARC Lens** is a real-time inventory analysis tool for the game ARC Raiders. It uses computer vision and OCR to:
@@ -408,38 +426,9 @@ Test fixtures (screenshots) are organized by resolution in `test/fixtures/screen
 
 ## Git Workflow
 
-### **CRITICAL: Branch Creation Guidelines**
+### Branch Rules
 
-**Before writing a single line of code or making any file change**, always check what branch you are on:
-
-```bash
-git fetch origin
-git status
-git log --oneline origin/master..HEAD
-```
-
-**Then apply this decision:**
-
-- If the current branch is `master` → create a new feature branch immediately
-- If the current branch is a feature branch with commits not yet in `origin/master` → confirm with the user whether to continue on this branch or start a new one
-- If the current branch is a feature branch whose commits are already in `origin/master` (i.e. its PR was merged) → **do not use it**; switch to master and create a new branch
-- If in doubt → create a new branch from master
-
-**Do not assume the branch shown in git status at conversation start is the correct one to work on.** It is often a stale feature branch left over from previous work.
-
-**When starting ANY new feature or task:**
-
-1. **Check the current branch** (see above) before touching anything
-2. **Always start from master** (unless explicitly told otherwise)
-3. **Pull latest changes** to ensure you're up-to-date
-4. **Create a new feature branch** with descriptive name
-
-```bash
-# Standard workflow for new features:
-git checkout master
-git pull origin master
-git checkout -b feature/descriptive-name
-```
+See **"Before Starting Any Task"** at the top of this document for the mandatory branch check.
 
 **Branch Naming Convention:**
 - `feature/` - New features (e.g., `feature/umami-analytics`)
@@ -507,7 +496,7 @@ npm run generate-manifest
 ```
 
 ### 7. Branch Workflow
-ALWAYS start from master and create a new branch. Don't work on existing feature branches unless continuing previous work.
+See **"Before Starting Any Task"** at the top. The branch check is the first thing you do — before reading code, before editing files, before anything.
 
 ### 8. Worker Module Dependencies
 The vision worker imports multiple modules. When modifying worker code, ensure imports are correct and modules don't have circular dependencies.
@@ -572,7 +561,7 @@ The vision worker imports multiple modules. When modifying worker code, ensure i
 - Look for TODO comments in code
 - Review recent PRs for context
 - Ask clarifying questions before making assumptions
-- **When in doubt about branching**: Start from master, pull, create new branch
+- **When in doubt about branching**: See "Before Starting Any Task" at the top
 
 ## Maintenance Notes
 

@@ -5,6 +5,13 @@ import { styles, theme } from '../styles';
 // Changes can be strings or objects with { text, bold: true } for emphasis
 const CHANGELOG = [
   {
+    version: '1.2.2b',
+    date: '2.3.2026',
+    changes: [
+      'Fixed missing sell values and other item data for recently added items',
+    ]
+  },
+  {
     version: '1.2.2a',
     date: '1.3.2026',
     changes: [
