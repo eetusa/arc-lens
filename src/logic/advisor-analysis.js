@@ -10,7 +10,8 @@ export class AdvisorAnalysis {
             // --- UPDATED: Use Rarity instead of Tier ---
             rarity: itemNode.rarity || 'common',
             // Keep tier only if it genuinely exists (e.g. for specific upgrades), otherwise undefined
-            tier: itemNode.tier 
+            tier: itemNode.tier,
+            foundIn: itemNode.raw?.foundIn || []
         };
 
         // 2. Verdict (Decision)
