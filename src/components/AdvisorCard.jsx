@@ -147,6 +147,16 @@ export default function AdvisorCard({ analysis, isMobile = false }) {
                   <span style={{ color: '#bdbdbd' }}>Value: {economics.sellPrice.toLocaleString()}</span>
               </div>
 
+              {/* Found In row */}
+              {meta.foundIn && meta.foundIn.length > 0 && (
+                <div style={{ fontSize: isMobile ? '10px' : '11px', color: '#666', marginTop: '3px' }}>
+                  Found in:{' '}
+                  <span style={{ color: '#888' }}>
+                    {meta.foundIn.map(f => f.charAt(0).toUpperCase() + f.slice(1)).join(' • ')}
+                  </span>
+                </div>
+              )}
+
             </div>
 
             {/* Verdict */}
