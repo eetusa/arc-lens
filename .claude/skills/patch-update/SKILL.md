@@ -40,6 +40,16 @@ After Step 2 is complete, add any brand-new items that are not yet in the databa
 node scripts/wiki-scraper.js --add-missing 2>&1
 ```
 
+### Step 3.5: Validate database
+
+Run the database validator to check for items with missing critical fields:
+
+```bash
+node scripts/wiki-scraper.js --validate 2>&1
+```
+
+Report any warnings to the user before continuing. If items have incomplete data, note them for the summary report.
+
 ### Step 4: Compare quest data
 
 Show the user what quests are new or missing:
@@ -90,6 +100,7 @@ Report to the user:
 - How many quests were added/updated (from Steps 4–5 output)
 - How many map markers were updated (from Step 6 output)
 - Any missing project items that need manual attention (from Step 7)
+- Any items with incomplete data (from Step 3.5)
 
 ### Step 10: Commit, push, and open PR
 
