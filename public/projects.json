@@ -3,6 +3,7 @@
     {
       "id": "expedition-2",
       "name": "Expedition 2",
+      "active": false,
       "wikiUrl": "https://arcraiders.wiki/wiki/Expedition",
       "startDate": "2025-12-22",
       "endDate": "2026-03-01",
@@ -11,50 +12,110 @@
           "id": 1,
           "name": "Foundation",
           "requirements": [
-            { "item": "Metal Parts", "amount": 150 },
-            { "item": "Plastic Parts", "amount": 200 },
-            { "item": "ARC Alloy", "amount": 80 },
-            { "item": "Steel Spring", "amount": 15 }
+            {
+              "item": "Metal Parts",
+              "amount": 150
+            },
+            {
+              "item": "Plastic Parts",
+              "amount": 200
+            },
+            {
+              "item": "ARC Alloy",
+              "amount": 80
+            },
+            {
+              "item": "Steel Spring",
+              "amount": 15
+            }
           ]
         },
         {
           "id": 2,
           "name": "Core Systems",
           "requirements": [
-            { "item": "Durable Cloth", "amount": 35 },
-            { "item": "Wires", "amount": 25 },
-            { "item": "Electrical Components", "amount": 20 },
-            { "item": "Cooling Coil", "amount": 4 }
+            {
+              "item": "Durable Cloth",
+              "amount": 35
+            },
+            {
+              "item": "Wires",
+              "amount": 25
+            },
+            {
+              "item": "Electrical Components",
+              "amount": 20
+            },
+            {
+              "item": "Cooling Coil",
+              "amount": 4
+            }
           ]
         },
         {
           "id": 3,
           "name": "Framework",
           "requirements": [
-            { "item": "Light Bulb", "amount": 4 },
-            { "item": "Battery", "amount": 30 },
-            { "item": "Shredder Gyro", "amount": 10 },
-            { "item": "Exodus Modules", "amount": 1 }
+            {
+              "item": "Light Bulb",
+              "amount": 4
+            },
+            {
+              "item": "Battery",
+              "amount": 30
+            },
+            {
+              "item": "Shredder Gyro",
+              "amount": 10
+            },
+            {
+              "item": "Exodus Modules",
+              "amount": 1
+            }
           ]
         },
         {
           "id": 4,
           "name": "Outfitting",
           "requirements": [
-            { "item": "Frequency Modulation Box", "amount": 5 },
-            { "item": "Advanced Electrical Components", "amount": 5 },
-            { "item": "Ion Sputter", "amount": 3 },
-            { "item": "Leaper Pulse Unit", "amount": 3 }
+            {
+              "item": "Frequency Modulation Box",
+              "amount": 5
+            },
+            {
+              "item": "Advanced Electrical Components",
+              "amount": 5
+            },
+            {
+              "item": "Ion Sputter",
+              "amount": 3
+            },
+            {
+              "item": "Leaper Pulse Unit",
+              "amount": 3
+            }
           ]
         },
         {
           "id": 5,
           "name": "Load Stage",
           "coinRequirements": [
-            { "category": "Combat Items", "coinValue": 250000 },
-            { "category": "Survival Items", "coinValue": 100000 },
-            { "category": "Provisions", "coinValue": 180000 },
-            { "category": "Materials", "coinValue": 300000 }
+            {
+              "category": "Combat Items",
+              "coinValue": 250000
+            },
+            {
+              "category": "Survival Items",
+              "coinValue": 100000
+            },
+            {
+              "category": "Provisions",
+              "coinValue": 180000
+            },
+            {
+              "category": "Materials",
+              "coinValue": 300000
+            }
           ]
         },
         {
@@ -74,54 +135,192 @@
           "id": 1,
           "name": "Roaming Threats",
           "requirements": [
-            { "item": "Rusted Bolts", "amount": 3 },
-            { "item": "Pop Trigger", "amount": 15 },
-            { "item": "Tick Pod", "amount": 15 },
-            { "item": "Surveyor Vault", "amount": 5 }
+            {
+              "item": "Rusted Bolts",
+              "amount": 3
+            },
+            {
+              "item": "Pop Trigger",
+              "amount": 15
+            },
+            {
+              "item": "Tick Pod",
+              "amount": 15
+            },
+            {
+              "item": "Surveyor Vault",
+              "amount": 5
+            }
           ]
         },
         {
           "id": 2,
           "name": "Soaring Menaces",
           "requirements": [
-            { "item": "Spotter Relay", "amount": 10 },
-            { "item": "Expired Respirator", "amount": 3 },
-            { "item": "Wasp Driver", "amount": 20 },
-            { "item": "Hornet Driver", "amount": 15 }
+            {
+              "item": "Spotter Relay",
+              "amount": 10
+            },
+            {
+              "item": "Expired Respirator",
+              "amount": 3
+            },
+            {
+              "item": "Wasp Driver",
+              "amount": 20
+            },
+            {
+              "item": "Hornet Driver",
+              "amount": 15
+            }
           ]
         },
         {
           "id": 3,
           "name": "Ferocious Foes",
           "requirements": [
-            { "item": "ARC Performance Steel", "amount": 10 },
-            { "item": "Shredder Gyro", "amount": 5 },
-            { "item": "Leaper Pulse Unit", "amount": 10 },
-            { "item": "Bastion Cell", "amount": 5 }
+            {
+              "item": "ARC Performance Steel",
+              "amount": 10
+            },
+            {
+              "item": "Shredder Gyro",
+              "amount": 5
+            },
+            {
+              "item": "Leaper Pulse Unit",
+              "amount": 10
+            },
+            {
+              "item": "Bastion Cell",
+              "amount": 5
+            }
           ]
         },
         {
           "id": 4,
           "name": "Dominant Dangers",
           "requirements": [
-            { "item": "ARC Synthetic Resin", "amount": 10 },
-            { "item": "Magnetic Accelerator", "amount": 10 },
-            { "item": "Rocketeer Driver", "amount": 8 },
-            { "item": "Queen Reactor", "amount": 3 }
+            {
+              "item": "ARC Synthetic Resin",
+              "amount": 10
+            },
+            {
+              "item": "Magnetic Accelerator",
+              "amount": 10
+            },
+            {
+              "item": "Rocketeer Driver",
+              "amount": 8
+            },
+            {
+              "item": "Queen Reactor",
+              "amount": 3
+            }
           ]
         },
         {
           "id": 5,
           "name": "Imposing Behemoths",
           "requirements": [
-            { "item": "Exodus Modules", "amount": 5 },
-            { "item": "Geiger Counter", "amount": 3 },
-            { "item": "Bombardier Cell", "amount": 8 },
-            { "item": "Matriarch Reactor", "amount": 3 }
+            {
+              "item": "Exodus Modules",
+              "amount": 5
+            },
+            {
+              "item": "Geiger Counter",
+              "amount": 3
+            },
+            {
+              "item": "Bombardier Cell",
+              "amount": 8
+            },
+            {
+              "item": "Matriarch Reactor",
+              "amount": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "weather-monitor-system",
+      "name": "Weather Monitor System",
+      "wikiUrl": "https://arcraiders.wiki/wiki/Weather_Monitor_System",
+      "startDate": "2026-02-24",
+      "phases": [
+        {
+          "id": 1,
+          "name": "Atmospheric Pressure",
+          "requirements": [
+            { "item": "Plastic Parts", "amount": 25 },
+            { "item": "Durable Cloth", "amount": 5 },
+            { "item": "Metal Parts", "amount": 15 },
+            { "item": "Great Mullein", "amount": 5 },
+            { "item": "ARC Alloy", "amount": 5 },
+            { "item": "Antiseptic", "amount": 5 },
+            { "item": "Oil", "amount": 3 },
+            { "item": "Vita Shot", "amount": 3 }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Sunlight",
+          "requirements": [
+            { "item": "Snitch Scanner", "amount": 1 },
+            { "item": "Processor", "amount": 10 },
+            { "item": "Wires", "amount": 3 },
+            { "item": "Advanced Electrical Components", "amount": 5 },
+            { "item": "Sensors", "amount": 3 },
+            { "item": "Zipline", "amount": 3 },
+            { "item": "Comet Igniter", "amount": 1 },
+            { "item": "Raider Hatch Key", "amount": 1 }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Precipitation",
+          "requirements": [
+            { "item": "ARC Powercell", "amount": 5 },
+            { "item": "Medium Gun Parts", "amount": 3 },
+            { "item": "Canister", "amount": 5 },
+            { "item": "Complex Gun Parts", "amount": 2 },
+            { "item": "Steel Spring", "amount": 5 },
+            { "item": "Advanced Mechanical Components", "amount": 3 },
+            { "item": "Fine Wristwatch", "amount": 1 },
+            { "item": "Renegade III", "amount": 1 }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Humidity",
+          "requirements": [
+            { "item": "Duct Tape", "amount": 10 },
+            { "item": "Explosive Compound", "amount": 10 },
+            { "item": "Rusted Bolts", "amount": 3 },
+            { "item": "Showstopper", "amount": 3 },
+            { "item": "Water Pump", "amount": 1 },
+            { "item": "Trailblazer", "amount": 3 },
+            { "item": "Wasp Driver", "amount": 3 },
+            { "item": "Extended Barrel", "amount": 1 }
+          ]
+        },
+        {
+          "id": 5,
+          "name": "Temperature",
+          "requirements": [
+            { "item": "Camera Lens", "amount": 3 },
+            { "item": "Medium Shield", "amount": 1 },
+            { "item": "Damaged Heat Sink", "amount": 1 },
+            { "item": "Surge Shield Recharger", "amount": 5 },
+            { "item": "Firefly Burner", "amount": 1 },
+            { "item": "Sterilized Bandage", "amount": 3 },
+            { "item": "Voltage Converter", "amount": 1 },
+            { "item": "Tactical Mk. 3 (Revival)", "amount": 1 }
           ]
         }
       ]
     }
   ],
-  "lastUpdated": "2026-01-29T20:30:00.000Z"
+  "lastUpdated": "2026-03-01T18:26:55.547Z"
 }

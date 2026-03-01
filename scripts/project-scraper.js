@@ -6,10 +6,11 @@
  * the local projects.json file.
  *
  * Usage:
- *   node scripts/project-scraper.js --help           # Show all commands
- *   node scripts/project-scraper.js --scrape         # Scrape current project and update projects.json
- *   node scripts/project-scraper.js --list           # Show current project phases
- *   node scripts/project-scraper.js --verify         # Check if items in requirements exist in items_db
+ *   node scripts/project-scraper.js --help                    # Show all commands
+ *   node scripts/project-scraper.js --scrape                  # Scrape current project (auto-discover URL)
+ *   node scripts/project-scraper.js --scrape-url <url>        # Scrape a specific project URL
+ *   node scripts/project-scraper.js --list                    # Show all projects and their phases
+ *   node scripts/project-scraper.js --verify                  # Check if items in requirements exist in items_db
  */
 
 import fs from 'fs';
@@ -63,34 +64,43 @@ function loadItemsDB() {
   }
 }
 
-// Load existing projects.json
+// Load existing projects.json — always returns { projects: [], lastUpdated: null }
 function loadProjects() {
   try {
     if (fs.existsSync(PROJECTS_PATH)) {
-      return JSON.parse(fs.readFileSync(PROJECTS_PATH, 'utf-8'));
+      const data = JSON.parse(fs.readFileSync(PROJECTS_PATH, 'utf-8'));
+      // Normalise legacy single-project format
+      if (data.currentProject && !data.projects) {
+        return { projects: [data.currentProject], lastUpdated: data.lastUpdated };
+      }
+      return data;
     }
   } catch (err) {
     console.error('Failed to load projects.json:', err.message);
   }
-  return { currentProject: null, lastUpdated: null };
+  return { projects: [], lastUpdated: null };
 }
 
-// Save projects.json
+// Save projects.json (always uses the projects[] array format)
 function saveProjects(data) {
   data.lastUpdated = new Date().toISOString();
   fs.writeFileSync(PROJECTS_PATH, JSON.stringify(data, null, 2));
   console.log(`\nSaved to: ${PROJECTS_PATH}`);
 }
 
-// Get current project URL from the Projects page
+// Derive a stable ID from a wiki URL or project name
+function deriveProjectId(url) {
+  return url.split('/').pop().replace(/_/g, '-').toLowerCase();
+}
+
+// Get current project URL from the Projects page (auto-discovery)
 async function getCurrentProjectUrl() {
   console.log('Fetching Projects page...');
   const html = await fetchPage(`${WIKI_BASE}/Projects`);
   if (!html) return null;
 
-  // Look for the current expedition link
-  // Pattern: <a href="/wiki/Expedition" title="Expedition">
-  // Or look for "Expedition 2" or similar
+  // Look for any /wiki/ link whose title looks like a project page
+  // Expedition pages: /wiki/Expedition, /wiki/Expedition_2
   const expeditionMatch = html.match(/href="(\/wiki\/Expedition[^"]*)"[^>]*title="([^"]+)"/i);
   if (expeditionMatch) {
     return {
@@ -106,29 +116,31 @@ async function getCurrentProjectUrl() {
   };
 }
 
-// Parse a phase table row to extract item requirements
-function parsePhaseRequirements(rowHtml) {
+// Parse a block of HTML to extract item requirements (quantity × item)
+function parsePhaseRequirements(html) {
   const requirements = [];
 
   // Pattern: "150× <a...>Metal Parts</a>" or "150 × <a...>Metal Parts</a>"
-  // Also handles: <a...>Metal Parts</a> ×150 or ×150
-  const itemMatches = rowHtml.matchAll(/(\d+)\s*×?\s*<a[^>]*title="([^"]+)"/g);
+  const itemMatches = html.matchAll(/(\d+)\s*×\s*<a[^>]*title="([^"]+)"/g);
   for (const match of itemMatches) {
-    requirements.push({
-      item: match[2],
-      amount: parseInt(match[1])
-    });
+    requirements.push({ item: match[2], amount: parseInt(match[1]) });
   }
 
-  // Alternative pattern: <a>Item</a> (150)
-  const altMatches = rowHtml.matchAll(/<a[^>]*title="([^"]+)"[^>]*>[^<]*<\/a>\s*\((\d+)\)/g);
-  for (const match of altMatches) {
-    // Avoid duplicates
+  // Pattern: quantity before link without × e.g. "150 <a title="Metal Parts">"
+  if (requirements.length === 0) {
+    const altMatches = html.matchAll(/(\d+)\s*<a[^>]*title="([^"]+)"/g);
+    for (const match of altMatches) {
+      if (!requirements.find(r => r.item === match[2])) {
+        requirements.push({ item: match[2], amount: parseInt(match[1]) });
+      }
+    }
+  }
+
+  // Pattern: <a>Item</a> (150)
+  const parenMatches = html.matchAll(/<a[^>]*title="([^"]+)"[^>]*>[^<]*<\/a>\s*\((\d+)\)/g);
+  for (const match of parenMatches) {
     if (!requirements.find(r => r.item === match[1])) {
-      requirements.push({
-        item: match[1],
-        amount: parseInt(match[2])
-      });
+      requirements.push({ item: match[1], amount: parseInt(match[2]) });
     }
   }
 
@@ -138,48 +150,68 @@ function parsePhaseRequirements(rowHtml) {
 // Parse coin-based requirements (for Load Stage type phases)
 function parseCoinRequirements(rowHtml) {
   const coinReqs = [];
-
-  // Pattern: "Combat Items" with coin value
-  // This is a simplified parser - actual wiki structure may vary
   const coinMatch = rowHtml.match(/(\d{1,3}(?:,\d{3})*)\s*(?:coins?)?/gi);
   if (coinMatch) {
     for (const match of coinMatch) {
       const value = parseInt(match.replace(/,/g, ''));
-      if (value > 1000) { // Likely a coin value, not an item count
+      if (value > 1000) {
         coinReqs.push({ coinValue: value });
       }
     }
   }
-
   return coinReqs;
 }
 
-// Parse expedition page for phases
-async function parseExpeditionPage(url) {
-  console.log(`Fetching expedition page: ${url}`);
+// Split HTML into sections by h2/h3 headings
+// Returns [{ title, content }]
+function splitByHeadings(html) {
+  const sections = [];
+  // Match h2 or h3 with mw-headline span (standard MediaWiki structure)
+  const headingPattern = /<h[23][^>]*>[\s\S]*?<span[^>]*class="[^"]*mw-headline[^"]*"[^>]*>([^<]+)<\/span>[\s\S]*?<\/h[23]>/gi;
+
+  let lastIndex = 0;
+  let lastTitle = null;
+  let match;
+
+  while ((match = headingPattern.exec(html)) !== null) {
+    if (lastTitle !== null) {
+      sections.push({ title: lastTitle.trim(), content: html.slice(lastIndex, match.index) });
+    }
+    lastTitle = match[1].trim();
+    lastIndex = match.index + match[0].length;
+  }
+
+  if (lastTitle !== null) {
+    sections.push({ title: lastTitle.trim(), content: html.slice(lastIndex) });
+  }
+
+  return sections;
+}
+
+// Parse a project/expedition page for phases — supports both Expedition style and generic wikis
+async function parseProjectPage(url) {
+  console.log(`Fetching project page: ${url}`);
   const html = await fetchPage(url);
   if (!html) return null;
 
   const project = {
+    id: deriveProjectId(url),
     name: '',
     wikiUrl: url,
     startDate: null,
-    endDate: null,
     phases: []
   };
 
-  // Extract project name from title
-  const titleMatch = html.match(/<h1[^>]*class="[^"]*page-header__title[^"]*"[^>]*>([^<]+)<\/h1>/i);
+  // Extract project name from page title
+  const titleMatch = html.match(/<h1[^>]*class="[^"]*page-header__title[^"]*"[^>]*>([^<]+)<\/h1>/i)
+    || html.match(/<title>([^<|]+)/i);
   if (titleMatch) {
-    project.name = titleMatch[1].trim();
+    project.name = titleMatch[1].trim().replace(/\s*[-|].*$/, '').trim();
   } else {
-    // Fallback: extract from URL
-    const urlName = url.split('/').pop().replace(/_/g, ' ');
-    project.name = urlName;
+    project.name = url.split('/').pop().replace(/_/g, ' ');
   }
 
-  // Extract dates if present
-  // Pattern varies, but often in format: "December 2, 2025 - February 18, 2026"
+  // Extract dates — pattern: "December 2, 2025 – February 18, 2026"
   const dateMatch = html.match(/(\w+ \d{1,2},? \d{4})\s*[-–]\s*(\w+ \d{1,2},? \d{4})/i);
   if (dateMatch) {
     try {
@@ -190,18 +222,13 @@ async function parseExpeditionPage(url) {
     }
   }
 
-  // Find phase tables
-  // Look for section headers like "Phase 1", "Foundation", etc.
-  const phaseNames = [
-    'Foundation',
-    'Core Systems',
-    'Framework',
-    'Outfitting',
-    'Load Stage',
-    'Departure'
+  // -------------------------------------------------------------------
+  // Strategy 1: Hardcoded phase names (Expedition-style pages)
+  // -------------------------------------------------------------------
+  const hardcodedPhaseNames = [
+    'Foundation', 'Core Systems', 'Framework', 'Outfitting', 'Load Stage', 'Departure'
   ];
 
-  // Method 1: Look for wikitables with phase data
   const tableMatches = html.matchAll(/<table[^>]*class="[^"]*wikitable[^"]*"[^>]*>([\s\S]*?)<\/table>/gi);
 
   for (const tableMatch of tableMatches) {
@@ -210,17 +237,14 @@ async function parseExpeditionPage(url) {
 
     for (const row of rows) {
       const rowHtml = row[1];
-
-      // Skip header rows
       if (rowHtml.includes('<th')) continue;
 
-      // Check if this row contains a phase name
       let foundPhase = null;
       let phaseId = 0;
 
-      for (let i = 0; i < phaseNames.length; i++) {
-        if (rowHtml.toLowerCase().includes(phaseNames[i].toLowerCase())) {
-          foundPhase = phaseNames[i];
+      for (let i = 0; i < hardcodedPhaseNames.length; i++) {
+        if (rowHtml.toLowerCase().includes(hardcodedPhaseNames[i].toLowerCase())) {
+          foundPhase = hardcodedPhaseNames[i];
           phaseId = i + 1;
           break;
         }
@@ -230,22 +254,10 @@ async function parseExpeditionPage(url) {
         const requirements = parsePhaseRequirements(rowHtml);
         const coinRequirements = parseCoinRequirements(rowHtml);
 
-        // Only add if we found some requirements
         if (requirements.length > 0 || coinRequirements.length > 0) {
-          const phase = {
-            id: phaseId,
-            name: foundPhase
-          };
-
-          if (requirements.length > 0) {
-            phase.requirements = requirements;
-          }
-
-          if (coinRequirements.length > 0) {
-            phase.coinRequirements = coinRequirements;
-          }
-
-          // Don't add duplicates
+          const phase = { id: phaseId, name: foundPhase };
+          if (requirements.length > 0) phase.requirements = requirements;
+          if (coinRequirements.length > 0) phase.coinRequirements = coinRequirements;
           if (!project.phases.find(p => p.id === phaseId)) {
             project.phases.push(phase);
           }
@@ -254,29 +266,90 @@ async function parseExpeditionPage(url) {
     }
   }
 
-  // Method 2: Look for phase sections with headers
+  // -------------------------------------------------------------------
+  // Strategy 2: Section-based (generic — works for any project page)
+  // Splits the page by h2/h3 headings and extracts items per section.
+  // -------------------------------------------------------------------
   if (project.phases.length === 0) {
-    console.log('  Trying alternative parsing method...');
+    console.log('  Hardcoded phase names not found. Trying generic section-based parser...');
+    const sections = splitByHeadings(html);
+    let phaseId = 1;
 
-    for (let i = 0; i < phaseNames.length; i++) {
-      const phaseName = phaseNames[i];
-      // Look for section with this phase name
-      const sectionPattern = new RegExp(
-        `id="${phaseName.replace(/ /g, '_')}"[\\s\\S]*?<table[^>]*>([\\s\\S]*?)<\\/table>`,
-        'i'
-      );
-      const sectionMatch = html.match(sectionPattern);
+    // Skip common non-phase headings
+    const skipSections = new Set([
+      'contents', 'references', 'navigation', 'see also',
+      'external links', 'notes', 'gallery'
+    ]);
 
-      if (sectionMatch) {
-        const requirements = parsePhaseRequirements(sectionMatch[1]);
-        if (requirements.length > 0) {
-          project.phases.push({
-            id: i + 1,
-            name: phaseName,
-            requirements: requirements
-          });
+    for (const section of sections) {
+      if (skipSections.has(section.title.toLowerCase())) continue;
+
+      // Check section content for item links
+      const requirements = parsePhaseRequirements(section.content);
+
+      if (requirements.length > 0) {
+        project.phases.push({ id: phaseId++, name: section.title, requirements });
+        console.log(`  Found phase "${section.title}" with ${requirements.length} items`);
+      } else {
+        // Also scan any wikitables in this section
+        const tables = section.content.matchAll(/<table[^>]*class="[^"]*wikitable[^"]*"[^>]*>([\s\S]*?)<\/table>/gi);
+        let tableReqs = [];
+        for (const table of tables) {
+          tableReqs = tableReqs.concat(parsePhaseRequirements(table[1]));
+        }
+        if (tableReqs.length > 0) {
+          project.phases.push({ id: phaseId++, name: section.title, requirements: tableReqs });
+          console.log(`  Found phase "${section.title}" (from table) with ${tableReqs.length} items`);
         }
       }
+    }
+  }
+
+  // -------------------------------------------------------------------
+  // Strategy 3: Single-table with section header rows
+  // Some pages use one big wikitable where rows alternate between
+  // section headers and item requirement rows.
+  // -------------------------------------------------------------------
+  if (project.phases.length === 0) {
+    console.log('  Trying single-table with header-row parser...');
+    const allTableMatches = html.matchAll(/<table[^>]*class="[^"]*wikitable[^"]*"[^>]*>([\s\S]*?)<\/table>/gi);
+    let phaseId = 1;
+
+    for (const tableMatch of allTableMatches) {
+      const tableHtml = tableMatch[1];
+      let currentPhaseName = null;
+      let currentRequirements = [];
+
+      const rows = tableHtml.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi);
+      for (const row of rows) {
+        const rowHtml = row[1];
+
+        // Detect header rows: contains th, or a bold-only td with no item links
+        const isHeader = rowHtml.includes('<th');
+        const hasItemLinks = /<a[^>]*title="[^"]+"/.test(rowHtml);
+        const hasBoldText = /<(?:th|b|strong)[^>]*>([^<]{2,50})<\/(?:th|b|strong)>/i.test(rowHtml);
+
+        if (isHeader || (hasBoldText && !hasItemLinks)) {
+          // Save previous phase
+          if (currentPhaseName && currentRequirements.length > 0) {
+            project.phases.push({ id: phaseId++, name: currentPhaseName, requirements: currentRequirements });
+          }
+          // Extract phase name from this header row
+          const nameMatch = rowHtml.match(/<(?:th|td|b|strong)[^>]*>([^<]{2,50})<\/(?:th|td|b|strong)>/i);
+          currentPhaseName = nameMatch ? nameMatch[1].trim() : null;
+          currentRequirements = [];
+        } else if (hasItemLinks) {
+          const reqs = parsePhaseRequirements(rowHtml);
+          currentRequirements = currentRequirements.concat(reqs);
+        }
+      }
+
+      // Save last phase
+      if (currentPhaseName && currentRequirements.length > 0) {
+        project.phases.push({ id: phaseId++, name: currentPhaseName, requirements: currentRequirements });
+      }
+
+      if (project.phases.length > 0) break; // Found phases in this table
     }
   }
 
@@ -286,21 +359,16 @@ async function parseExpeditionPage(url) {
   return project;
 }
 
-// Verify items exist in the database
-function verifyItemsExist(project, itemsDB) {
+// Verify items exist in the database (for one project)
+function verifyProjectItems(project, itemsDB) {
   const issues = [];
   const itemNames = new Set(Object.values(itemsDB).map(i => i.name.toLowerCase()));
 
   for (const phase of project.phases) {
     if (!phase.requirements) continue;
-
     for (const req of phase.requirements) {
       if (!itemNames.has(req.item.toLowerCase())) {
-        issues.push({
-          phase: phase.name,
-          item: req.item,
-          issue: 'Item not found in items_db.json'
-        });
+        issues.push({ project: project.name, phase: phase.name, item: req.item, issue: 'Item not found in items_db.json' });
       }
     }
   }
@@ -318,133 +386,129 @@ async function main() {
 ARC Raiders Project Scraper
 
 Usage:
-  node scripts/project-scraper.js --scrape         Scrape current project and update projects.json
-  node scripts/project-scraper.js --list           Show current project phases
-  node scripts/project-scraper.js --verify         Check if items in requirements exist in items_db
+  node scripts/project-scraper.js --scrape                  Scrape current project (auto-discover URL)
+  node scripts/project-scraper.js --scrape-url <url>        Scrape a specific project wiki URL
+  node scripts/project-scraper.js --list                    Show all projects and their phases
+  node scripts/project-scraper.js --verify                  Check if items in requirements exist in items_db
 
 Examples:
   node scripts/project-scraper.js --scrape
+  node scripts/project-scraper.js --scrape-url https://arcraiders.wiki/wiki/Weather_Monitor_System
   node scripts/project-scraper.js --list
   node scripts/project-scraper.js --verify
 `);
     return;
   }
 
+  // ------------------------------------------------------------------
+  // --scrape  (auto-discover URL)
+  // ------------------------------------------------------------------
   if (command === '--scrape') {
-    console.log('=== Scraping Current Project ===\n');
+    console.log('=== Scraping Current Project (auto-discover) ===\n');
 
-    // Get current project URL
     const projectInfo = await getCurrentProjectUrl();
     if (!projectInfo) {
       console.error('Could not find current project URL');
       return;
     }
 
-    console.log(`Found project: ${projectInfo.name}`);
+    console.log(`Found project: ${projectInfo.name} → ${projectInfo.url}`);
     await delay(DELAY_MS);
 
-    // Parse the project page
-    const project = await parseExpeditionPage(projectInfo.url);
-    if (!project) {
-      console.error('Could not parse project page');
-      return;
-    }
-
-    console.log(`\nProject: ${project.name}`);
-    console.log(`Phases found: ${project.phases.length}`);
-
-    if (project.phases.length > 0) {
-      console.log('\nPhase Summary:');
-      for (const phase of project.phases) {
-        const reqCount = phase.requirements?.length || 0;
-        const coinCount = phase.coinRequirements?.length || 0;
-        console.log(`  ${phase.id}. ${phase.name}: ${reqCount} items, ${coinCount} coin requirements`);
-      }
-    }
-
-    // Verify items
-    const itemsDB = loadItemsDB();
-    const issues = verifyItemsExist(project, itemsDB);
-
-    if (issues.length > 0) {
-      console.log(`\n⚠️  Found ${issues.length} item(s) not in database:`);
-      for (const issue of issues) {
-        console.log(`    - ${issue.item} (${issue.phase})`);
-      }
-    }
-
-    // Save
-    const data = {
-      currentProject: project,
-      lastUpdated: new Date().toISOString()
-    };
-    saveProjects(data);
-
-    console.log('\n✓ Done!');
+    await scrapeAndSave(projectInfo.url);
   }
 
+  // ------------------------------------------------------------------
+  // --scrape-url <url>
+  // ------------------------------------------------------------------
+  else if (command === '--scrape-url') {
+    const url = args[1];
+    if (!url) {
+      console.error('Error: --scrape-url requires a URL argument');
+      console.log('Example: node scripts/project-scraper.js --scrape-url https://arcraiders.wiki/wiki/Weather_Monitor_System');
+      process.exit(1);
+    }
+
+    console.log(`=== Scraping Project from URL ===\n  ${url}\n`);
+    await scrapeAndSave(url);
+  }
+
+  // ------------------------------------------------------------------
+  // --list
+  // ------------------------------------------------------------------
   else if (command === '--list') {
     const data = loadProjects();
 
-    if (!data.currentProject) {
+    if (!data.projects || data.projects.length === 0) {
       console.log('No project data found. Run --scrape first.');
       return;
     }
 
-    const project = data.currentProject;
-    console.log(`\n=== ${project.name} ===`);
-    console.log(`URL: ${project.wikiUrl}`);
-    if (project.startDate && project.endDate) {
-      console.log(`Period: ${project.startDate} to ${project.endDate}`);
-    }
-    console.log(`Last Updated: ${data.lastUpdated}`);
+    console.log(`\nLast Updated: ${data.lastUpdated}`);
+    console.log(`\n${data.projects.length} project(s) in projects.json:\n`);
 
-    console.log('\nPhases:');
-    for (const phase of project.phases) {
-      console.log(`\n  ${phase.id}. ${phase.name}`);
+    for (const project of data.projects) {
+      const activeLabel = project.active === false ? ' [INACTIVE]' : ' [ACTIVE]';
+      console.log(`=== ${project.name}${activeLabel} ===`);
+      console.log(`  ID: ${project.id}`);
+      console.log(`  URL: ${project.wikiUrl}`);
+      if (project.startDate) console.log(`  Start: ${project.startDate}`);
+      if (project.endDate) console.log(`  End: ${project.endDate}`);
 
-      if (phase.requirements && phase.requirements.length > 0) {
-        console.log('     Item Requirements:');
-        for (const req of phase.requirements) {
-          console.log(`       - ${req.amount}× ${req.item}`);
+      console.log(`  Phases (${project.phases.length}):`);
+      for (const phase of project.phases) {
+        const reqCount = phase.requirements?.length || 0;
+        const coinCount = phase.coinRequirements?.length || 0;
+        console.log(`    ${phase.id}. ${phase.name}: ${reqCount} items${coinCount ? `, ${coinCount} coin reqs` : ''}`);
+
+        if (phase.requirements && phase.requirements.length > 0) {
+          for (const req of phase.requirements) {
+            console.log(`       - ${req.amount}× ${req.item}`);
+          }
+        }
+
+        if (phase.coinRequirements && phase.coinRequirements.length > 0) {
+          for (const req of phase.coinRequirements) {
+            console.log(`       - ${req.coinValue?.toLocaleString()} coins`);
+          }
         }
       }
-
-      if (phase.coinRequirements && phase.coinRequirements.length > 0) {
-        console.log('     Coin Requirements:');
-        for (const req of phase.coinRequirements) {
-          console.log(`       - ${req.coinValue.toLocaleString()} coins`);
-        }
-      }
+      console.log('');
     }
   }
 
+  // ------------------------------------------------------------------
+  // --verify
+  // ------------------------------------------------------------------
   else if (command === '--verify') {
     const data = loadProjects();
 
-    if (!data.currentProject) {
+    if (!data.projects || data.projects.length === 0) {
       console.log('No project data found. Run --scrape first.');
       return;
     }
 
     const itemsDB = loadItemsDB();
-    const issues = verifyItemsExist(data.currentProject, itemsDB);
+    let allIssues = [];
 
-    if (issues.length === 0) {
+    for (const project of data.projects) {
+      const issues = verifyProjectItems(project, itemsDB);
+      allIssues = allIssues.concat(issues);
+    }
+
+    if (allIssues.length === 0) {
       console.log('✓ All items in project requirements exist in items_db.json');
     } else {
-      console.log(`\n⚠️  Found ${issues.length} issue(s):\n`);
-      for (const issue of issues) {
-        console.log(`  Phase "${issue.phase}": "${issue.item}" - ${issue.issue}`);
+      console.log(`\n⚠️  Found ${allIssues.length} issue(s):\n`);
+      for (const issue of allIssues) {
+        console.log(`  [${issue.project}] Phase "${issue.phase}": "${issue.item}" - ${issue.issue}`);
       }
 
-      // Save report
       ensureDir(REPORTS_DIR);
       const reportPath = path.join(REPORTS_DIR, 'verification-report.json');
       fs.writeFileSync(reportPath, JSON.stringify({
         generatedAt: new Date().toISOString(),
-        project: data.currentProject.name,
-        issues: issues
+        issues: allIssues
       }, null, 2));
       console.log(`\nReport saved to: ${reportPath}`);
     }
@@ -454,6 +518,58 @@ Examples:
     console.error(`Unknown command: ${command}`);
     console.log('Use --help for usage information');
   }
+}
+
+// Shared scrape + save logic used by --scrape and --scrape-url
+async function scrapeAndSave(url) {
+  const project = await parseProjectPage(url);
+  if (!project) {
+    console.error('Could not parse project page');
+    return;
+  }
+
+  console.log(`\nProject: ${project.name}`);
+  console.log(`ID: ${project.id}`);
+  console.log(`Phases found: ${project.phases.length}`);
+
+  if (project.phases.length > 0) {
+    console.log('\nPhase Summary:');
+    for (const phase of project.phases) {
+      const reqCount = phase.requirements?.length || 0;
+      const coinCount = phase.coinRequirements?.length || 0;
+      console.log(`  ${phase.id}. ${phase.name}: ${reqCount} items, ${coinCount} coin requirements`);
+    }
+  }
+
+  // Verify items
+  const itemsDB = loadItemsDB();
+  const issues = verifyProjectItems(project, itemsDB);
+
+  if (issues.length > 0) {
+    console.log(`\n⚠️  Found ${issues.length} item(s) not in database:`);
+    for (const issue of issues) {
+      console.log(`    - ${issue.item} (${issue.phase})`);
+    }
+  }
+
+  // Load existing data, upsert the project
+  const data = loadProjects();
+  const idx = data.projects.findIndex(p => p.id === project.id || p.wikiUrl === project.wikiUrl);
+  if (idx >= 0) {
+    // Preserve the active flag if already set
+    const existing = data.projects[idx];
+    if (existing.active !== undefined && project.active === undefined) {
+      project.active = existing.active;
+    }
+    data.projects[idx] = project;
+    console.log(`\nUpdated existing project: ${project.name}`);
+  } else {
+    data.projects.push(project);
+    console.log(`\nAdded new project: ${project.name}`);
+  }
+
+  saveProjects(data);
+  console.log('\n✓ Done!');
 }
 
 main().catch(console.error);
