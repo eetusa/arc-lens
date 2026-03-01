@@ -147,6 +147,41 @@ function parsePhaseRequirements(html) {
   return requirements;
 }
 
+// Strip the Rewards section and everything after it from a block of HTML,
+// so that parsePhaseRequirements only sees actual requirements.
+function extractRequirementsSection(html) {
+  // Match "Rewards" appearing in a heading, bold/strong tag, or table header
+  const rewardsIdx = html.search(/<(?:h[2-6]|b|strong|th|p)[^>]*>[^<]*Rewards[^<]*<\/(?:h[2-6]|b|strong|th|p)>/i);
+  if (rewardsIdx > 0) {
+    return html.slice(0, rewardsIdx);
+  }
+  return html;
+}
+
+// For wikitables with Requirements | Rewards column headers,
+// extract only items from the Requirements column.
+function parseTableRequirementsColumn(tableHtml) {
+  const headerRow = tableHtml.match(/<tr[^>]*>([\s\S]*?)<\/tr>/i);
+  if (!headerRow || !headerRow[1].includes('<th')) return null;
+
+  const headers = [...headerRow[1].matchAll(/<th[^>]*>([\s\S]*?)<\/th>/gi)];
+  const reqColIdx = headers.findIndex(h =>
+    h[1].replace(/<[^>]+>/g, '').trim().toLowerCase().includes('requirement')
+  );
+  if (reqColIdx < 0) return null;
+
+  const requirements = [];
+  const allRows = [...tableHtml.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi)];
+  for (const row of allRows) {
+    if (row[1].includes('<th')) continue;
+    const cells = [...row[1].matchAll(/<td[^>]*>([\s\S]*?)<\/td>/gi)];
+    if (cells.length > reqColIdx) {
+      requirements.push(...parsePhaseRequirements(cells[reqColIdx][1]));
+    }
+  }
+  return requirements.length > 0 ? requirements : null;
+}
+
 // Parse coin-based requirements (for Load Stage type phases)
 function parseCoinRequirements(rowHtml) {
   const coinReqs = [];
@@ -267,6 +302,46 @@ async function parseProjectPage(url) {
   }
 
   // -------------------------------------------------------------------
+  // Strategy 1.5: Tabber panel parser (MediaWiki TabberNeue extension)
+  // Pages using <tabber> have each phase in a <section class="tabber__panel">
+  // element with the phase name in data-mw-tabber-title.
+  // Within each panel, a two-column wikitable has Requirements | Rewards columns.
+  // -------------------------------------------------------------------
+  if (project.phases.length === 0) {
+    console.log('  Hardcoded phase names not found. Trying tabber panel parser...');
+    // Panels are <article class="tabber__panel" id="tabber-Phase_Name_(N)">
+    const panelPattern = /<article[^>]*class="[^"]*tabber__panel[^"]*"[^>]*id="tabber-([^"]+)"[^>]*>([\s\S]*?)<\/article>/gi;
+    const panels = [...html.matchAll(panelPattern)];
+    let phaseId = 1;
+
+    for (const panel of panels) {
+      const title = panel[1].replace(/_/g, ' ').trim();
+      const content = panel[2];
+      let phaseReqs = [];
+
+      const tablePattern = /<table[^>]*class="[^"]*wikitable[^"]*"[^>]*>([\s\S]*?)<\/table>/gi;
+      for (const table of content.matchAll(tablePattern)) {
+        const colReqs = parseTableRequirementsColumn(table[1]);
+        if (colReqs !== null) {
+          phaseReqs = phaseReqs.concat(colReqs);
+        } else {
+          phaseReqs = phaseReqs.concat(parsePhaseRequirements(extractRequirementsSection(table[1])));
+        }
+      }
+
+      // Fallback: parse section content directly (strip rewards first)
+      if (phaseReqs.length === 0) {
+        phaseReqs = parsePhaseRequirements(extractRequirementsSection(content));
+      }
+
+      if (phaseReqs.length > 0) {
+        project.phases.push({ id: phaseId++, name: title, requirements: phaseReqs });
+        console.log(`  Found phase "${title}" with ${phaseReqs.length} items`);
+      }
+    }
+  }
+
+  // -------------------------------------------------------------------
   // Strategy 2: Section-based (generic — works for any project page)
   // Splits the page by h2/h3 headings and extracts items per section.
   // -------------------------------------------------------------------
@@ -284,8 +359,8 @@ async function parseProjectPage(url) {
     for (const section of sections) {
       if (skipSections.has(section.title.toLowerCase())) continue;
 
-      // Check section content for item links
-      const requirements = parsePhaseRequirements(section.content);
+      // Check section content for item links (strip rewards section first)
+      const requirements = parsePhaseRequirements(extractRequirementsSection(section.content));
 
       if (requirements.length > 0) {
         project.phases.push({ id: phaseId++, name: section.title, requirements });
@@ -295,7 +370,10 @@ async function parseProjectPage(url) {
         const tables = section.content.matchAll(/<table[^>]*class="[^"]*wikitable[^"]*"[^>]*>([\s\S]*?)<\/table>/gi);
         let tableReqs = [];
         for (const table of tables) {
-          tableReqs = tableReqs.concat(parsePhaseRequirements(table[1]));
+          const colReqs = parseTableRequirementsColumn(table[1]);
+          tableReqs = tableReqs.concat(
+            colReqs !== null ? colReqs : parsePhaseRequirements(extractRequirementsSection(table[1]))
+          );
         }
         if (tableReqs.length > 0) {
           project.phases.push({ id: phaseId++, name: section.title, requirements: tableReqs });
