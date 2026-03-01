@@ -20,6 +20,24 @@ Then apply this decision:
 
 This applies even when the user provides a plan to implement. The very first action is always the branch check — before reading files, before editing code, before anything.
 
+## Plans
+
+Plans are saved to `.claude/plans/` (gitignored, local only). They persist across sessions and link decisions to PRs.
+
+**When to create a plan file:**
+- After exiting plan mode, save the plan using the template at `.claude/plans/TEMPLATE.md`
+- Filename format: `YYYY-MM-DD-<branch-name>.md` (e.g., `2026-03-02-scraper-validation.md`)
+
+**Lifecycle:**
+1. Create the plan file after plan mode (status: `planned`)
+2. Update status to `in-progress` when implementation begins
+3. After creating a PR, add the PR link and update status
+4. When the PR is merged or abandoned, update the status
+
+**Using plan history:**
+- Before starting related work, check `.claude/plans/` for prior decisions
+- Use stored PR links with `gh pr view <number>` to pull diffs, comments, and review feedback from past work
+
 ## Project Overview
 
 **ARC Lens** is a real-time inventory analysis tool for the game ARC Raiders. It uses computer vision and OCR to:

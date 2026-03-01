@@ -30,12 +30,18 @@ dist-ssr
 # Claude Code
 tmpclaude-*
 .claude/settings.local.json
+.claude/plans/
+
+# Windows artifacts
+nul
 
 # Generated files
 public/image-manifest.json
 
 # Wiki scraper
 .wiki-cache.json
+.metaforge-cache.json
+.quest-cache.json
 wiki-reports/
 backups/
 
