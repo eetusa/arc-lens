@@ -247,80 +247,120 @@
       "id": "weather-monitor-system",
       "name": "Weather Monitor System",
       "wikiUrl": "https://arcraiders.wiki/wiki/Weather_Monitor_System",
-      "startDate": "2026-02-24",
+      "startDate": null,
       "phases": [
         {
           "id": 1,
-          "name": "Atmospheric Pressure",
+          "name": "Atmospheric Pressure (1)",
           "requirements": [
-            { "item": "Plastic Parts", "amount": 25 },
-            { "item": "Durable Cloth", "amount": 5 },
-            { "item": "Metal Parts", "amount": 15 },
-            { "item": "Great Mullein", "amount": 5 },
-            { "item": "ARC Alloy", "amount": 5 },
-            { "item": "Antiseptic", "amount": 5 },
-            { "item": "Oil", "amount": 3 },
-            { "item": "Vita Shot", "amount": 3 }
+            {
+              "item": "Plastic Parts",
+              "amount": 25
+            },
+            {
+              "item": "Metal Parts",
+              "amount": 15
+            },
+            {
+              "item": "ARC Alloy",
+              "amount": 5
+            },
+            {
+              "item": "Oil",
+              "amount": 3
+            }
           ]
         },
         {
           "id": 2,
-          "name": "Sunlight",
+          "name": "Sunlight (2)",
           "requirements": [
-            { "item": "Snitch Scanner", "amount": 1 },
-            { "item": "Processor", "amount": 10 },
-            { "item": "Wires", "amount": 3 },
-            { "item": "Advanced Electrical Components", "amount": 5 },
-            { "item": "Sensors", "amount": 3 },
-            { "item": "Zipline", "amount": 3 },
-            { "item": "Comet Igniter", "amount": 1 },
-            { "item": "Raider Hatch Key", "amount": 1 }
+            {
+              "item": "Snitch Scanner",
+              "amount": 1
+            },
+            {
+              "item": "Wires",
+              "amount": 3
+            },
+            {
+              "item": "Sensors",
+              "amount": 3
+            },
+            {
+              "item": "Comet Igniter",
+              "amount": 1
+            }
           ]
         },
         {
           "id": 3,
-          "name": "Precipitation",
+          "name": "Precipitation (3)",
           "requirements": [
-            { "item": "ARC Powercell", "amount": 5 },
-            { "item": "Medium Gun Parts", "amount": 3 },
-            { "item": "Canister", "amount": 5 },
-            { "item": "Complex Gun Parts", "amount": 2 },
-            { "item": "Steel Spring", "amount": 5 },
-            { "item": "Advanced Mechanical Components", "amount": 3 },
-            { "item": "Fine Wristwatch", "amount": 1 },
-            { "item": "Renegade III", "amount": 1 }
+            {
+              "item": "ARC Powercell",
+              "amount": 5
+            },
+            {
+              "item": "Canister",
+              "amount": 5
+            },
+            {
+              "item": "Steel Spring",
+              "amount": 5
+            },
+            {
+              "item": "Fine Wristwatch",
+              "amount": 1
+            }
           ]
         },
         {
           "id": 4,
-          "name": "Humidity",
+          "name": "Humidity (4)",
           "requirements": [
-            { "item": "Duct Tape", "amount": 10 },
-            { "item": "Explosive Compound", "amount": 10 },
-            { "item": "Rusted Bolts", "amount": 3 },
-            { "item": "Showstopper", "amount": 3 },
-            { "item": "Water Pump", "amount": 1 },
-            { "item": "Trailblazer", "amount": 3 },
-            { "item": "Wasp Driver", "amount": 3 },
-            { "item": "Extended Barrel", "amount": 1 }
+            {
+              "item": "Duct Tape",
+              "amount": 10
+            },
+            {
+              "item": "Rusted Bolts",
+              "amount": 3
+            },
+            {
+              "item": "Water Pump",
+              "amount": 1
+            },
+            {
+              "item": "Wasp Driver",
+              "amount": 3
+            }
           ]
         },
         {
           "id": 5,
-          "name": "Temperature",
+          "name": "Temperature (5)",
           "requirements": [
-            { "item": "Camera Lens", "amount": 3 },
-            { "item": "Medium Shield", "amount": 1 },
-            { "item": "Damaged Heat Sink", "amount": 1 },
-            { "item": "Surge Shield Recharger", "amount": 5 },
-            { "item": "Firefly Burner", "amount": 1 },
-            { "item": "Sterilized Bandage", "amount": 3 },
-            { "item": "Voltage Converter", "amount": 1 },
-            { "item": "Tactical Mk. 3 (Revival)", "amount": 1 }
+            {
+              "item": "Camera Lens",
+              "amount": 3
+            },
+            {
+              "item": "Damaged Heat Sink",
+              "amount": 1
+            },
+            {
+              "item": "Firefly Burner",
+              "amount": 1
+            },
+            {
+              "item": "Voltage Converter",
+              "amount": 3
+            }
           ]
         }
       ]
     }
   ],
-  "lastUpdated": "2026-03-01T18:26:55.547Z"
+  "lastUpdated": "2026-03-01T19:54:24.283Z"
 }
