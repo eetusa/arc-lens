@@ -5,6 +5,13 @@ import { styles, theme } from '../styles';
 // Changes can be strings or objects with { text, bold: true } for emphasis
 const CHANGELOG = [
   {
+    version: '1.2.2a',
+    date: '1.3.2026',
+    changes: [
+      'Current supported game patch version is now shown in the application header',
+    ]
+  },
+  {
     version: '1.2.2',
     date: '1.3.2026',
     changes: [

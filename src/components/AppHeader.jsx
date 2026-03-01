@@ -84,7 +84,8 @@ export default function AppHeader({
   onSessionToggle,
   onSessionDisconnect,
   onInfoClick,
-  showVersionNotification
+  showVersionNotification,
+  patchInfo
 }) {
   // Header divider
   const divider = {
@@ -291,6 +292,27 @@ export default function AppHeader({
           </div>
           <span style={styles.toggleText}>DBG</span>
         </div>
+
+        {patchInfo && (
+          <>
+            <div style={divider} />
+            <span
+              title={`Game patch: ${patchInfo.name ? `${patchInfo.name} ` : ''}${patchInfo.version}`}
+              style={{
+                fontSize: '9px',
+                fontWeight: '600',
+                fontFamily: '"Consolas", "Monaco", monospace',
+                letterSpacing: '0.5px',
+                textTransform: 'uppercase',
+                color: theme.textDim,
+                whiteSpace: 'nowrap',
+                userSelect: 'none'
+              }}
+            >
+              {patchInfo.name ? `${patchInfo.name} · ${patchInfo.version}` : `Patch · ${patchInfo.version}`}
+            </span>
+          </>
+        )}
 
         <div style={divider} />
 
