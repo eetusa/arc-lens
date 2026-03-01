@@ -64050,7 +64050,8 @@
                 },
                 "amount": 2
             }
-        ]
+        ],
+        "value": 1000
     },
     "dam_controlled_access_zone_key": {
         "id": "dam_controlled_access_zone_key",
@@ -64105,6 +64106,7 @@
                 },
                 "amount": 2
             }
-        ]
+        ],
+        "value": 1000
     }
 }
