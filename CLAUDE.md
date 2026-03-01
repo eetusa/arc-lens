@@ -410,11 +410,29 @@ Test fixtures (screenshots) are organized by resolution in `test/fixtures/screen
 
 ### **CRITICAL: Branch Creation Guidelines**
 
+**Before writing a single line of code or making any file change**, always check what branch you are on:
+
+```bash
+git fetch origin
+git status
+git log --oneline origin/master..HEAD
+```
+
+**Then apply this decision:**
+
+- If the current branch is `master` → create a new feature branch immediately
+- If the current branch is a feature branch with commits not yet in `origin/master` → confirm with the user whether to continue on this branch or start a new one
+- If the current branch is a feature branch whose commits are already in `origin/master` (i.e. its PR was merged) → **do not use it**; switch to master and create a new branch
+- If in doubt → create a new branch from master
+
+**Do not assume the branch shown in git status at conversation start is the correct one to work on.** It is often a stale feature branch left over from previous work.
+
 **When starting ANY new feature or task:**
 
-1. **Always start from master** (unless explicitly told otherwise)
-2. **Pull latest changes** to ensure you're up-to-date
-3. **Create a new feature branch** with descriptive name
+1. **Check the current branch** (see above) before touching anything
+2. **Always start from master** (unless explicitly told otherwise)
+3. **Pull latest changes** to ensure you're up-to-date
+4. **Create a new feature branch** with descriptive name
 
 ```bash
 # Standard workflow for new features:
