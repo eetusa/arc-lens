@@ -5,6 +5,16 @@ import { styles, theme } from '../styles';
 // Changes can be strings or objects with { text, bold: true } for emphasis
 const CHANGELOG = [
   {
+    version: '1.2.2',
+    date: '1.3.2026',
+    changes: [
+      { text: 'Shrouded Sky patch support: Weather Monitor System project added with all 5 phases', bold: true },
+      'Expedition 2 marked as ended and removed from active project tracking',
+      'Item database updated: 19 value/weight/recycle corrections, 3 new items (Comet Igniter, Firefly Burner, Dam Controlled Access Zone Key)',
+      '7 new Shrouded Sky quests added (On The Map, Stable Housing, Worth Your Salt, Keeping An Eye Out, A Dead End, A Rising Tide, Source Of The Contamination)',
+    ]
+  },
+  {
     version: '1.2.1',
     date: '8.2.2026',
     changes: [
@@ -266,8 +276,8 @@ function InfoModal({ onClose, currentVersion, isNewVersion, onVersionSeen }) {
                 What's New in v{currentVersion}
               </span>
               <ul style={{ ...styles.modalList, marginBottom: 0 }}>
-                <li style={styles.modalListItem}>Added support for touchscreen laptops</li>
-                <li style={styles.modalListItem}>App now reacts to monitor changes</li>
+                <li style={styles.modalListItem}>Weather Monitor System project added (Shrouded Sky patch)</li>
+                <li style={styles.modalListItem}>7 new quests and updated item database</li>
               </ul>
             </div>
           )}

@@ -381,7 +381,7 @@ const ProjectPanel = ({
   projectData,
   embedded = false
 }) => {
-  const projects = projectData?.projects || [];
+  const projects = (projectData?.projects || []).filter(p => p.active !== false);
 
   // Drag state for click-and-drag selection
   const [dragState, setDragState] = useState({

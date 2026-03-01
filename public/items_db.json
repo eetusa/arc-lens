@@ -8364,7 +8364,7 @@
                     "icon": "/items/icons/arc_alloy.webp",
                     "updatedAt": "2025-10-20T11:29:16.330Z"
                 },
-                "amount": 2
+                "amount": 3
             },
             {
                 "item": {
@@ -8379,7 +8379,7 @@
                     "icon": "/items/icons/advanced_mechanical_components.webp",
                     "updatedAt": "2025-10-31T07:10:25.404Z"
                 },
-                "amount": 2
+                "amount": 1
             }
         ],
         "description": "Can be recycled into crafting materials.",
@@ -11040,7 +11040,7 @@
                     "icon": "/items/icons/advanced_mechanical_components.webp",
                     "updatedAt": "2025-10-31T07:10:25.404Z"
                 },
-                "amount": 2
+                "amount": 1
             },
             {
                 "item": {
@@ -11055,7 +11055,7 @@
                     "icon": "/items/icons/arc_alloy.webp",
                     "updatedAt": "2025-10-20T11:29:16.330Z"
                 },
-                "amount": 2
+                "amount": 3
             }
         ],
         "description": "Can be recycled into crafting materials.",
@@ -15147,7 +15147,7 @@
         "stackSize": 1,
         "type": "modification",
         "value": 5000,
-        "weight": 0.5,
+        "weight": 0.75,
         "modSpecs": {
             "perShotDispersionPercent": -60,
             "maxDispersionPercent": -30,
@@ -18758,7 +18758,7 @@
         "stackSize": 1,
         "type": "modification",
         "value": 640,
-        "weight": 0.25,
+        "weight": 0.5,
         "modSpecs": {
             "magSize": 5
         },
@@ -22805,12 +22805,12 @@
             },
             {
                 "item": {
-                    "id": "chemicals",
-                    "name": "Chemicals",
-                    "rarity": "common",
-                    "type": "basic material",
-                    "value": 50,
-                    "icon": "/items/icons/chemicals.webp"
+                    "id": "crude_explosives",
+                    "name": "Crude Explosives",
+                    "rarity": "uncommon",
+                    "type": "refined material",
+                    "value": 270,
+                    "icon": "/items/icons/crude_explosives.webp"
                 },
                 "amount": 1
             }
@@ -27421,7 +27421,7 @@
                     "icon": "/items/icons/arc_alloy.webp",
                     "updatedAt": "2025-10-20T11:29:16.330Z"
                 },
-                "amount": 2
+                "amount": 1
             },
             {
                 "item": {
@@ -27436,7 +27436,7 @@
                     "icon": "/items/icons/electrical_components.webp",
                     "updatedAt": "2025-10-20T11:29:16.330Z"
                 },
-                "amount": 2
+                "amount": 1
             }
         ],
         "icon": "/items/icons/hornet_driver.webp",
@@ -31992,7 +31992,7 @@
                     "icon": "/items/icons/advanced_mechanical_components.webp",
                     "updatedAt": "2025-10-31T07:10:25.404Z"
                 },
-                "amount": 2
+                "amount": 1
             }
         ],
         "description": "Can be recycled into crafting materials.",
@@ -32406,7 +32406,7 @@
         "stackSize": 1,
         "type": "modification",
         "value": 5000,
-        "weight": 0.5,
+        "weight": 0.25,
         "modSpecs": {
             "recoilRecoveryDurationPercent": 50,
             "verticalRecoilPercent": 50,
@@ -39659,7 +39659,7 @@
         "stackSize": 1,
         "type": "modification",
         "value": 5000,
-        "weight": 0.75,
+        "weight": 0.5,
         "compatibleWith": [
             {
                 "rarity": "uncommon",
@@ -48778,7 +48778,7 @@
                     "icon": "/items/icons/mechanical_components.webp",
                     "updatedAt": "2025-10-20T11:29:16.330Z"
                 },
-                "amount": 3
+                "amount": 2
             }
         ],
         "description": "Can be recycled into crafting materials.",
@@ -49917,7 +49917,7 @@
                     "icon": "/items/icons/mechanical_components.webp",
                     "updatedAt": "2025-10-20T11:29:16.330Z"
                 },
-                "amount": 3
+                "amount": 2
             },
             {
                 "item": {
@@ -49932,7 +49932,7 @@
                     "icon": "/items/icons/arc_alloy.webp",
                     "updatedAt": "2025-10-20T11:29:16.330Z"
                 },
-                "amount": 3
+                "amount": 2
             }
         ],
         "description": "Can be recycled into crafting materials.",
@@ -51935,7 +51935,7 @@
                     "icon": "/items/icons/electrical_components.webp",
                     "updatedAt": "2025-10-20T11:29:16.330Z"
                 },
-                "amount": 2
+                "amount": 1
             }
         ],
         "description": "Can be recycled into ARC Alloy.",
@@ -52420,7 +52420,7 @@
                     "icon": "/items/icons/electrical_components.webp",
                     "updatedAt": "2025-10-20T11:29:16.330Z"
                 },
-                "amount": 2
+                "amount": 1
             },
             {
                 "item": {
@@ -53246,7 +53246,7 @@
         "stackSize": 1,
         "type": "modification",
         "value": 5000,
-        "weight": 0.5,
+        "weight": 0.75,
         "description": "Significantly improves dispersion & recoil recovery over time.",
         "modSpecs": {
             "recoilRecoveryDurationPercent": -50,
@@ -55455,7 +55455,7 @@
                     "icon": "/items/icons/mechanical_components.webp",
                     "updatedAt": "2025-10-20T11:29:16.330Z"
                 },
-                "amount": 2
+                "amount": 1
             },
             {
                 "item": {
@@ -55470,7 +55470,7 @@
                     "icon": "/items/icons/arc_alloy.webp",
                     "updatedAt": "2025-10-20T11:29:16.330Z"
                 },
-                "amount": 2
+                "amount": 1
             }
         ],
         "description": "Can be recycled into crafting materials.",
@@ -60721,7 +60721,7 @@
         "stackSize": 1,
         "type": "modification",
         "value": 5000,
-        "weight": 0.5,
+        "weight": 0.75,
         "modSpecs": {
             "verticalRecoilPercent": -40,
             "ADSSpeedPercent": -30
@@ -61322,7 +61322,7 @@
                     "icon": "/items/icons/canister.webp",
                     "updatedAt": "2025-10-20T11:29:16.330Z"
                 },
-                "amount": 2
+                "amount": 1
             }
         ],
         "image": "/items/images/vita_spray.webp",
@@ -63982,6 +63982,129 @@
         "type": "augment",
         "value": 5000,
         "weight": 3,
-        "description": "This augment includes an"
+        "description": "This augment includes an",
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "advanced_electrical_components",
+                    "name": "Advanced Electrical Components",
+                    "rarity": "rare",
+                    "type": "refined material",
+                    "value": 1750,
+                    "icon": "/items/icons/advanced_electrical_components.webp"
+                },
+                "amount": 1
+            },
+            {
+                "item": {
+                    "id": "processor",
+                    "name": "Processor",
+                    "rarity": "rare",
+                    "type": "topside material",
+                    "value": 500,
+                    "icon": "/items/icons/processor.webp"
+                },
+                "amount": 1
+            }
+        ]
+    },
+    "comet_igniter": {
+        "id": "comet_igniter",
+        "name": "Comet Igniter",
+        "updatedAt": "2026-03-01T18:38:08.053Z",
+        "foundIn": [],
+        "maps": [],
+        "rarity": "rare",
+        "type": "recyclable",
+        "weight": 1,
+        "description": "a Rare item that can be recycled into crafting materials. It's found by scavenging non-exploded destroyed",
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "arc_alloy",
+                    "name": "ARC Alloy",
+                    "rarity": "uncommon",
+                    "type": "topside material",
+                    "value": 200,
+                    "icon": "/items/icons/arc_alloy.webp",
+                    "foundIn": [
+                        "ARC"
+                    ],
+                    "updatedAt": "2025-10-20T11:29:16.330Z"
+                },
+                "amount": 2
+            },
+            {
+                "item": {
+                    "id": "crude_explosives",
+                    "name": "Crude Explosives",
+                    "rarity": "uncommon",
+                    "type": "refined material",
+                    "value": 270,
+                    "icon": "/items/icons/crude_explosives.webp",
+                    "foundIn": [
+                        "industrial",
+                        "security"
+                    ],
+                    "updatedAt": "2025-10-20T11:29:16.330Z"
+                },
+                "amount": 2
+            }
+        ]
+    },
+    "dam_controlled_access_zone_key": {
+        "id": "dam_controlled_access_zone_key",
+        "name": "Dam Controlled Access Zone Key",
+        "updatedAt": "2026-03-01T18:38:08.648Z",
+        "foundIn": [],
+        "maps": [],
+        "rarity": "rare",
+        "type": "key",
+        "weight": 0.25,
+        "description": "Opens a locked door in the Dam Controlled Access Zone Key building on"
+    },
+    "firefly_burner": {
+        "id": "firefly_burner",
+        "name": "Firefly Burner",
+        "updatedAt": "2026-03-01T18:38:09.921Z",
+        "foundIn": [],
+        "maps": [],
+        "rarity": "rare",
+        "type": "recyclable",
+        "weight": 0.75,
+        "description": "a Rare item that can be recycled into crafting materials. It's found by scavenging destroyed",
+        "breaksInto": [
+            {
+                "item": {
+                    "id": "arc_alloy",
+                    "name": "ARC Alloy",
+                    "rarity": "uncommon",
+                    "type": "topside material",
+                    "value": 200,
+                    "icon": "/items/icons/arc_alloy.webp",
+                    "foundIn": [
+                        "ARC"
+                    ],
+                    "updatedAt": "2025-10-20T11:29:16.330Z"
+                },
+                "amount": 2
+            },
+            {
+                "item": {
+                    "id": "crude_explosives",
+                    "name": "Crude Explosives",
+                    "rarity": "uncommon",
+                    "type": "refined material",
+                    "value": 270,
+                    "icon": "/items/icons/crude_explosives.webp",
+                    "foundIn": [
+                        "industrial",
+                        "security"
+                    ],
+                    "updatedAt": "2025-10-20T11:29:16.330Z"
+                },
+                "amount": 2
+            }
+        ]
     }
 }
