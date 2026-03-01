@@ -39,3 +39,8 @@ export const PROJECT_PHASES = [
   { id: 5, name: "Load Stage" },
   { id: 6, name: "Departure" }
 ];
+
+export const CURRENT_PATCH = {
+  name: 'Shrouded Sky',  // Set to null for unnamed patches
+  version: '1.17.0'      // Game patch version (not app version)
+};

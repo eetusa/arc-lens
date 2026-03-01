@@ -22,6 +22,7 @@ import { useSessionSync } from './hooks/useSessionSync';
 import { useVersionTracking } from './hooks/useVersionTracking';
 import { preloadAllItemImages } from './utils/imagePreloader';
 import { AdvisorEngine } from './logic/advisor-engine';
+import { CURRENT_PATCH } from './logic/constants';
 import { trackManualSearch } from './utils/analytics';
 
 function App() {
@@ -605,6 +606,7 @@ function App() {
           onSessionDisconnect={handleDisconnect}
           onInfoClick={() => setShowInfo(true)}
           showVersionNotification={showVersionNotification}
+          patchInfo={CURRENT_PATCH}
         />
 
         {/* MAIN CONTENT - Three columns */}
