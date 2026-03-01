@@ -22,11 +22,11 @@ export class ProjectTracker {
     }
 
     /**
-     * Get all projects
+     * Get all active projects (excludes projects where active === false)
      * @returns {Array} Array of project objects
      */
     getProjects() {
-        return this.projectData?.projects || [];
+        return (this.projectData?.projects || []).filter(p => p.active !== false);
     }
 
     /**

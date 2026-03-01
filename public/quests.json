@@ -36,8 +36,8 @@
   
   "After Rain Comes": ["Eyes In The Sky"],
   "Water Troubles": ["After Rain Comes"],
-  "Source Of The Contaminant": ["Water Troubles"],
-  "Switching The Supply": ["Source Of The Contaminant"],
+  "Source Of The Contamination": ["Water Troubles"],
+  "Switching The Supply": ["Source Of The Contamination"],
   "A Warm Place To Rest": ["Switching The Supply"],
   "Prescriptions Of The Past": ["A Warm Place To Rest"],
   "Power Out": ["Prescriptions Of The Past"],
@@ -94,5 +94,13 @@
   "A Prime Specimen": ["The Clean Dream"],
   "Armored Transports": ["With A Trace", "A New Type Of Plant"],
 
-  "On Deaf Ears": []
+  "On Deaf Ears": [],
+  "On The Map": ["On Deaf Ears"],
+
+  "Stable Housing": [],
+  "Worth Your Salt": [],
+  "Keeping An Eye Out": [],
+
+  "A Dead End": [],
+  "A Rising Tide": ["A Dead End"]
 }
