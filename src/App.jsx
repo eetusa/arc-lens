@@ -20,7 +20,7 @@ import { useVisionSystem } from './hooks/useVisionSystem';
 import { useAppMode, AppMode } from './hooks/useAppMode';
 import { useSessionSync } from './hooks/useSessionSync';
 import { useVersionTracking } from './hooks/useVersionTracking';
-import { preloadAllItemImages } from './utils/imagePreloader';
+import { preloadAllItemImages, hasImage } from './utils/imagePreloader';
 import { AdvisorEngine } from './logic/advisor-engine';
 import { CURRENT_PATCH } from './logic/constants';
 import { trackManualSearch } from './utils/analytics';
@@ -679,8 +679,12 @@ function App() {
               }}>
                 {/* Image Column */}
                 <div style={styles.imageCol}>
-                  <canvas ref={analyticsCanvasRef} style={{...styles.cropCanvas, display: hasData ? 'block' : 'none'}} />
-                  {!hasData && <div style={{color: '#333', fontSize: '12px'}}>NO IMAGE</div>}
+                  <canvas ref={analyticsCanvasRef} style={{...styles.cropCanvas, display: (!manualAnalysis && hasData) ? 'block' : 'none'}} />
+                  {manualAnalysis && hasImage(manualAnalysis.meta.id) && (
+                    <img src={`/images/${manualAnalysis.meta.id}.webp`} alt={manualAnalysis.meta.name} style={styles.cropCanvas} />
+                  )}
+                  {manualAnalysis && !hasImage(manualAnalysis.meta.id) && <div style={{color: '#333', fontSize: '12px'}}>NO IMAGE</div>}
+                  {!manualAnalysis && !hasData && <div style={{color: '#333', fontSize: '12px'}}>NO IMAGE</div>}
                 </div>
 
                 {/* Info Column */}
