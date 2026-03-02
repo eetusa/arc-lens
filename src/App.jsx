@@ -1195,12 +1195,6 @@ function App() {
             border: '1px solid rgba(180, 80, 220, 0.6)'
           } : {})
         }}>
-          {manualAnalysis && hasImage(manualAnalysis.meta.id) && (
-            <div style={{ display: 'flex', justifyContent: 'center', padding: '12px 0 4px' }}>
-              <img src={`/images/${manualAnalysis.meta.id}.webp`} alt={manualAnalysis.meta.name}
-                   style={{ maxWidth: '120px', maxHeight: '120px', objectFit: 'contain', borderRadius: '4px' }} />
-            </div>
-          )}
           <div style={styles.infoCol}>
               {isAnalyzing && (
                   <div style={styles.loaderContainer}>
