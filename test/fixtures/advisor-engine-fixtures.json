@@ -1,0 +1,106 @@
+{
+  "items": {
+    "antiseptic": {
+      "id": "antiseptic",
+      "name": "Antiseptic",
+      "type": "refined material",
+      "rarity": "uncommon",
+      "value": 1000,
+      "requiredForQuests": [
+        { "quest": { "id": "doctors_orders", "title": "Doctor's Orders" }, "amount": 2 }
+      ],
+      "requiredForStation": [
+        { "amount": 8, "station": { "name": "Medical Lab", "tier": 3 } }
+      ]
+    },
+    "arc_alloy": {
+      "id": "arc_alloy",
+      "name": "ARC Alloy",
+      "type": "topside material",
+      "rarity": "uncommon",
+      "value": 200,
+      "requiredForQuests": [
+        { "quest": { "id": "clearer_skies", "title": "Clearer Skies" }, "amount": 3 }
+      ],
+      "requiredForStation": [
+        { "amount": 6, "station": { "name": "Explosives Station", "tier": 1 } },
+        { "amount": 6, "station": { "name": "Medical Lab", "tier": 1 } },
+        { "amount": 6, "station": { "name": "Utility Station", "tier": 1 } }
+      ]
+    },
+    "metal_parts": {
+      "id": "metal_parts",
+      "name": "Metal Parts",
+      "type": "basic material",
+      "rarity": "common",
+      "value": 75,
+      "requiredForStation": [
+        { "amount": 20, "station": { "name": "Gunsmith", "tier": 1 } },
+        { "amount": 60, "station": { "name": "Refiner", "tier": 1 } }
+      ]
+    },
+    "plastic_parts": {
+      "id": "plastic_parts",
+      "name": "Plastic Parts",
+      "type": "basic material",
+      "rarity": "common",
+      "value": 60,
+      "requiredForStation": [
+        { "amount": 25, "station": { "name": "Gear Bench", "tier": 1 } }
+      ]
+    },
+    "cellar_key": {
+      "id": "cellar_key",
+      "name": "Cellar Key",
+      "type": "key",
+      "rarity": "rare",
+      "value": 100
+    },
+    "wires": {
+      "id": "wires",
+      "name": "Wires",
+      "type": "topside material",
+      "rarity": "common",
+      "value": 150
+    }
+  },
+
+  "quests": {
+    "Picking Up The Pieces": [],
+    "Clearer Skies": ["Picking Up The Pieces"],
+    "Off The Radar": ["Clearer Skies"],
+    "A Bad Feeling": ["Off The Radar"],
+    "Doctor's Orders": ["A Bad Feeling"]
+  },
+
+  "priorities": {
+    "priorities": []
+  },
+
+  "projects": {
+    "projects": [
+      {
+        "id": "test-project",
+        "name": "Test Project",
+        "phases": [
+          {
+            "id": 1,
+            "name": "Foundation",
+            "requirements": [
+              { "item": "Metal Parts", "amount": 15 },
+              { "item": "Plastic Parts", "amount": 25 },
+              { "item": "ARC Alloy", "amount": 5 }
+            ]
+          },
+          {
+            "id": 2,
+            "name": "Core Systems",
+            "requirements": [
+              { "item": "Wires", "amount": 3 }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
