@@ -281,6 +281,19 @@ export function useVisionSystem(
             // Track item recognition event
             trackItemRecognition(payload.analysis);
           }
+          // Sync image with text atomically to prevent desync
+          if (payload.analytics && analyticsCanvasRef.current) {
+            const { buffer, width, height } = payload.analytics;
+            if (buffer && width > 0) {
+              const anaCanvas = analyticsCanvasRef.current;
+              setHasData(true);
+              if (anaCanvas.width !== width) anaCanvas.width = width;
+              if (anaCanvas.height !== height) anaCanvas.height = height;
+              anaCanvas.getContext('2d').putImageData(
+                new ImageData(new Uint8ClampedArray(buffer), width, height), 0, 0
+              );
+            }
+          }
         }
 
         // Handle detected quests from PLAY tab
