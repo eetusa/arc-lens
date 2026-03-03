@@ -12,7 +12,8 @@ export function useVisionSystem(
   isMobile = false,
   projectPhases = {},
   questDetectionEnabled = false,
-  onQuestsDetected = null
+  onQuestsDetected = null,
+  projectProgress = {}
 ) {
   // --- REFS (Single Source of Truth for Loop) ---
   const videoRef = useRef(null);
@@ -346,12 +347,14 @@ export function useVisionSystem(
           inventoryOverride: inventoryOverride,
           // Project phases (dynamic, keyed by project ID)
           projectPhases: projectPhases || {},
+          // Project progress with sub-phase completion data
+          projectProgress: projectProgress || {},
           // Quest auto-detection
           questDetectionEnabled: questDetectionEnabled
         }
       });
     }
-  }, [stationLevels, activeQuests, prioritySettings, inventoryOverride, projectPhases, questDetectionEnabled]);
+  }, [stationLevels, activeQuests, prioritySettings, inventoryOverride, projectPhases, questDetectionEnabled, projectProgress]);
 
   // --- START CAPTURE ACTION ---
   const startCapture = async () => {

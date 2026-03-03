@@ -155,7 +155,8 @@ function App() {
     isMobile,
     projectPhases,
     questAutoDetect,
-    questAutoDetect ? handleQuestsDetected : null
+    questAutoDetect ? handleQuestsDetected : null,
+    projectProgress
   );
 
   // --- SESSION CALLBACKS ---
@@ -525,7 +526,9 @@ function App() {
 
     const analysis = advisorEngineRef.current.analyzeItem(itemName, {
       activeQuestTitles: activeQuests,
-      stationLevels: stationLevels
+      stationLevels: stationLevels,
+      projectPhases: projectPhases,
+      projectProgress: projectProgress
     });
 
     setManualAnalysis(analysis);

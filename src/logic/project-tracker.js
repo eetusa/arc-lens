@@ -53,9 +53,10 @@ export class ProjectTracker {
      * Returns ALL matches across all projects (not just the first)
      * @param {string} itemName - Item name to check
      * @param {Object} projectPhases - Map of projectId -> phase currently working on (1 = first phase, >maxPhase = done)
+     * @param {Object} projectProgress - Map of projectId -> { completed: { "phaseId:itemName": true } }
      * @returns {Object} { needed: boolean, matches: Array<{project, projectId, phase, phaseId, amount}> }
      */
-    isItemNeeded(itemName, projectPhases = {}) {
+    isItemNeeded(itemName, projectPhases = {}, projectProgress = {}) {
         if (!this.isLoaded) {
             return { needed: false, matches: [] };
         }
@@ -66,6 +67,7 @@ export class ProjectTracker {
         for (const project of this.getProjects()) {
             // Default to phase 1 (working on first phase) if not set
             const workingOnPhase = projectPhases[project.id] || 1;
+            const completed = projectProgress[project.id]?.completed || {};
 
             for (const phase of project.phases || []) {
                 // Skip phases before the one we're working on
@@ -79,6 +81,9 @@ export class ProjectTracker {
                 );
 
                 if (req) {
+                    // Skip if this specific item in this phase is marked completed
+                    if (completed[`${phase.id}:${req.item}`]) continue;
+
                     matches.push({
                         project: project.name,
                         projectId: project.id,
@@ -96,9 +101,10 @@ export class ProjectTracker {
     /**
      * Get all items needed across all projects' current and future phases
      * @param {Object} projectPhases - Map of projectId -> phase currently working on
+     * @param {Object} projectProgress - Map of projectId -> { completed: { "phaseId:itemName": true } }
      * @returns {Array} Array of { itemName, project, projectId, phase, phaseId, amount }
      */
-    getAllNeededItems(projectPhases = {}) {
+    getAllNeededItems(projectPhases = {}, projectProgress = {}) {
         if (!this.isLoaded) {
             return [];
         }
@@ -107,12 +113,15 @@ export class ProjectTracker {
 
         for (const project of this.getProjects()) {
             const workingOnPhase = projectPhases[project.id] || 1;
+            const completed = projectProgress[project.id]?.completed || {};
 
             for (const phase of project.phases || []) {
                 if (phase.id < workingOnPhase) continue;
                 if (!phase.requirements) continue;
 
                 for (const req of phase.requirements) {
+                    if (completed[`${phase.id}:${req.item}`]) continue;
+
                     neededItems.push({
                         itemName: req.item,
                         project: project.name,
@@ -132,9 +141,10 @@ export class ProjectTracker {
      * Get total amount of a specific item needed across current and future phases
      * @param {string} itemName - Item name to check
      * @param {Object} projectPhases - Map of projectId -> phase currently working on
+     * @param {Object} projectProgress - Map of projectId -> { completed: { "phaseId:itemName": true } }
      * @returns {number} Total amount needed
      */
-    getTotalAmountNeeded(itemName, projectPhases = {}) {
+    getTotalAmountNeeded(itemName, projectPhases = {}, projectProgress = {}) {
         if (!this.isLoaded) {
             return 0;
         }
@@ -144,6 +154,7 @@ export class ProjectTracker {
 
         for (const project of this.getProjects()) {
             const workingOnPhase = projectPhases[project.id] || 1;
+            const completed = projectProgress[project.id]?.completed || {};
 
             for (const phase of project.phases || []) {
                 if (phase.id < workingOnPhase) continue;
@@ -154,6 +165,7 @@ export class ProjectTracker {
                 );
 
                 if (req) {
+                    if (completed[`${phase.id}:${req.item}`]) continue;
                     total += req.amount;
                 }
             }

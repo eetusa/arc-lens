@@ -147,7 +147,8 @@ export class AdvisorEngine {
 
         // --- Projects ---
         const projectPhases = userProgress.projectPhases || {};
-        const projectNeed = this.projectTracker.isItemNeeded(node.name, projectPhases);
+        const projectProgress = userProgress.projectProgress || {};
+        const projectNeed = this.projectTracker.isItemNeeded(node.name, projectPhases, projectProgress);
         if (projectNeed.needed) {
             for (const match of projectNeed.matches) {
                 analysis.addProjectRequirement(match.project, match.phase, match.phaseId, match.amount);
