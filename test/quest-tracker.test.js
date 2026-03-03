@@ -726,7 +726,7 @@ describe('QuestTracker', () => {
             'Eyes In The Sky',
             'After Rain Comes',
             'Water Troubles',
-            'Source Of The Contaminant',
+            'Source Of The Contamination',
             'Switching The Supply',
             'A Warm Place To Rest',
             'Prescriptions Of The Past',
@@ -860,7 +860,11 @@ describe('QuestTracker', () => {
             expect(rootQuests).toContain('Picking Up The Pieces');
             expect(rootQuests).toContain('A First Foothold');
             expect(rootQuests).toContain('On Deaf Ears');
-            expect(rootQuests.length).toBe(3);
+            expect(rootQuests).toContain('Stable Housing');
+            expect(rootQuests).toContain('Worth Your Salt');
+            expect(rootQuests).toContain('Keeping An Eye Out');
+            expect(rootQuests).toContain('A Dead End');
+            expect(rootQuests.length).toBe(7);
         });
 
         it('should have exactly 3 quests with multiple prerequisites', () => {
