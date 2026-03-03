@@ -5,6 +5,13 @@ import { styles, theme } from '../styles';
 // Changes can be strings or objects with { text, bold: true } for emphasis
 const CHANGELOG = [
   {
+    version: '1.2.2c',
+    date: '3.3.2026',
+    changes: [
+      'Fixed item image and text getting out of sync when quickly scrolling over inventory items',
+    ]
+  },
+  {
     version: '1.2.2b',
     date: '2.3.2026',
     changes: [

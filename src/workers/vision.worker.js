@@ -454,7 +454,20 @@ async function processFrame({ width, height, buffer, bitmap }) {
                     runOcr(headerRoi, candidateProps).then(({ analysis, rawText, didUpdate }) => {
                         // Only notify UI if stableState was actually updated
                         if (didUpdate) {
-                            postMessage({ type: 'RESULT_TEXT_UPDATE', payload: { analysis, rawText } });
+                            // Include stableState image so UI can sync both atomically
+                            const bufferCopy = stableState.buffer.slice(0);
+                            postMessage({
+                                type: 'RESULT_TEXT_UPDATE',
+                                payload: {
+                                    analysis,
+                                    rawText,
+                                    analytics: {
+                                        buffer: bufferCopy,
+                                        width: stableState.width,
+                                        height: stableState.height
+                                    }
+                                }
+                            }, [bufferCopy]);
                         }
                         isOcrBusy = false;
                         postMessage({ type: 'DEBUG_TEXT', payload: rawText });
